@@ -1,0 +1,94 @@
+name: Package desktop and Android apps
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: packaging/package.json
+      - run: npm ci --prefix packaging
+      - run: npm test --prefix packaging
+
+  windows:
+    needs: test
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: packaging/package.json
+      - run: npm ci --prefix packaging
+      - run: npm run desktop:dist --prefix packaging
+      - name: Create Windows checksums
+        shell: pwsh
+        run: Get-ChildItem packaging/release/windows/*.exe | ForEach-Object { "{0}  {1}" -f (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(), $_.Name } | Set-Content packaging/release/windows/SHA256SUMS-windows.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: anime-kill-windows
+          path: |
+            packaging/release/windows/*.exe
+            packaging/release/windows/SHA256SUMS-windows.txt
+
+  android:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: packaging/package.json
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+      - uses: android-actions/setup-android@v3
+      - run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - run: npm ci --prefix packaging
+      - run: npm run android:prepare --prefix packaging
+      - run: chmod +x packaging/android/gradlew
+      - run: cd packaging/android && ./gradlew assembleDebug
+      - name: Collect Android package
+        run: |
+          mkdir -p packaging/release/android
+          cp packaging/android/app/build/outputs/apk/debug/app-debug.apk packaging/release/android/anime-kill-demo-0.1.0-debug.apk
+          cd packaging/release/android
+          sha256sum anime-kill-demo-0.1.0-debug.apk > SHA256SUMS-android.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: anime-kill-android
+          path: packaging/release/android/*
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [windows, android]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: anime-kill-*
+          path: release
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: 动漫杀 Demo ${{ github.ref_name }}
+          body_path: packaging/RELEASE_NOTES.md
+          files: release/*
