@@ -1,0 +1,9 @@
+node_modules/
+npm-debug.log*
+*.log
+.DS_Store
+Thumbs.db
+
+# 游戏运行时使用已优化的 WebP；原始 PNG 由本地提示词档案再生成。
+assets/cards/*.png
+assets/portraits/*.png
