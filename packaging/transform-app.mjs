@@ -119,6 +119,7 @@ function showToast(message) {`, "Android 返回键");
 export function transformIndexHtml(original) {
   original = original.replace(/\r\n/g, "\n");
   let html = original;
+  html = replaceOnce(html, "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />", "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0, viewport-fit=cover\" />", "安卓安全区视口");
   html = replaceOnce(html, "  <meta name=\"theme-color\" content=\"#090b17\" />", `  <meta name="theme-color" content="#090b17" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: capacitor:; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: capacitor:; font-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" />
   <link rel="icon" href="./assets/app-icon.png" />`, "安全策略");

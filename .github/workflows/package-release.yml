@@ -19,7 +19,7 @@ permissions:
   contents: read
 
 env:
-  PACKAGE_VERSION: 0.1.0
+  PACKAGE_VERSION: 0.1.1
 
 jobs:
   test:
@@ -79,9 +79,9 @@ jobs:
       - name: Collect Android package
         run: |
           mkdir -p packaging/release/android
-          cp packaging/android/app/build/outputs/apk/debug/app-debug.apk packaging/release/android/anime-kill-demo-0.1.0-debug.apk
+          cp packaging/android/app/build/outputs/apk/debug/app-debug.apk packaging/release/android/anime-kill-demo-0.1.1-debug.apk
           cd packaging/release/android
-          sha256sum anime-kill-demo-0.1.0-debug.apk > SHA256SUMS-android.txt
+          sha256sum anime-kill-demo-0.1.1-debug.apk > SHA256SUMS-android.txt
       - uses: actions/upload-artifact@v4
         with:
           name: anime-kill-android

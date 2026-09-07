@@ -55,4 +55,26 @@ variables = variables
   .replace(/targetSdkVersion\s*=\s*\d+/, "targetSdkVersion = 36");
 await writeFile(variablesPath, variables, "utf8");
 
-console.log("Android 工程已同步：API 24+、横屏、无网络权限");
+const appGradlePath = path.join(androidDir, "app", "build.gradle");
+let appGradle = await readFile(appGradlePath, "utf8");
+appGradle = appGradle
+  .replace(/versionCode\s+\d+/, "versionCode 2")
+  .replace(/versionName\s+"[^"]+"/, 'versionName "0.1.1"');
+await writeFile(appGradlePath, appGradle, "utf8");
+
+const stylesPath = path.join(resDir, "values", "styles.xml");
+let styles = await readFile(stylesPath, "utf8");
+if (!styles.includes("android:navigationBarColor")) {
+  const systemBarItems = `
+        <item name="android:statusBarColor">#090B17</item>
+        <item name="android:navigationBarColor">#090B17</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>`;
+  styles = styles
+    .replace(/(<style name="AppTheme\.NoActionBar"[^>]*>)/, `$1${systemBarItems}`)
+    .replace(/(<style name="AppTheme\.NoActionBarLaunch"[^>]*>)/, `$1${systemBarItems}`);
+  await writeFile(stylesPath, styles, "utf8");
+}
+
+console.log("Android 工程已同步：v0.1.1、API 24+、横屏、深色系统栏、无网络权限");
