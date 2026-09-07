@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#090b17" />
+  <title>动漫杀 · 战术演示版</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="noise"></div>
+  <main id="app">
+    <section id="lobby" class="lobby screen">
+      <nav class="topbar">
+        <div class="brand"><span class="brand-mark">界</span><span>动漫杀</span><small>TACTICAL DEMO</small></div>
+        <div class="topbar-actions">
+          <button id="cardCodexButton" class="ghost-button" type="button">卡牌图鉴</button>
+          <button id="rulesButton" class="ghost-button">玩法说明</button>
+        </div>
+      </nav>
+      <div class="hero-copy">
+        <p class="eyebrow">DIMENSIONAL CARD BATTLE</p>
+        <h1>以手中之牌，<br><em>改写角色命运。</em></h1>
+        <p>经典身份推理与动漫角色技能结合。选择一种模式和你的角色，与智能对手完成一场对局。</p>
+      </div>
+      <section class="lobby-panel">
+        <div class="section-heading"><span>01</span><div><h2>选择模式</h2><p>本 Demo 暂时开放两种经典玩法</p></div></div>
+        <div id="modeList" class="mode-list"></div>
+        <div class="section-heading character-heading"><span>02</span><div><h2>选择角色</h2><p>悬停预览技能 · 点击选择出战角色</p></div></div>
+        <div id="seriesFilters" class="series-filters" aria-label="按漫画作品筛选角色"></div>
+        <div id="characterList" class="character-list"></div>
+        <section id="characterPreview" class="character-preview" aria-live="polite"></section>
+        <div class="launch-row">
+          <div class="launch-note"><b>单机演示</b><span>其他席位由战术 AI 控制</span></div>
+          <button id="startButton" class="primary-button">进入对局 <span>→</span></button>
+        </div>
+      </section>
+    </section>
+
+    <section id="game" class="game screen hidden">
+      <header class="game-header">
+        <button id="backButton" class="icon-button" aria-label="返回大厅">←</button>
+        <div><p id="modeName" class="eyebrow"></p><h2 id="roundTitle">第 1 轮</h2></div>
+        <div class="phase-pill"><i></i><span id="phaseText">等待开始</span></div>
+        <button id="intelToggle" class="ghost-button small mobile-panel-toggle">行动</button>
+        <div class="header-actions">
+          <button id="gameRulesButton" class="ghost-button small">规则</button>
+          <button id="soundButton" class="icon-button" aria-label="切换音效">♪</button>
+        </div>
+      </header>
+
+      <div class="game-layout">
+        <aside class="timeline-panel panel">
+          <div class="panel-title"><span>战局记录</span><i>LIVE</i></div>
+          <div id="gameLog" class="game-log"></div>
+        </aside>
+
+        <section class="battlefield">
+          <div class="arena-orbit orbit-one"></div><div class="arena-orbit orbit-two"></div>
+          <div id="opponents" class="opponents"></div>
+          <div class="arena-center">
+            <div class="turn-sigil"><span id="turnMark">界</span></div>
+            <p id="turnOwner">等待对局</p><small id="turnHint">选择模式后开始</small>
+            <div class="deck-status"><span>牌堆 <b id="deckCount">0</b></span><i></i><span>弃牌 <b id="discardCount">0</b></span></div>
+          </div>
+          <div id="playerArea" class="player-area"></div>
+        </section>
+
+        <aside class="intel-panel panel">
+          <div class="panel-title"><span>行动面板</span><button id="intelClose" class="intel-close" aria-label="关闭行动面板">×</button></div>
+          <div id="identityCard" class="identity-card"></div>
+          <div id="skillPanel" class="skill-panel"></div>
+          <div class="control-stack">
+            <button id="activeSkillButton" class="action-button active-skill">发动主动技 <span id="activeSkillCost">每回合一次</span></button>
+            <button id="signatureButton" class="action-button signature">释放招牌技 <span id="energyCost">4 能量</span></button>
+            <button id="revealButton" class="action-button">显露身份</button>
+            <button id="endTurnButton" class="primary-button full">结束回合</button>
+          </div>
+        </aside>
+        <button id="intelScrim" class="intel-scrim" aria-label="关闭行动面板"></button>
+      </div>
+      <div id="toast" class="toast"></div>
+    </section>
+  </main>
+
+  <dialog id="rulesDialog" class="modal rules-modal">
+    <button class="modal-close" data-close="rulesDialog">×</button>
+    <p class="eyebrow">QUICK GUIDE</p><h2>三分钟上手</h2>
+    <div class="rule-grid">
+      <article><b>01</b><h3>摸牌与上限</h3><p>角色拥有独立的手牌上限，初始手牌数等于该数值，受伤与回复不会改变上限。界主体力、手牌上限与初始手牌均+1；装备【记忆晶体】时上限额外+2。回合结束若超限，由玩家自行选择弃置。</p></article>
+      <article><b>02</b><h3>出牌</h3><p>每回合通常只能使用1张攻击。点击手牌，再点击高亮目标；装备与恢复牌点击后直接使用。手牌上的放大按钮只查看完整规则，不会使用卡牌。</p></article>
+      <article><b>03</b><h3>响应与重伤</h3><p>受到突击时可打出防御。体力降至0后先进入重伤，存活角色可依座次打出恢复救援；无人救援才退场。</p></article>
+      <article><b>04</b><h3>获得能量</h3><p>能量初始为0、上限为4。进入自己的回合时获得1点；每轮首次实际造成伤害、每轮首次实际受到伤害时，各获得1点。【蓄能】、【能量核心】及部分身份或角色技能也能补充能量，超出上限的部分不保留。</p></article>
+      <article><b>05</b><h3>释放招牌技</h3><p>自己的出牌阶段中，能量达到技能标注消耗且存在合法目标时即可发动，并立即扣除。多数招牌技消耗4点，虎杖的【黑闪】消耗3点；部分主动技也会消耗1点。能否再次发动取决于剩余能量和合法目标，返还能量以技能说明为准。</p></article>
+      <article><b>06</b><h3>取胜</h3><p>军八依身份达成目标；2V2则消灭对方两名角色。</p></article>
+      <article><b>07</b><h3>策略与伏笔</h3><p>即时策略在生效前只开启一次反制窗口，反制不能继续嵌套。次元弹幕与裂隙侵袭按座次逐人响应，反制只免除对自己的效果；意志对决中的突击属于响应，不消耗回合次数。每名角色最多同时保留2张不同名伏笔，不限制每回合布置次数；满槽后可选择替换旧伏笔。对手只能看到设置者、目标、数量和统一牌背。</p></article>
+      <article><b>08</b><h3>双牌堆</h3><p>军八使用37种、144张的标准牌堆；2V2使用相同37种牌的80张精简牌堆。其中包含6种基础牌、19种策略牌与12种装备牌。</p></article>
+      <article><b>09</b><h3>忍界初阵</h3><p>火影忍者扩展包含10名角色。樱点击【百豪印】后可选择继续蓄印或主动解放：基础牌回复并强化攻击，策略牌净化并摸牌，装备牌转化为护盾。鼬布置的任意虚假伏笔都可供【乌鸦替身】消耗；幻象未被反制时还能强化对目标的攻击，【月读】封存手牌后会造成伤害。佐助围绕装备换位建立追猎，鹿丸与雏田的控制成功后也拥有伤害出口；自来也通过蛤蟆束缚、仙术印与五右卫门完成爆发。</p></article>
+    </div>
+  </dialog>
+
+  <dialog id="cardCodexDialog" class="modal codex-modal">
+    <button class="modal-close" data-close="cardCodexDialog" aria-label="关闭卡牌图鉴">×</button>
+    <header class="codex-header">
+      <div><p class="eyebrow">DIMENSIONAL ARCHIVE</p><h2>卡牌图鉴</h2><p>37种卡牌 · 标准144张 / 精简80张</p></div>
+      <div id="codexFilters" class="codex-filters" aria-label="卡牌类别筛选"></div>
+    </header>
+    <div class="codex-layout">
+      <div id="codexGrid" class="codex-grid"></div>
+      <article id="codexDetail" class="codex-detail"></article>
+    </div>
+  </dialog>
+
+  <dialog id="playerDetailDialog" class="modal player-detail-modal">
+    <button class="modal-close" data-close="playerDetailDialog" aria-label="关闭角色详情">×</button>
+    <div id="playerDetailContent"></div>
+  </dialog>
+
+  <dialog id="cardDetailDialog" class="modal battle-card-detail-modal">
+    <button class="modal-close" data-close="cardDetailDialog" aria-label="关闭卡牌详情">×</button>
+    <div id="cardDetailContent"></div>
+  </dialog>
+
+  <dialog id="responseDialog" class="modal response-modal">
+    <p class="eyebrow">REACTION WINDOW</p><h2 id="responseTitle">是否响应？</h2><p id="responseCopy"></p>
+    <div class="response-actions"><button id="declineResponse" class="ghost-button">承受效果</button><button id="acceptResponse" class="primary-button">打出防御</button></div>
+  </dialog>
+
+  <dialog id="discardDialog" class="modal discard-modal">
+    <p class="eyebrow">DISCARD PHASE</p><h2>请选择弃牌</h2>
+    <p id="discardReason" class="discard-reason"></p>
+    <div id="discardCardList" class="discard-card-list"></div>
+    <div class="discard-footer"><span id="discardProgress">已选 0/0</span><button id="confirmDiscard" class="primary-button" disabled>确认弃置</button></div>
+  </dialog>
+
+  <dialog id="choiceDialog" class="modal choice-modal">
+    <p class="eyebrow">TACTICAL DECISION</p><h2 id="choiceTitle">请选择</h2>
+    <p id="choiceCopy" class="choice-copy"></p>
+    <div id="choiceOptions" class="choice-options"></div>
+  </dialog>
+
+  <dialog id="resultDialog" class="modal result-modal">
+    <div id="resultIcon" class="result-icon">胜</div><p class="eyebrow">BATTLE RESULT</p><h2 id="resultTitle">对局结束</h2><p id="resultCopy"></p>
+    <div class="result-actions"><button id="resultLobby" class="ghost-button">返回大厅</button><button id="rematchButton" class="primary-button">再来一局</button></div>
+  </dialog>
+
+  <script src="./dist/app.bundle.js"></script>
+</body>
+</html>
