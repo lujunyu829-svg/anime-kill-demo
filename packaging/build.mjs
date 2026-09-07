@@ -63,7 +63,7 @@ await cp(iconPng, path.join(webDir, "assets", "app-icon.png"));
 await mkdir(path.join(appDir, "desktop"), { recursive: true });
 await cp(path.join(packagingDir, "desktop", "main.cjs"), path.join(appDir, "desktop", "main.cjs"));
 await cp(webDir, path.join(appDir, "www"), { recursive: true });
-await writeFile(path.join(appDir, "package.json"), JSON.stringify({ name: "anime-kill-demo", version: "0.1.0", private: true, main: "desktop/main.cjs" }, null, 2), "utf8");
+await writeFile(path.join(appDir, "package.json"), JSON.stringify({ name: "anime-kill-demo", version: "0.1.1", private: true, main: "desktop/main.cjs" }, null, 2), "utf8");
 
 const size = (await stat(path.join(webDir, "dist", "app.bundle.js"))).size;
 console.log(`已生成共享离线版本 www/（脚本 ${Math.round(size / 1024)} KiB）`);
