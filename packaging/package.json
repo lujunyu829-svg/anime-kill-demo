@@ -1,0 +1,25 @@
+{
+  "name": "anime-kill-packaging",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:web": "node build.mjs",
+    "test": "node --test ../test/*.test.js test/*.test.js",
+    "desktop:dev": "npm run build:web && electron app",
+    "desktop:dist": "npm run build:web && electron-builder --projectDir app --config ../electron-builder.yml --win nsis portable --x64",
+    "android:prepare": "npm run build:web && node prepare-android.mjs"
+  },
+  "dependencies": {
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/core": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/cli": "^8.0.0",
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12",
+    "esbuild": "^0.25.0",
+    "sharp": "^0.34.0"
+  }
+}
