@@ -1,0 +1,28 @@
+appId: com.lujunyu.animekill
+productName: 动漫杀 Demo
+asar: true
+electronVersion: 38.8.6
+directories:
+  buildResources: ../assets
+  output: ../release/windows
+files:
+  - desktop/**/*
+  - www/**/*
+  - package.json
+win:
+  icon: ../assets/icon-only.png
+  target:
+    - target: nsis
+      arch: [x64]
+    - target: portable
+      arch: [x64]
+nsis:
+  artifactName: AnimeKillDemo-Setup-${version}-${arch}.${ext}
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: 动漫杀 Demo
+portable:
+  artifactName: AnimeKillDemo-Portable-${version}-${arch}.${ext}

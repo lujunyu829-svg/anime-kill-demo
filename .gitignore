@@ -7,3 +7,6 @@ Thumbs.db
 # 游戏运行时使用已优化的 WebP；原始 PNG 由本地提示词档案再生成。
 assets/cards/*.png
 assets/portraits/*.png
+
+# 桌面与移动应用的生成目录。
+www/

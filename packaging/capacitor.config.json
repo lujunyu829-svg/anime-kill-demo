@@ -1,0 +1,10 @@
+{
+  "appId": "com.lujunyu.animekill",
+  "appName": "动漫杀 Demo",
+  "webDir": "../www",
+  "server": { "androidScheme": "https" },
+  "android": {
+    "backgroundColor": "#090b17",
+    "minWebViewVersion": 60
+  }
+}

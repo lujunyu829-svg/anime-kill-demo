@@ -7,6 +7,12 @@
     "build": "node build.mjs",
     "prestart": "node build.mjs",
     "start": "node server.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "app:install": "npm install --prefix packaging",
+    "app:test": "npm test --prefix packaging",
+    "app:build": "npm run build:web --prefix packaging",
+    "desktop:dev": "npm run desktop:dev --prefix packaging",
+    "desktop:dist": "npm run desktop:dist --prefix packaging",
+    "android:prepare": "npm run android:prepare --prefix packaging"
   }
 }

@@ -1,0 +1,6 @@
+node_modules/
+app/
+android/
+release/
+assets/icon-only.png
+assets/splash.png
