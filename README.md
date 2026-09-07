@@ -38,4 +38,6 @@ Windows 构建会生成 x64 安装版和便携版。Android 工程可用 `npm ru
 
 推送 `v0.1.1` 标签后，GitHub Actions 会自动构建 EXE 与测试 APK，并发布到公开 GitHub Release。演示版没有商业代码签名，Windows 可能显示 SmartScreen 提示；Android 测试 APK 不能直接提交应用商店。
 
+最新安装包：[动漫杀 Demo v0.1.1](https://github.com/lujunyu829-svg/anime-kill-demo/releases/tag/v0.1.1)。
+
 本项目是个人非商业玩法原型。角色名称仅用于内部玩法验证；任何公开发布版本均需取得相应授权或替换为原创角色与素材。
