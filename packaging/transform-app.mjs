@@ -5,6 +5,7 @@ function replaceOnce(source, search, replacement, label) {
 }
 
 export function transformAppSource(original) {
+  original = original.replace(/\r\n/g, "\n");
   let source = `import { App as CapacitorApp } from "@capacitor/app";\nimport { Capacitor } from "@capacitor/core";\nimport { GameSession, discardSavedMatch, inspectSavedMatch, restoreSavedMatch } from "../packaging/runtime/persistence.js";\n${original}`;
 
   source = replaceOnce(source, "let engine = null;", "let engine = null;\nlet gameSession = null;", "会话变量");
@@ -116,6 +117,7 @@ function showToast(message) {`, "Android 返回键");
 }
 
 export function transformIndexHtml(original) {
+  original = original.replace(/\r\n/g, "\n");
   let html = original;
   html = replaceOnce(html, "  <meta name=\"theme-color\" content=\"#090b17\" />", `  <meta name="theme-color" content="#090b17" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: capacitor:; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: capacitor:; font-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'" />
