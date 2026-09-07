@@ -2,6 +2,12 @@ name: Package desktop and Android apps
 
 on:
   workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Publish the packaged artifacts as the configured version
+        required: false
+        type: boolean
+        default: false
   pull_request:
   push:
     branches:
@@ -11,6 +17,9 @@ on:
 
 permissions:
   contents: read
+
+env:
+  PACKAGE_VERSION: 0.1.0
 
 jobs:
   test:
@@ -79,7 +88,10 @@ jobs:
           path: packaging/release/android/*
 
   release:
-    if: startsWith(github.ref, 'refs/tags/')
+    if: >-
+      startsWith(github.ref, 'refs/tags/') ||
+      (github.event_name == 'workflow_dispatch' && inputs.publish_release) ||
+      (github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'release: '))
     needs: [windows, android]
     runs-on: ubuntu-latest
     permissions:
@@ -93,6 +105,8 @@ jobs:
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
-          name: 动漫杀 Demo ${{ github.ref_name }}
+          name: 动漫杀 Demo ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('v{0}', env.PACKAGE_VERSION) }}
+          tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('v{0}', env.PACKAGE_VERSION) }}
+          target_commitish: ${{ github.sha }}
           body_path: packaging/RELEASE_NOTES.md
           files: release/*
