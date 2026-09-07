@@ -24,4 +24,18 @@ npm start
 npm test
 ```
 
+## Windows 与 Android 应用
+
+应用封装层位于 `packaging/`，Windows 与 Android 共用同一份离线 `www/` 资源，并支持在大厅继续未完成的本地对局。
+
+```powershell
+npm run app:install
+npm run app:test
+npm run desktop:dist
+```
+
+Windows 构建会生成 x64 安装版和便携版。Android 工程可用 `npm run android:prepare` 生成，最低支持 Android 7/API 24并锁定横屏。完整依赖、产物位置和签名说明见 [PACKAGING.md](./PACKAGING.md)。
+
+推送 `v0.1.0` 标签后，GitHub Actions 会自动构建 EXE 与测试 APK，并发布到公开 GitHub Release。演示版没有商业代码签名，Windows 可能显示 SmartScreen 提示；Android 测试 APK 不能直接提交应用商店。
+
 本项目是个人非商业玩法原型。角色名称仅用于内部玩法验证；任何公开发布版本均需取得相应授权或替换为原创角色与素材。
