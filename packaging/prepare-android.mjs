@@ -58,8 +58,8 @@ await writeFile(variablesPath, variables, "utf8");
 const appGradlePath = path.join(androidDir, "app", "build.gradle");
 let appGradle = await readFile(appGradlePath, "utf8");
 appGradle = appGradle
-  .replace(/versionCode\s+\d+/, "versionCode 2")
-  .replace(/versionName\s+"[^"]+"/, 'versionName "0.1.1"');
+  .replace(/versionCode\s+\d+/, "versionCode 3")
+  .replace(/versionName\s+"[^"]+"/, 'versionName "0.2.0"');
 await writeFile(appGradlePath, appGradle, "utf8");
 
 const stylesPath = path.join(resDir, "values", "styles.xml");
@@ -77,4 +77,4 @@ if (!styles.includes("android:navigationBarColor")) {
   await writeFile(stylesPath, styles, "utf8");
 }
 
-console.log("Android 工程已同步：v0.1.1、API 24+、横屏、深色系统栏、无网络权限");
+console.log("Android 工程已同步：v0.2.0、API 24+、横屏、深色系统栏、无网络权限");

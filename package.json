@@ -1,6 +1,6 @@
 {
   "name": "anime-kill-demo",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,6 +8,7 @@
     "prestart": "node build.mjs",
     "start": "node server.mjs",
     "test": "node --test",
+    "balance:test": "node scripts/balance-simulation.mjs",
     "app:install": "npm install --prefix packaging",
     "app:test": "npm test --prefix packaging",
     "app:build": "npm run build:web --prefix packaging",

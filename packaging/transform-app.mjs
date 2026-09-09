@@ -6,7 +6,7 @@ function replaceOnce(source, search, replacement, label) {
 
 export function transformAppSource(original) {
   original = original.replace(/\r\n/g, "\n");
-  let source = `import { App as CapacitorApp } from "@capacitor/app";\nimport { Capacitor } from "@capacitor/core";\nimport { GameSession, discardSavedMatch, inspectSavedMatch, restoreSavedMatch } from "../packaging/runtime/persistence.js";\n${original}`;
+  let source = `import { App as CapacitorApp } from "@capacitor/app";\nimport { Capacitor } from "@capacitor/core";\nimport { GameSession, discardSavedMatch, inspectSavedMatch, restoreSavedMatch } from "../packaging/runtime/persistence.js";\nimport { installNativeViewport } from "../packaging/runtime/native-viewport.js";\nif (Capacitor.isNativePlatform()) installNativeViewport(window, document);\n${original}`;
 
   source = replaceOnce(source, "let engine = null;", "let engine = null;\nlet gameSession = null;", "会话变量");
   source = replaceOnce(source, "  renderCharacterPreview(selectedCharacter);\n}", "  renderCharacterPreview(selectedCharacter);\n  renderResumePanel();\n}", "大厅存档入口");

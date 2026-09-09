@@ -20,7 +20,7 @@ test("初始对局可以序列化并确定性恢复", () => {
 
 test("选择窗口通过命令日志恢复其闭包续接逻辑", () => {
   const storage = new MemoryStorage();
-  const session = new GameSession({ config: { modeId: "ranked2v2", humanCharacterId: "itachi" }, seed: 311, storage });
+  const session = new GameSession({ config: { modeId: "ranked2v2", humanCharacterId: "itachi", fixedAnchorSeat: 0 }, seed: 311, storage });
   const human = session.engine.players.find(player => player.human);
   const target = session.engine.players.find(player => player.alive && player.id !== human.id);
   const started = session.execute("useActiveSkill", human.id, target.id);

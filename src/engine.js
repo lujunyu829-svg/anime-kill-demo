@@ -1,16 +1,20 @@
 import { activeSkills, cardDefinitions, characters, deckProfiles, getCharacter, getMode, roles } from "./data.js";
+import { handleOnePieceEvent, initializeOnePieceState, isOnePieceCharacter, getOnePieceActiveTargets, useOnePieceActive, getOnePieceSignatureTargets, useOnePieceSignature, signatureCost as onePieceSignatureCost } from "./packs/one-piece.js";
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 export class GameEngine {
-  constructor({ modeId, humanCharacterId, random = Math.random } = {}) {
+  constructor({ modeId, humanCharacterId, random = Math.random, fixedAnchorSeat = null } = {}) {
     this.random = random;
+    this.fixedAnchorSeat = fixedAnchorSeat;
     this.mode = getMode(modeId) || getMode("classic8");
     this.humanCharacterId = humanCharacterId || characters[0].id;
     this.players = [];
     this.deck = [];
     this.discard = [];
     this.logs = [];
+    this.eventHistory = [];
+    this.telemetry = { rounds: 0, turns: 0, damage: 0, cardDeclared: 0, cardResolved: 0, cardCancelled: 0, shieldGranted: 0 };
     this.visualEvents = [];
     this.round = 0;
     this.phase = "setup";
@@ -85,14 +89,21 @@ export class GameEngine {
         signatureLocked: 0,
         contractHpLoss: 0,
         energyLocked: false,
+        dreamState: { progress: 0, awakened: false, progressedRound: 0 },
+        reviveUsed: false,
+        nextAttackState: { bonus: false, ignoreArmor: false, requiredGuards: 0, shadowNeckTarget: null },
         roundFlags: {},
         turnFlags: {}
       };
     });
 
+    for (const player of this.players) initializeOnePieceState(player, this.characterOf(player));
     for (const player of this.players) this.draw(player.id, player.baseHandLimit + player.handLimitModifier, false);
     const lord = this.players.find(player => player.roleId === "lord");
-    this.anchorSeat = lord?.seat ?? 0;
+    this.anchorSeat = this.mode.id === "ranked2v2"
+      ? (this.fixedAnchorSeat ?? Math.floor(this.random() * this.players.length))
+      : (lord?.seat ?? 0);
+    this.anchorSeatRoll = this.mode.id === "ranked2v2" ? this.anchorSeat : null;
     this.log("system", `对局开始：${this.mode.name}`);
     if (lord) this.log("event", `${this.nameOf(lord)}公开身份：${roles.lord.name}`);
     this.startRound();
@@ -120,6 +131,7 @@ export class GameEngine {
   startRound() {
     if (this.winner) return;
     this.round += 1;
+    this.telemetry.rounds += 1;
     for (const player of this.players) {
       player.roundFlags = {};
       player.armorReady = true;
@@ -138,6 +150,7 @@ export class GameEngine {
     const player = this.player(this.turnQueue.shift());
     this.currentPlayerId = player.id;
     this.turnNumber += 1;
+    this.telemetry.turns += 1;
     this.phase = "play";
     if (this.expirePlotsAtTurnStart(player.id, () => this.completeTurnStart(player.id))) return;
     this.completeTurnStart(player.id);
@@ -168,7 +181,23 @@ export class GameEngine {
       player.roundFlags.byakugoReturnedTypes = [];
       this.log("event", `${this.nameOf(player)}的“百豪之术”结束`);
     }
-    player.turnFlags = { cardsPlayed: 0 };
+    const prior = player.turnFlags || {};
+    const carry = {
+      ...(player.nextAttackState || {}),
+      bonus: Boolean((player.nextAttackState?.bonus) || prior.nextAttackBonus),
+      ignoreArmor: Boolean((player.nextAttackState?.ignoreArmor) || prior.nextAttackIgnoreArmor),
+      requiredGuards: (player.nextAttackState?.requiredGuards || 0) + (prior.nextAttackRequiredGuard || 0),
+      shadowNeckTarget: player.nextAttackState?.shadowNeckTarget || prior.shadowNeckTarget || null
+    };
+    player.turnFlags = {
+      cardsPlayed: 0,
+      nextAttackBonus: Boolean(carry.bonus),
+      nextAttackIgnoreArmor: Boolean(carry.ignoreArmor),
+      nextAttackRequiredGuard: carry.requiredGuards || 0,
+      shadowNeckTarget: carry.shadowNeckTarget || null
+    };
+    player.nextAttackState = { bonus: false, ignoreArmor: false, requiredGuards: 0, shadowNeckTarget: null };
+    this.emitOnePieceEvent({ type: "turnStart", sourceId: playerId });
     player.attacksUsed = 0;
     player.attackLimit = 1 + (player.equipment.weapon?.id === "repeater" ? 1 : 0);
     player.rangeInfinite = false;
@@ -245,6 +274,7 @@ export class GameEngine {
         target.sandMarkSetTurn = 0;
       }
     }
+    this.emitOnePieceEvent({ type: "turnEnd", sourceId: playerId });
     this.phase = "between";
     this.startNextTurn();
     return true;
@@ -283,6 +313,13 @@ export class GameEngine {
   characterOf(playerOrId) { const player = typeof playerOrId === "string" ? this.player(playerOrId) : playerOrId; return getCharacter(player?.characterId); }
   nameOf(playerOrId) { return this.characterOf(playerOrId)?.name || "未知角色"; }
   roleOf(playerOrId) { const player = typeof playerOrId === "string" ? this.player(playerOrId) : playerOrId; return roles[player?.roleId]; }
+  emitOnePieceEvent(event) {
+    if (event?.type) {
+      this.eventHistory.push({ ...event });
+      if (Object.prototype.hasOwnProperty.call(this.telemetry, event.type)) this.telemetry[event.type] += 1;
+    }
+    return handleOnePieceEvent(this, event) || event;
+  }
 
   refreshEnergyCap(playerOrId) {
     const player = typeof playerOrId === "string" ? this.player(playerOrId) : playerOrId;
@@ -297,6 +334,16 @@ export class GameEngine {
     const before = player.energy;
     player.energy = clamp(player.energy + amount, 0, player.maxEnergy);
     return player.energy - before;
+  }
+
+  gainShield(playerId, amount = 1, sourceId = playerId) {
+    const player = this.player(playerId);
+    if (!player?.alive || amount <= 0) return 0;
+    const before = player.shield;
+    player.shield = clamp(player.shield + amount, 0, 3);
+    const gained = player.shield - before;
+    if (gained > 0) this.emitOnePieceEvent({ type: "shieldGranted", sourceId, targetId: playerId, amount: gained });
+    return gained;
   }
 
   pushDamageFeedback(playerId, amount) {
@@ -354,11 +401,11 @@ export class GameEngine {
     return stored;
   }
 
-  returnSealedCards(sealerId) {
+  returnSealedCards(playerId) {
     for (const player of this.players) {
-      const returning = player.sealedCards.filter(item => item.sealedBy === sealerId);
+      const returning = player.sealedCards.filter(item => item.returnAtPlayerId === playerId || (!item.returnAtPlayerId && item.sealedBy === playerId));
       if (!returning.length) continue;
-      player.sealedCards = player.sealedCards.filter(item => item.sealedBy !== sealerId);
+      player.sealedCards = player.sealedCards.filter(item => !(item.returnAtPlayerId === playerId || (!item.returnAtPlayerId && item.sealedBy === playerId)));
       if (player.alive) player.hand.push(...returning.map(item => item.card));
       else this.discard.push(...returning.map(item => item.card));
       this.log("event", `${this.nameOf(player)}被“月读”封存的${returning.length}张牌返回手牌`);
@@ -442,6 +489,7 @@ export class GameEngine {
   }
 
   notifyCardCancelled(playerId, reason = "出牌被取消") {
+    this.emitOnePieceEvent({ type: "cardCancelled", sourceId: playerId, reason });
     const owner = this.findChessOwner(playerId);
     if (owner) this.triggerTacticalForesight(owner.id, playerId, reason);
   }
@@ -502,6 +550,8 @@ export class GameEngine {
     let range = 1 + (player.equipment.weapon?.rangeBonus || 0) + (player.turnFlags.rangeBonus || 0);
     if (["ichigo"].includes(player.characterId)) range += 1;
     if (player.characterId === "mikasa" && player.equipment.weapon) range += 1;
+    if (player.characterId === "zoro" && player.equipment.weapon) range += 1;
+    if (player.characterId === "sanji" && !player.equipment.weapon) range += 1;
     if (player.characterId === "jiraiya" && player.sageMarks > 0) range += 1;
     if (player.characterId === "naruto" && this.getSpecialCards(playerId, "clone").length) return 99;
     return range;
@@ -510,6 +560,9 @@ export class GameEngine {
   getCardTargets(playerId, card) {
     const player = this.player(playerId);
     if (!player?.alive || !card || card.responseOnly) return [];
+    if (player.navigationWind && card.type === "strategy" && card.targetMode !== "self" && card.targetMode !== "allOther") {
+      return this.players.filter(target => target.alive && target.id !== playerId).map(target => target.id);
+    }
     if (card.type === "equipment" || ["focus", "overdrive", "energy_auction", "delayed_cast", "echo_script", "dimensional_barrage", "rift_invasion"].includes(card.id)) return [playerId];
     if (card.id === "adapt") return this.players.filter(target => target.alive && (target.id === playerId || this.distance(playerId, target.id) <= this.attackRange(playerId))).map(target => target.id);
     if (card.id === "heal") {
@@ -537,6 +590,7 @@ export class GameEngine {
   getSignatureTargets(playerId) {
     const player = this.player(playerId), signature = this.characterOf(player)?.signature;
     if (!player?.alive || !signature) return [];
+    if (isOnePieceCharacter(player)) return getOnePieceSignatureTargets(this, playerId, signature);
     if (signature.effect === "colossal" && player.hp <= 1) return [];
     if (signature.effect === "checkmate") {
       const targetId = player.chessTargetId;
@@ -564,13 +618,14 @@ export class GameEngine {
   getActiveSkillTargets(playerId) {
     const player = this.player(playerId), skill = activeSkills[player?.characterId];
     if (!player?.alive || !skill || player.turnFlags.activeUsed) return [];
+    if (isOnePieceCharacter(player)) return getOnePieceActiveTargets(this, playerId, skill);
     if (skill.cost && player.energy < skill.cost) return [];
     if (["totalConcentration", "odmGear", "tacticalGift"].includes(skill.effect) && !player.hand.length) return [];
     if (skill.effect === "shadowClone" && (this.getSpecialCards(playerId, "clone").length || !player.hand.some(card => card.type === "basic" && !card.responseOnly))) return [];
     if (skill.effect === "byakugoStore") {
       const stored = this.getSpecialCards(playerId, "byakugo");
       const storedTypes = new Set(stored.map(item => item.card.type));
-      const canStore = stored.length < 2 && player.hand.some(card => !storedTypes.has(card.type));
+      const canStore = stored.length < 3 && player.hand.some(card => !storedTypes.has(card.type));
       if (!canStore && !stored.length) return [];
     }
     if (skill.effect === "illusionPlot" && !player.hand.some(card => card.strategyKind !== "plot")) return [];
@@ -579,7 +634,7 @@ export class GameEngine {
     }
     if (skill.effect === "copyNinjutsu" && !this.discard.some(card => !card.responseOnly && !card._copiedBy && (card.type === "basic" || card.strategyKind === "instant"))) return [];
     if (skill.effect === "toadBind") {
-      if (player.toadBindTargetId) return [];
+      if (player.toadBindTargetId || player.roundFlags.toadBindUsed) return [];
       return this.players.filter(target => target.alive && target.id !== playerId && (this.mode.id === "classic8" || !this.isAlly(playerId, target.id)) && this.distance(playerId, target.id) <= 2).map(target => target.id);
     }
     if (skill.effect === "curseExperiment" && !player.hand.length) return [];
@@ -600,6 +655,7 @@ export class GameEngine {
     if (!this.canAct(playerId)) return { ok: false, reason: "现在不能发动技能" };
     if (!skill || player.turnFlags.activeUsed) return { ok: false, reason: "主动技本回合已经使用" };
     if (!this.getActiveSkillTargets(playerId).includes(targetId)) return { ok: false, reason: "消耗不足或目标不合法" };
+    if (isOnePieceCharacter(player)) return useOnePieceActive(this, playerId, targetId, skill);
     if (skill.cost) player.energy -= skill.cost;
     player.turnFlags.activeUsed = true;
     this.log("signature", `${this.nameOf(player)}发动主动技「${skill.name}」`);
@@ -637,6 +693,7 @@ export class GameEngine {
       case "toadBind": {
         player.toadBindTargetId = targetId;
         player.toadBindExpiresTurn = this.turnNumber + 1;
+        player.roundFlags.toadBindUsed = true;
         this.log("event", `${this.nameOf(player)}以“蛤蟆口束缚”困住了${this.nameOf(targetId)}`);
         return { ok: true };
       }
@@ -678,7 +735,7 @@ export class GameEngine {
     const stored = this.getSpecialCards(playerId, "byakugo");
     const storedTypes = new Set(stored.map(item => item.card.type));
     const cards = player.hand.filter(card => !storedTypes.has(card.type));
-    const canStore = stored.length < 2 && cards.length > 0;
+    const canStore = stored.length < 3 && cards.length > 0;
     const typeNames = { basic: "基础", strategy: "策略", equipment: "装备" };
     const options = [
       ...(canStore ? [{ value: "store", label: "继续蓄印", description: "选择1张不同类别手牌置入百豪区" }] : []),
@@ -700,7 +757,7 @@ export class GameEngine {
         if (value === "store") {
           this.requestChoice(playerId, {
             title: "百豪蓄印：选择卡牌",
-            text: "百豪区最多2张，且卡牌类别不能重复。",
+            text: "百豪区最多3张，且卡牌类别不能重复。",
             options: cards.map(card => ({ value: card.uid, label: `蓄入【${card.name}】`, description: `${typeNames[card.type]}牌 · ${card.description}` })),
             aiChoice: cards[0]?.uid,
             onResolve: uid => {
@@ -720,7 +777,7 @@ export class GameEngine {
           this.draw(playerId, 1);
           this.log("event", `${this.nameOf(player)}以医疗忍术净化异常并摸1张牌`);
         } else {
-          player.shield += 2;
+          this.gainShield(playerId, 2);
           this.log("event", `${this.nameOf(player)}将装备百豪牌转化为2点护盾`);
         }
       }
@@ -736,8 +793,9 @@ export class GameEngine {
       options: slots.map(slot => ({ value: slot, label: { weapon: "武器", armor: "防具", charm: "饰品" }[slot], description: `${source.equipment[slot]?.name || "空槽"} ↔ ${target.equipment[slot]?.name || "空槽"}` })),
       aiChoice: slots[0],
       onResolve: slot => {
-        [source.equipment[slot], target.equipment[slot]] = [target.equipment[slot], source.equipment[slot]];
-        this.refreshEnergyCap(source); this.refreshEnergyCap(target);
+        const sourceEquip = source.equipment[slot], targetEquip = target.equipment[slot];
+        this.moveEquipment(source.id, slot, targetEquip, sourceId);
+        this.moveEquipment(target.id, slot, sourceEquip, sourceId);
         source.swapMarkedId = targetId;
         this.log("event", `${this.nameOf(source)}以“天手力”交换${{ weapon: "武器", armor: "防具", charm: "饰品" }[slot]}并标记${this.nameOf(target)}`);
       }
@@ -746,7 +804,7 @@ export class GameEngine {
 
   resolveCopyNinjutsu(playerId) {
     const player = this.player(playerId);
-    const candidates = [...this.discard].reverse().filter(card => !card.responseOnly && !card._copiedBy && (card.type === "basic" || card.strategyKind === "instant")).slice(0, 8);
+    const candidates = [...this.discard].reverse().filter(card => !card.responseOnly && !card._copiedBy && (card.type === "basic" || card.strategyKind === "instant"));
     return this.requestChoice(playerId, {
       title: "拷贝忍术：选择术式",
       text: "生成的拷贝不计出牌数，仅持续到本回合结束。",
@@ -830,6 +888,7 @@ export class GameEngine {
         target.frozenDraw = Math.max(1, target.frozenDraw);
         this.log("event", `${this.nameOf(target)}被“砂缚牢”限制，下回合少摸1张牌`);
       } else if (target.alive) {
+        this.log("event", `${this.nameOf(target)}没有手牌，砂缚牢造成1点伤害`);
         this.dealDamage(sourceId, targetId, 1, "skill");
       }
     };
@@ -877,6 +936,43 @@ export class GameEngine {
     });
   }
 
+  handleUsoppLie(playerId, card, cardUid, targetId, options = {}) {
+    if (options.ignoreLie || card.responseOnly || (card.id !== "attack" && card.type !== "strategy")) return null;
+    const owner = this.players.find(player => player.alive && player.characterId === "usopp" && player.specialCards.some(item => item.kind === "lie" && item.targetId === playerId));
+    if (!owner) return null;
+    const lie = owner.specialCards.find(item => item.kind === "lie" && item.targetId === playerId);
+    const clear = () => {
+      owner.specialCards = owner.specialCards.filter(item => item.uid !== lie.uid);
+      this.discard.push(lie.card);
+      this.emitOnePieceEvent({ type: "lieTriggered", sourceId: owner.id, targetId: playerId });
+    };
+    const cancel = () => {
+      clear();
+      this.removeCard(playerId, cardUid);
+      this.notifyCardCancelled(playerId, "出牌被谎言弹取消");
+      this.log("event", `${this.nameOf(playerId)}被乌索普的“谎言弹”取消了【${card.name}】`);
+      return { ok: true, cancelled: true };
+    };
+    const proceed = () => {
+      clear();
+      return this.playCard(playerId, cardUid, targetId, { ...options, ignoreLie: true });
+    };
+    const payable = this.player(playerId).hand.filter(item => item.uid !== cardUid);
+    if (!payable.length) return cancel();
+    if (!this.player(playerId).human) {
+      this.discardRandom(playerId, 1, true, payable.map(item => item.uid));
+      return proceed();
+    }
+    return this.requestChoice(playerId, {
+      title: "谎言弹触发",
+      text: `你被${this.nameOf(owner)}的未知谎言标记。弃置另一张手牌可继续，否则当前牌被取消。`,
+      options: [{ value: "pay", label: "弃牌继续" }, { value: "cancel", label: "取消当前牌" }],
+      onResolve: value => value === "pay"
+        ? this.requestDiscard(playerId, 1, { reason: "谎言弹：请弃置另一张手牌", allowedUids: payable.map(item => item.uid), onComplete: proceed })
+        : cancel()
+    });
+  }
+
   playCard(playerId, cardUid, targetId, options = {}) {
     const player = this.player(playerId);
     if (!options.freeUse && !this.canAct(playerId)) return { ok: false, reason: "现在不能出牌" };
@@ -901,6 +997,7 @@ export class GameEngine {
         return { ok: true, cancelled: true };
       }
     }
+    this.emitOnePieceEvent({ type: "cardDeclared", sourceId: playerId, targetId, card });
     if (!options.freeUse) {
       const checkmate = this.plotsTargeting(playerId, "checkmateTrap")[0];
       if (checkmate) {
@@ -920,12 +1017,15 @@ export class GameEngine {
     }
     const bindResult = this.handleToadBind(playerId, card, cardUid, targetId, options);
     if (bindResult) return bindResult;
+    const lieResult = this.handleUsoppLie(playerId, card, cardUid, targetId, options);
+    if (lieResult) return lieResult;
     const chessResult = this.handleChessPressure(playerId, card, cardUid, targetId, options);
     if (chessResult) return chessResult;
     player.hand.splice(index, 1);
     if (card.type !== "equipment" && card.strategyKind !== "plot" && !card._ephemeral) this.discard.push(card);
     if (!options.freeUse && !card._copiedBy) player.turnFlags.cardsPlayed = (player.turnFlags.cardsPlayed || 0) + 1;
     this.log("card", `${this.nameOf(player)}使用了【${card.name}】${targetId !== playerId ? `，目标是${this.nameOf(targetId)}` : ""}`);
+    this.emitOnePieceEvent({ type: "cardResolved", sourceId: playerId, targetId, card });
     if (player.characterId === "kakashi" && card._copiedBy === playerId && !player.roundFlags.copyRecovery) {
       player.roundFlags.copyRecovery = true;
       this.gainEnergy(playerId, 1);
@@ -1005,21 +1105,37 @@ export class GameEngine {
     });
   }
 
-  equip(playerId, card) {
+  equip(playerId, card, { replaceToHand = false, sourceId = playerId } = {}) {
     const player = this.player(playerId);
     const old = player.equipment[card.slot];
-    if (old) this.discard.push(old);
+    if (old) {
+      if (replaceToHand && player.alive) player.hand.push(old);
+      else this.discard.push(old);
+    }
     player.equipment[card.slot] = card;
     this.refreshEnergyCap(player);
     if (card.id === "battery") this.gainEnergy(playerId, 1);
     this.log("event", `${this.nameOf(player)}装备了【${card.name}】`);
+    this.emitOnePieceEvent({ type: "equipmentChanged", sourceId, ownerId: playerId, targetId: playerId, slot: card.slot, entered: card, left: old, card, old });
     return { ok: true };
+  }
+
+  moveEquipment(playerId, slot, card, sourceId = playerId) {
+    const owner = this.player(playerId);
+    if (!owner) return null;
+    const left = owner.equipment[slot] || null;
+    owner.equipment[slot] = card || null;
+    this.refreshEnergyCap(owner);
+    this.emitOnePieceEvent({ type: "equipmentChanged", sourceId, ownerId: playerId, targetId: playerId, slot, entered: card || null, left, card: card || null, old: left, moved: true });
+    return left;
   }
 
   resolveHeal(sourceId, targetId) {
     const source = this.player(sourceId), target = this.player(targetId);
+    const before = target.hp;
     target.hp = clamp(target.hp + 1, 0, target.maxHp);
     this.log("heal", `${this.nameOf(target)}回复了1点体力`);
+    if (target.hp > before) this.emitOnePieceEvent({ type: "afterHeal", sourceId, targetId, amount: target.hp - before });
     if (source.characterId === "chopper" && sourceId !== targetId && !source.roundFlags.diagnosis) {
       source.roundFlags.diagnosis = true;
       this.draw(sourceId, 1); this.draw(targetId, 1);
@@ -1422,8 +1538,9 @@ export class GameEngine {
           onResolve: slot => this.offerCountersSequential(sourceId, [firstId, secondId], card, () => {
             const protectedId = [firstId, secondId].find(id => this.player(id)?.equipment[slot] && this.consumeByakugo(id, "equipment", `阻止了${{ weapon: "武器", armor: "防具", charm: "饰品" }[slot]}转移`));
             if (protectedId) return;
-            [first.equipment[slot], second.equipment[slot]] = [second.equipment[slot], first.equipment[slot]];
-            this.refreshEnergyCap(first); this.refreshEnergyCap(second);
+            const firstEquip = first.equipment[slot], secondEquip = second.equipment[slot];
+            this.moveEquipment(first.id, slot, secondEquip, sourceId);
+            this.moveEquipment(second.id, slot, firstEquip, sourceId);
             this.log("event", `${this.nameOf(first)}与${this.nameOf(second)}交换了${{ weapon: "武器", armor: "防具", charm: "饰品" }[slot]}`);
           })
         });
@@ -1528,6 +1645,15 @@ export class GameEngine {
   beginAttack({ sourceId, targetId, damage = 1, requiredGuards = 1, origin = "attack", alwaysPoison = false, onComplete = null, skipIntervene = false, skipRaven = false, freeUse = false }) {
     const source = this.player(sourceId), target = this.player(targetId);
     if (!source?.alive || !target?.alive) return { ok: false, reason: "目标已经退场" };
+    if (target.characterId === "luffy" && !target.roundFlags.observation) {
+      target.roundFlags.observation = true;
+      const omen = this.takeTop();
+      if (omen) {
+        if (omen.type === "basic") this.discard.push(omen);
+        else this.deck.push(omen);
+        this.log("event", `${this.nameOf(target)}发动“见闻色”，${omen.type === "basic" ? "将牌堆顶基础牌视为防御弃置" : `将【${omen.name}】置于牌堆底`}`);
+      }
+    }
     if (!skipRaven) {
       const raven = this.offerRavenSubstitution({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipIntervene, freeUse });
       if (raven) return raven;
@@ -1569,10 +1695,14 @@ export class GameEngine {
       requiredGuards += 1;
       this.log("event", `${this.nameOf(source)}发动“写轮眼追猎”，突击需要额外防御并忽略防护装甲`);
     }
-    if (source.characterId === "itachi" && source.turnFlags.nextAttackIgnoreArmor) {
+    if (source.turnFlags.nextAttackRequiredGuard) {
+      requiredGuards += source.turnFlags.nextAttackRequiredGuard;
+      source.turnFlags.nextAttackRequiredGuard = 0;
+    }
+    if (source.turnFlags.nextAttackIgnoreArmor) {
       source.turnFlags.nextAttackIgnoreArmor = false;
       source.turnFlags.ignoreArmorTarget = targetId;
-      this.log("event", `${this.nameOf(source)}以“月读前兆”蓄势，下一次攻击忽略防护装甲`);
+      this.log("event", `${this.nameOf(source)}的蓄势令下一次攻击忽略防护装甲`);
     }
     if (source.turnFlags.nextAttackBonus) { damage += 1; source.turnFlags.nextAttackBonus = false; }
     if (source.turnFlags.nextAttackPoison) { alwaysPoison = true; source.turnFlags.nextAttackPoison = false; }
@@ -1637,41 +1767,29 @@ export class GameEngine {
     return { ok: true, pending: Boolean(this.pendingChoice || this.pendingResponse || this.pendingDiscard) };
   }
 
-  continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete = null }) {
+  continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete = null, skipAbsoluteDefense = false }) {
     const source = this.player(sourceId), target = this.player(targetId);
     if (!source?.alive || !target?.alive) return { ok: false, reason: "目标已经退场" };
-    if (target.characterId === "gaara" && !target.roundFlags.sandShield && target.hand.length) {
-      target.roundFlags.sandShield = true;
+    if (target.characterId === "gaara" && origin === "attack" && !skipAbsoluteDefense && !target.roundFlags.sandShield && target.hand.length) {
       const useShield = () => this.requestDiscard(targetId, 1, {
         reason: "绝对防御：请选择1张手牌弃置以取消攻击",
         onComplete: () => {
-          const finishShield = () => {
-            this.log("event", `${this.nameOf(target)}发动“绝对防御”取消攻击`);
-            this.afterDefended(sourceId, targetId, origin, alwaysPoison, onComplete);
-          };
-          if (source.hand.length) this.requestDiscard(sourceId, 1, { reason: "绝对防御反震：请选择1张手牌弃置", onComplete: finishShield });
-          else finishShield();
+          target.roundFlags.sandShield = true;
+          this.log("event", `${this.nameOf(target)}发动“绝对防御”取消攻击`);
+          this.afterDefended(sourceId, targetId, origin, alwaysPoison, onComplete);
         }
       });
       if (target.human) {
         return this.requestChoice(targetId, {
           title: "绝对防御",
-          text: `是否弃置1张手牌取消${this.nameOf(source)}的此次攻击？发动后攻击者也须弃1张牌。`,
+          text: `是否弃置1张手牌取消${this.nameOf(source)}的此次攻击？`,
           options: [{ value: "use", label: "发动绝对防御" }, { value: "pass", label: "保留手牌，正常响应" }],
           aiChoice: "use",
-          onResolve: value => value === "use" ? useShield() : this.continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete })
+          onResolve: value => value === "use" ? useShield() : this.continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipAbsoluteDefense: true })
         });
       }
       return useShield();
     }
-    if (target.characterId === "luffy" && !target.roundFlags.observation) {
-      target.roundFlags.observation = true;
-      if (this.random() < .5) {
-        this.log("event", `${this.nameOf(target)}以“见闻色”避开攻击`);
-        return this.afterDefended(sourceId, targetId, origin, alwaysPoison, onComplete);
-      }
-    }
-
     const resources = this.guardResources(targetId);
     if (resources >= requiredGuards) {
       if (target.human) {
@@ -1688,7 +1806,7 @@ export class GameEngine {
 
   offerAttackIntervention(payload) {
     const { sourceId, targetId, origin } = payload;
-    if (origin !== "attack") return null;
+    if (!["attack", "signature", "goemon", "asura", "diableJambe", "impactWolf", "vagabondDrill", "arrowNotch", "blackFlash", "active"].includes(origin)) return null;
     const eligible = this.players.filter(player => player.alive && player.id !== sourceId && player.id !== targetId && player.hand.some(card => card.id === "intervene"));
     if (!eligible.length) return null;
     const candidate = eligible.find(player => player.human) || eligible.find(player => this.isAlly(player.id, targetId) && !this.isAlly(player.id, sourceId));
@@ -1807,6 +1925,11 @@ export class GameEngine {
       this.draw(sourceId, 1);
       this.log("event", `${this.nameOf(source)}的“千鸟贯穿”即使被防御仍追回1张牌`);
     }
+    if (source?.characterId === "zoro" && origin === "attack" && !source.roundFlags.zoroResolve) {
+      source.roundFlags.zoroResolve = true;
+      this.draw(sourceId, 1);
+      this.log("event", `${this.nameOf(source)}的剑士本能在攻击被完全防御后摸1张牌`);
+    }
     const shikamaru = this.findChessOwner(sourceId);
     if (shikamaru) this.triggerTacticalForesight(shikamaru.id, sourceId, "棋子攻击被防御");
     const finish = () => {
@@ -1841,7 +1964,8 @@ export class GameEngine {
       damage = Math.max(0, damage - 1);
       this.log("event", `${this.nameOf(target)}的防护装甲令伤害-1`);
     }
-    this.dealDamage(sourceId, targetId, damage, origin, onComplete);
+    const damageResult = this.dealDamage(sourceId, targetId, damage, origin, onComplete);
+    if (damageResult?.pending) return damageResult;
     if (alwaysPoison && target.alive) this.applyPoison(targetId, origin === "venomStrike" ? 1 : 1);
   }
 
@@ -1860,9 +1984,34 @@ export class GameEngine {
     }
   }
 
-  dealDamage(sourceId, targetId, amount, origin = "damage", onComplete = null) {
+  dealDamage(sourceId, targetId, amount, origin = "damage", onComplete = null, options = {}) {
     const source = this.player(sourceId), target = this.player(targetId);
     if (!target?.alive || amount <= 0) { if (onComplete) onComplete(); return; }
+    const beforeEvent = { type: "beforeDamage", sourceId, targetId, amount, origin };
+    this.emitOnePieceEvent(beforeEvent);
+    amount = beforeEvent.amount;
+    if (beforeEvent.optionalProtector && !options.skipOptionalDefense) {
+      const protector = this.player(beforeEvent.optionalProtector);
+      return this.requestChoice(protector.id, {
+        title: "侠义",
+        text: `是否弃置1张基础牌，令${this.nameOf(target)}受到的伤害-1？`,
+        options: [{ value: "use", label: "发动侠义" }, { value: "pass", label: "暂不发动" }],
+        aiChoice: "pass",
+        onResolve: value => {
+          if (value === "use") {
+            const basic = protector.hand.find(card => card.type === "basic");
+            if (basic) {
+              this.removeCard(protector.id, basic.uid);
+              protector.roundFlags.jinbeGuard = true;
+              amount = Math.max(0, amount - 1);
+              this.log("event", `${this.nameOf(protector)}发动“侠义”保护${this.nameOf(target)}`);
+            }
+          }
+          this.dealDamage(sourceId, targetId, amount, origin, onComplete, { skipOptionalDefense: true });
+        }
+      });
+    }
+    if (amount <= 0) { if (onComplete) onComplete(); return; }
     if (target.equipment.armor?.id === "limit_shield" && amount >= 2) {
       amount = 1;
       this.discard.push(target.equipment.armor);
@@ -1893,6 +2042,7 @@ export class GameEngine {
     }
     if (amount <= 0) { if (onComplete) onComplete(); return; }
     target.hp -= amount;
+    this.telemetry.damage += amount;
     this.pushDamageFeedback(targetId, amount);
     for (const plot of target.plots.filter(item => item.effect === "delayedCast")) plot.damaged = true;
     if (source && !source.roundFlags.damageEnergy) { source.roundFlags.damageEnergy = true; this.gainEnergy(sourceId, 1); }
@@ -1900,6 +2050,7 @@ export class GameEngine {
     this.addSageMark(sourceId, "dealt");
     this.addSageMark(targetId, "taken");
     this.log("damage", `${this.nameOf(sourceId)}对${this.nameOf(target)}造成${amount}点伤害`);
+    this.emitOnePieceEvent({ type: "afterDamage", sourceId, targetId, amount, origin });
     const causalPlots = source ? this.plotsTargeting(sourceId, "causalMark") : [];
     for (const causal of causalPlots) { this.removePlot(causal); this.draw(causal.ownerId, 2); this.gainEnergy(causal.ownerId, 1); }
 
@@ -1924,7 +2075,7 @@ export class GameEngine {
       source.turnFlags.impact = true;
       return this.requestDiscard(targetId, 1, { reason: "震荡重锤：请弃置1张手牌", onComplete: () => this.finishDamageResolution(sourceId, targetId, onComplete, origin) });
     }
-    if (target.hp <= 0) return this.startDying(targetId, sourceId, onComplete);
+    if (target.hp <= 0) return this.startDying(targetId, sourceId, onComplete, origin);
     if (onComplete) onComplete();
   }
 
@@ -1933,15 +2084,18 @@ export class GameEngine {
     if (!target?.alive) return;
     target.hp -= amount;
     this.pushDamageFeedback(targetId, amount);
-    if (target.hp <= 0) return this.startDying(targetId, sourceId, onComplete);
+    if (amount > 0) this.emitOnePieceEvent({ type: "afterHpLoss", sourceId: sourceId || targetId, targetId, amount, origin });
+    if (target.hp <= 0) return this.startDying(targetId, sourceId, onComplete, origin);
     if (onComplete) onComplete();
   }
 
-  startDying(targetId, sourceId = null, onComplete = null) {
+  startDying(targetId, sourceId = null, onComplete = null, origin = "damage") {
     const target = this.player(targetId);
     if (!target?.alive || target.dying) return;
     target.dying = true;
     this.log("event", `${this.nameOf(target)}进入重伤，等待救援`);
+    const rescue = this.emitOnePieceEvent({ type: "beforeDying", sourceId, targetId, origin });
+    if (rescue?.rescued) { if (onComplete) onComplete(); return rescue; }
     if (target.equipment.charm?.id === "life_pendant") {
       this.discard.push(target.equipment.charm);
       target.equipment.charm = null;
@@ -2054,21 +2208,29 @@ export class GameEngine {
     if (player.roleId === "loyal") {
       this.draw(playerId, 2);
       const lord = this.players.find(p => p.alive && p.roleId === "lord");
-      if (lord) lord.shield += 1;
+      if (lord) this.gainShield(lord.id, 1, playerId);
     } else if (player.roleId === "rebel") {
       this.draw(playerId, 1); this.gainEnergy(playerId, 2); player.rangeInfinite = true;
-    } else if (player.roleId === "lone") { this.draw(playerId, 2); player.shield += 1; }
+    } else if (player.roleId === "lone") { this.draw(playerId, 2); this.gainShield(playerId, 1); }
     return { ok: true };
+  }
+
+  signatureCost(playerId) {
+    const player = this.player(playerId), signature = this.characterOf(player)?.signature;
+    if (!signature) return Infinity;
+    return isOnePieceCharacter(player) ? onePieceSignatureCost(this, playerId) : signature.cost;
   }
 
   useSignature(playerId, targetId) {
     const player = this.player(playerId), character = this.characterOf(player), sig = character?.signature;
     if (!this.canAct(playerId)) return { ok: false, reason: "现在不能发动技能" };
-    if (!sig || player.energy < sig.cost) return { ok: false, reason: "能量不足" };
+    const cost = this.signatureCost(playerId);
+    if (!sig || player.energy < cost) return { ok: false, reason: "能量不足" };
     if (player.signatureLocked > 0) return { ok: false, reason: "招牌技正在封存中" };
     if (!this.getSignatureTargets(playerId).includes(targetId)) return { ok: false, reason: "目标不合法" };
-    player.energy -= sig.cost;
+    player.energy -= cost;
     this.log("signature", `${this.nameOf(player)}释放招牌技「${sig.name}」！`);
+    if (isOnePieceCharacter(player)) return useOnePieceSignature(this, playerId, targetId, sig);
     switch (sig.effect) {
       case "doubleGuard": return this.beginAttack({ sourceId: playerId, targetId, damage: 2, requiredGuards: 2, origin: "signature" });
       case "rasenshuriken": {
@@ -2133,7 +2295,7 @@ export class GameEngine {
       const index = target.hand.findIndex(card => card.uid === uid && !card.responseOnly);
       if (index < 0) return;
       const [card] = target.hand.splice(index, 1);
-      target.sealedCards.push({ uid: `sealed-${card.uid}`, card, sealedBy: sourceId, setTurn: this.turnNumber });
+      target.sealedCards.push({ uid: `sealed-${card.uid}`, card, sealedBy: sourceId, returnAtPlayerId: targetId, setTurn: this.turnNumber });
       this.log("event", `${this.nameOf(source)}以“月读”封存了${this.nameOf(target)}的【${card.name}】`);
       this.dealDamage(sourceId, targetId, 1, "tsukuyomi");
     };
@@ -2191,8 +2353,10 @@ export class GameEngine {
     const target = this.player(targetId);
     if (!source?.alive || !target?.alive) return this.resolveGoemonTargets(sourceId, targetIds, index + 1, enhancedId);
     const bound = source.toadBindTargetId === targetId;
-    const damage = 2 + (enhancedId === targetId ? 1 : 0);
-    const requiredGuards = 2 + (bound ? 1 : 0);
+    const baseDamage = index === 0 ? 2 : 1;
+    const baseGuards = index === 0 ? 2 : 1;
+    const damage = baseDamage + (enhancedId === targetId ? 1 : 0);
+    const requiredGuards = baseGuards + (bound ? 1 : 0);
     if (enhancedId === targetId) source.turnFlags.goemonIgnoreArmorTarget = targetId;
     return this.beginAttack({
       sourceId,
@@ -2200,7 +2364,7 @@ export class GameEngine {
       damage,
       requiredGuards,
       origin: "goemon",
-      skipIntervene: true,
+      skipIntervene: false,
       onComplete: () => {
         if (source.toadBindTargetId === targetId) {
           source.toadBindTargetId = null;
@@ -2264,7 +2428,7 @@ export class GameEngine {
         delete card._curseSpoil;
         if (card.type === "basic") {
           player.hp = clamp(player.hp + 1, 0, player.maxHp);
-          player.shield += 1;
+          this.gainShield(playerId, 1);
           this.discard.push(card);
         } else if (card.type === "strategy") {
           for (const plot of [...this.plotsTargeting(playerId)]) this.removePlot(plot);
@@ -2273,7 +2437,7 @@ export class GameEngine {
         } else {
           if (player.equipment[card.slot]) this.discard.push(player.equipment[card.slot]);
           player.equipment[card.slot] = card;
-          player.shield += 1;
+          this.gainShield(playerId, 1);
           this.refreshEnergyCap(player);
         }
         this.log("event", `${this.nameOf(player)}以【${card.name}】完成“不尸转生”`);
@@ -2371,8 +2535,20 @@ export class GameEngine {
   }
 
   getAITargets(playerId, candidates) {
-    const enemies = candidates.filter(id => !this.isAlly(playerId, id));
+    const actor = this.player(playerId);
+    const enemies = candidates.filter(id => !this.aiIsAlly(playerId, id));
+    if (this.mode.id === "classic8" && actor?.roleId === "lone") {
+      const lord = enemies.find(id => this.player(id)?.roleId === "lord");
+      const rebelsAlive = this.players.some(player => player.alive && player.roleId === "rebel");
+      if (lord && rebelsAlive) return enemies.filter(id => id !== lord);
+    }
     return enemies.sort((a, b) => this.player(a).hp - this.player(b).hp);
+  }
+
+  aiIsAlly(aId, bId) {
+    if (this.mode.id !== "classic8") return this.isAlly(aId, bId);
+    const a = this.player(aId), b = this.player(bId);
+    return Boolean(a?.revealed && b?.revealed && this.isAlly(aId, bId));
   }
 
   aiStep(playerId = this.currentPlayerId) {
@@ -2390,13 +2566,17 @@ export class GameEngine {
     const activeTargets = this.getActiveSkillTargets(playerId);
     if (activeTargets.length && !player.turnFlags.activeUsed && this.random() < .55) {
       const skill = activeSkills[player.characterId];
-      const choices = skill.target === "enemy" ? this.getAITargets(playerId, activeTargets) : skill.target === "ally" ? activeTargets.filter(id => this.isAlly(playerId, id)) : activeTargets;
+      let choices = skill.target === "enemy" ? this.getAITargets(playerId, activeTargets) : skill.target === "ally" ? activeTargets.filter(id => this.aiIsAlly(playerId, id)) : activeTargets;
+      if (player.characterId === "jinbe") {
+        const allies = activeTargets.filter(id => this.aiIsAlly(playerId, id));
+        if (allies.length) choices = allies;
+      }
       if (choices.length) { this.useActiveSkill(playerId, choices[0]); return { acted: true }; }
     }
     const sig = this.characterOf(player).signature;
-    if (player.energy >= sig.cost && player.signatureLocked <= 0) {
+    if (player.energy >= this.signatureCost(playerId) && player.signatureLocked <= 0) {
       const targets = this.getSignatureTargets(playerId);
-      const choices = sig.target === "enemy" ? this.getAITargets(playerId, targets) : sig.target === "ally" ? targets.filter(id => this.isAlly(playerId, id)) : targets;
+      const choices = sig.target === "enemy" ? this.getAITargets(playerId, targets) : sig.target === "ally" ? targets.filter(id => this.aiIsAlly(playerId, id)) : targets;
       if (choices.length) { const result = this.useSignature(playerId, choices[0]); if (result.ok !== false) return { acted: true }; }
     }
     const heal = player.hand.find(card => card.id === "heal");
@@ -2409,7 +2589,7 @@ export class GameEngine {
     const massDamage = player.hand.find(card => ["dimensional_barrage", "rift_invasion"].includes(card.id));
     if (massDamage && !player.skipOffense) {
       const others = this.players.filter(target => target.alive && target.id !== playerId);
-      const enemies = others.filter(target => !this.isAlly(playerId, target.id));
+      const enemies = others.filter(target => !this.aiIsAlly(playerId, target.id));
       const allies = others.length - enemies.length;
       if (enemies.length > allies) { this.playCard(playerId, massDamage.uid, playerId); return { acted: true }; }
     }
@@ -2431,24 +2611,24 @@ export class GameEngine {
     }
     const contract = player.hand.find(card => card.id === "limit_contract");
     if (contract) {
-      const allies = this.getCardTargets(playerId, contract).filter(id => this.isAlly(playerId, id));
+      const allies = this.getCardTargets(playerId, contract).filter(id => this.aiIsAlly(playerId, id));
       if (allies.length) { this.playCard(playerId, contract.uid, allies[0]); return { acted: true }; }
     }
     const relay = player.hand.find(card => card.id === "tactical_relay" && player.hand.some(item => item.type === "basic"));
     if (relay) {
-      const allies = this.getCardTargets(playerId, relay).filter(id => this.isAlly(playerId, id));
+      const allies = this.getCardTargets(playerId, relay).filter(id => this.aiIsAlly(playerId, id));
       if (allies.length) { this.playCard(playerId, relay.uid, allies[0]); return { acted: true }; }
     }
-    const selfStrategy = player.hand.find(card => ["energy_auction", "delayed_cast", "echo_script"].includes(card.id) && this.getCardTargets(playerId, card).length);
+    const selfStrategy = player.hand.find(card => ["energy_auction", "delayed_cast", "echo_script"].includes(card.id) && !player.plots.some(plot => plot.effect === card.effect) && this.getCardTargets(playerId, card).length);
     if (selfStrategy && this.random() < .65) { this.playCard(playerId, selfStrategy.uid, playerId); return { acted: true }; }
-    const enemyPlot = player.hand.find(card => ["causal_mark", "rhythm_break"].includes(card.id) && this.getCardTargets(playerId, card).length);
+    const enemyPlot = player.hand.find(card => ["causal_mark", "rhythm_break"].includes(card.id) && !player.plots.some(plot => plot.effect === card.effect) && this.getCardTargets(playerId, card).length);
     if (enemyPlot && player.plots.length < 2) {
       const targets = this.getAITargets(playerId, this.getCardTargets(playerId, enemyPlot));
       if (targets.length) { this.playCard(playerId, enemyPlot.uid, targets[0]); return { acted: true }; }
     }
-    const allyPlot = player.hand.find(card => ["guardian_oath", "return_route"].includes(card.id) && this.getCardTargets(playerId, card).length);
+    const allyPlot = player.hand.find(card => ["guardian_oath", "return_route"].includes(card.id) && !player.plots.some(plot => plot.effect === card.effect) && this.getCardTargets(playerId, card).length);
     if (allyPlot && player.plots.length < 2) {
-      const allies = this.getCardTargets(playerId, allyPlot).filter(id => this.isAlly(playerId, id));
+      const allies = this.getCardTargets(playerId, allyPlot).filter(id => this.aiIsAlly(playerId, id));
       if (allies.length) { this.playCard(playerId, allyPlot.uid, allies[0]); return { acted: true }; }
     }
     const exchange = player.hand.find(card => card.id === "memory_exchange");

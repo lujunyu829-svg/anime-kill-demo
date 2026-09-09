@@ -46,6 +46,12 @@ function hpPips(player, className = "") {
   return `<span class="hp-pips ${className}" role="img" aria-label="体力 ${current}/${player.maxHp}" title="体力 ${current}/${player.maxHp}">${hearts}</span>`;
 }
 
+function dreamBadge(player, character) {
+  if (!character?.dream || !player?.dreamState) return "";
+  const state = player.dreamState;
+  return `<span class="dream-badge ${state.awakened ? "dream-awakened" : ""}" title="梦想：${character.dream.name}">${state.awakened ? "觉醒" : `航迹 ${state.progress}/3`}</span>`;
+}
+
 function cardTags(card) {
   const tags = [cardTypeLabels[card.type], `标准 ×${deckProfiles.standard144[card.id]}`, `精简 ×${deckProfiles.compact80[card.id]}`];
   if (card.strategyKind) tags.push(strategyKindLabels[card.strategyKind]);
@@ -338,7 +344,7 @@ function playerCardTemplate(player, targetable = false) {
   const position = tableSeatPosition(engine.mode.playerCount, player.seat);
   return `<article class="player-card ${player.id === engine.currentPlayerId ? "current" : ""} ${targetable ? "targetable" : ""} ${engine.pendingStrategySequence?.currentTargetId === player.id ? "strategy-focus" : ""} ${!player.alive ? "dead" : ""}" data-player="${player.id}" style="--char:${character.color};--role-color:var(--${shownRole?.color || "muted"});--seat-x:${position.x}%;--seat-y:${position.y}%">
     <span class="portrait"><img src="${portraitPath(character.id)}" alt="${character.name}立绘"></span><span class="seat">${player.seat + 1}</span><span class="identity-dot ${prediction ? "predicted" : ""}">${identityLabel}</span>${player.id === engine.currentPlayerId ? `<span class="turn-badge">行动中</span>` : ""}${targetable ? `<span class="target-badge">可选择</span>` : ""}
-    <h4>${character.name}</h4>
+    <h4>${character.name} ${dreamBadge(player, character)}</h4>
     <div class="stat-row"><span>♥ ${player.hp}/${player.maxHp}</span><span>牌 ${player.hand.length}</span></div>
     ${hpPips(player, "seat-hp")}
     <div class="energy-bar" style="--value:${player.energy / player.maxEnergy * 100}%"><i></i></div>
@@ -373,8 +379,8 @@ function playerAreaTemplate(player) {
   }).join("");
   const plots = engine.getVisiblePlots(player.id, player.id);
   const plotTray = plots.length ? `<div class="self-plots">${plots.map(plot => `<span title="${plot.card.name} → ${engine.nameOf(plot.targetId)}"><i>${plot.card.icon}</i><b>${plot.card.name}</b></span>`).join("")}</div>` : "";
-  const specialTray = player.specialCards.length || player.sealedCards.length ? `<div class="self-specials">${player.specialCards.map(item => `<span title="${item.kind === "clone" ? "影分身" : "百豪牌"} · ${item.card.name}"><i>${item.kind === "clone" ? "分" : "印"}</i><b>${item.card.name}</b></span>`).join("")}${player.sealedCards.map(item => `<span class="sealed" title="被月读封存：${item.card.name}"><i>封</i><b>${item.card.name}</b></span>`).join("")}</div>` : "";
-  return `<div class="self-summary ${engine.pendingStrategySequence?.currentTargetId === player.id ? "strategy-focus" : ""}" data-player="${player.id}" style="--char:${character.color}"><span class="mini-avatar"><img src="${portraitPath(character.id)}" alt="${character.name}立绘"></span><div><h3>${character.name}</h3><p>${character.series} · ${character.role}</p><span class="stat-row"><b>♥ ${player.hp}/${player.maxHp}</b><b>◆ ${player.energy}/${player.maxEnergy}</b><b>牌 ${player.hand.length}/${engine.handLimit(player.id)}</b></span>${hpPips(player, "self-hp")}</div><button type="button" class="self-detail-button" data-inspect-player="${player.id}" aria-label="查看自己的状态与技能">状态与技能</button></div><div class="self-equipment">${equipment}</div>${plotTray}${specialTray}<div class="hand">${hand || `<p style="color:var(--muted);font-size:11px">暂无手牌</p>`}</div>`;
+  const specialTray = player.specialCards.length || player.sealedCards.length ? `<div class="self-specials">${player.specialCards.map(item => item.kind === "lie" ? `<span class="lie" title="未知谎言 → ${engine.nameOf(item.targetId)}"><i>谎</i><b>未知谎言</b></span>` : `<span title="${item.kind === "clone" ? "影分身" : "百豪牌"} · ${item.card.name}"><i>${item.kind === "clone" ? "分" : "印"}</i><b>${item.card.name}</b></span>`).join("")}${player.sealedCards.map(item => `<span class="sealed" title="被月读封存：${item.card.name}"><i>封</i><b>${item.card.name}</b></span>`).join("")}</div>` : "";
+  return `<div class="self-summary ${engine.pendingStrategySequence?.currentTargetId === player.id ? "strategy-focus" : ""}" data-player="${player.id}" style="--char:${character.color}"><span class="mini-avatar"><img src="${portraitPath(character.id)}" alt="${character.name}立绘"></span><div><h3>${character.name} ${dreamBadge(player, character)}</h3><p>${character.series} · ${character.role}</p><span class="stat-row"><b>♥ ${player.hp}/${player.maxHp}</b><b>◆ ${player.energy}/${player.maxEnergy}</b><b>牌 ${player.hand.length}/${engine.handLimit(player.id)}</b></span>${hpPips(player, "self-hp")}</div><button type="button" class="self-detail-button" data-inspect-player="${player.id}" aria-label="查看自己的状态与技能">状态与技能</button></div><div class="self-equipment">${equipment}</div>${plotTray}${specialTray}<div class="hand">${hand || `<p style="color:var(--muted);font-size:11px">暂无手牌</p>`}</div>`;
 }
 
 function playerStatusItems(player) {
@@ -497,7 +503,7 @@ function renderPlayerDetail(playerId) {
   const viewerId = human?.id;
   const visiblePlots = engine.getVisiblePlots(viewerId, player.id);
   const plotSection = `<section class="detail-section"><div class="detail-section-heading"><div><p class="eyebrow">PLOT ZONE</p><h3>伏笔区 ${visiblePlots.length}/2</h3></div><small>${viewerId === player.id ? "你可查看自己的伏笔" : "对手伏笔保持暗置"}</small></div><div class="detail-plot-list">${visiblePlots.length ? visiblePlots.map(plot => `<article class="${plot.hidden ? "hidden-plot" : ""}"><i>${plot.hidden ? "?" : plot.card.icon}</i><div><b>${plot.hidden ? plot.name : plot.effect === "checkmateTrap" ? `将军·${plot.card.name}` : plot.isFalse ? `幻象·${plot.card.name}` : plot.card.name}</b><span>目标：${engine.nameOf(plot.targetId)}${plot.hidden ? "" : ` · ${plotTimingLabel(plot)}`}</span><p>${plot.hidden ? "名称、效果与持续时间未知" : plotRuleText(plot)}</p></div></article>`).join("") : `<p class="empty-plots">当前没有伏笔</p>`}</div></section>`;
-  const specialCards = player.specialCards.map(item => ({ icon: item.kind === "clone" ? "分" : "印", name: item.kind === "clone" ? `影分身·${item.card.name}` : `百豪·${item.card.name}`, copy: item.kind === "clone" ? "可作为应变用于防御，消耗后获得1点能量。" : `${cardTypeLabels[item.card.type]}：${item.card.description}` }));
+  const specialCards = player.specialCards.map(item => item.kind === "lie" && !player.human ? ({ icon: "谎", name: "未知谎言", copy: `目标：${engine.nameOf(item.targetId)}；牌面与触发条件仅设置者可见。` }) : ({ icon: item.kind === "clone" ? "分" : item.kind === "lie" ? "谎" : "印", name: item.kind === "clone" ? `影分身·${item.card.name}` : item.kind === "lie" ? `谎言·${item.card.name}` : `百豪·${item.card.name}`, copy: item.kind === "clone" ? "可作为应变用于防御，消耗后获得1点能量。" : item.kind === "lie" ? `指定目标：${engine.nameOf(item.targetId)}；其下一张非响应牌会触发检定。` : `${cardTypeLabels[item.card.type]}：${item.card.description}` }));
   const sealedCards = player.sealedCards.map(item => ({ icon: "封", name: `月读封存·${item.card.name}`, copy: `由${engine.nameOf(item.sealedBy)}封存，直到其下回合开始。` }));
   const specialSection = specialCards.length || sealedCards.length ? `<section class="detail-section"><div class="detail-section-heading"><div><p class="eyebrow">SPECIAL ZONE</p><h3>特殊牌区</h3></div><small>均不计入手牌与手牌上限</small></div><div class="detail-special-list">${[...specialCards, ...sealedCards].map(item => `<article><i>${item.icon}</i><div><b>${item.name}</b><p>${item.copy}</p></div></article>`).join("")}</div></section>` : "";
   const canRecon = human?.characterId === "hinata" && human.scoutedTargetId === player.id && !player.human;
@@ -526,6 +532,7 @@ function renderPlayerDetail(playerId) {
     <div class="detail-section-heading"><div><p class="eyebrow">LIVE STATUS</p><h3>当前状态</h3></div><small>随战局实时更新</small></div>
     <div class="detail-status-list">${statuses.map(status => `<article class="${status.tone}"><b>${status.label}</b><span>${status.text}</span></article>`).join("")}</div>
   </section>
+  ${character.dream ? `<section class="detail-section dream-section"><div class="detail-section-heading"><div><p class="eyebrow">DREAM TRAIL</p><h3>${character.dream.name} ${dreamBadge(player, character)}</h3></div><small>${player.dreamState?.awakened ? "已觉醒" : `进度 ${player.dreamState?.progress || 0}/3`}</small></div><p class="dream-condition">推进条件：${character.dream.conditionText}</p><p class="dream-awaken">觉醒效果：${character.dream.awakenText}</p></section>` : ""}
   ${plotSection}
   ${reconSection}
   ${specialSection}
@@ -538,7 +545,7 @@ function renderPlayerDetail(playerId) {
   </section>
   <section class="detail-section">
     <div class="detail-section-heading"><div><p class="eyebrow">ABILITY FILE</p><h3>角色技能</h3></div><small>主动技、角色特性与招牌技</small></div>
-    <div class="detail-skill-grid">${skills.map(skill => `<article class="${skill.active ? "active" : skill.signature ? "signature" : "passive"}"><i>${skill.icon}</i><div><small>${skill.kind} · ${skill.meta}${skill.active && player.turnFlags.activeUsed ? " · 本回合已使用" : skill.signature && player.signatureLocked > 0 ? " · 当前封存" : ""}</small><b>${skill.name}</b><p>${skill.text}</p></div></article>`).join("")}</div>
+    <div class="detail-skill-grid">${skills.map(skill => { const meta = skill.signature ? `${engine.signatureCost(player.id)} 能量 · ${targetLabels[character.signature.target] || "指定目标"}` : skill.meta; return `<article class="${skill.active ? "active" : skill.signature ? "signature" : "passive"}"><i>${skill.icon}</i><div><small>${skill.kind} · ${meta}${skill.active && player.turnFlags.activeUsed ? " · 本回合已使用" : skill.signature && player.signatureLocked > 0 ? " · 当前封存" : ""}</small><b>${skill.name}</b><p>${skill.text}</p></div></article>`; }).join("")}</div>
   </section>
   ${predictionPanel}`;
 }
@@ -553,11 +560,14 @@ function renderIntel(human) {
   $("#activeSkillButton").classList.toggle("armed", selectingActive);
   $("#activeSkillButton").childNodes[0].textContent = `发动「${active.name}」 `;
   $("#activeSkillCost").textContent = active.costText;
-  $("#signatureButton").disabled = !canAct || human.signatureLocked > 0 || human.energy < character.signature.cost || !engine.getSignatureTargets(human.id).length;
-  $("#energyCost").textContent = `${character.signature.cost} 能量`;
+  const signatureCost = engine.signatureCost(human.id);
+  $("#signatureButton").disabled = !canAct || human.signatureLocked > 0 || human.energy < signatureCost || !engine.getSignatureTargets(human.id).length;
+  $("#energyCost").textContent = `${signatureCost} 能量`;
   $("#revealButton").classList.toggle("hidden", engine.mode.id === "ranked2v2" || human.roleId === "lord" || human.revealed);
   $("#revealButton").disabled = !canAct;
-  $("#endTurnButton").disabled = !canAct;
+  const endTurnDisabled = !canAct;
+  $("#endTurnButton").disabled = endTurnDisabled;
+  $("#compactEndTurnButton").disabled = endTurnDisabled;
 }
 
 function renderLog() {
@@ -721,12 +731,15 @@ $("#revealButton").addEventListener("click", () => {
   renderGame();
 });
 
-$("#endTurnButton").addEventListener("click", () => {
+function endHumanTurn() {
   const human = engine.players.find(player => player.human);
   selectedCard = null; selectingSignature = false; selectingActive = false;
   toggleIntel(false);
   if (engine.endTurn(human.id)) { renderGame(); continueFlow(650); }
-});
+}
+
+$("#endTurnButton").addEventListener("click", endHumanTurn);
+$("#compactEndTurnButton").addEventListener("click", endHumanTurn);
 
 function showDiscard() {
   const pending = engine?.pendingDiscard;

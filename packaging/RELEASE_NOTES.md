@@ -1,4 +1,4 @@
-# 动漫杀 Demo 0.1.1
+# 动漫杀 Demo 0.2.0
 
 移动端适配修复版，包含 Windows x64 安装版、Windows x64 便携版和 Android 7+ 横屏测试 APK。
 

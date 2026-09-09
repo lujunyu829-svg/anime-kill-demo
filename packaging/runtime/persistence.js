@@ -1,8 +1,8 @@
 import { GameEngine } from "../../src/engine.js";
 
-export const SAVE_KEY = "anime-kill.saved-match.v1";
-export const SAVE_SCHEMA_VERSION = 1;
-export const APP_VERSION = "0.1.1";
+export const SAVE_KEY = "anime-kill.saved-match.v2";
+export const SAVE_SCHEMA_VERSION = 2;
+export const APP_VERSION = "0.2.0";
 
 export function createSeededRandom(seed) {
   let value = Number(seed) >>> 0;
@@ -76,7 +76,7 @@ function commandChangedState(method, result) {
 export class GameSession {
   constructor({ config, seed = createRandomSeed(), storage = defaultSaveStorage(), commands = [], ui = {} } = {}) {
     if (!config?.modeId || !config?.humanCharacterId) throw new Error("缺少对局配置");
-    this.config = { modeId: config.modeId, humanCharacterId: config.humanCharacterId };
+    this.config = { modeId: config.modeId, humanCharacterId: config.humanCharacterId, ...(config.fixedAnchorSeat === undefined ? {} : { fixedAnchorSeat: config.fixedAnchorSeat }) };
     this.seed = Number(seed) >>> 0 || 1;
     this.storage = storage;
     this.commands = [];

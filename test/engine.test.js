@@ -3,11 +3,12 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import { GameEngine } from "../src/engine.js";
 import { activeSkills, cardArtPath, cardDefinitions, characterPacks, characters, deckProfiles, portraitPath, tableSeatPosition } from "../src/data.js";
+import { initializeOnePieceState, handleOnePieceEvent } from "../src/packs/one-piece.js";
 
 const fixedRandom = () => 0.314159;
-const create = (modeId = "ranked2v2", character = "naruto") => new GameEngine({ modeId, humanCharacterId: character, random: fixedRandom }).setup();
+const create = (modeId = "ranked2v2", character = "naruto") => new GameEngine({ modeId, humanCharacterId: character, random: fixedRandom, fixedAnchorSeat: modeId === "ranked2v2" ? 0 : null }).setup();
 
-test("两种模式创建正确人数、身份与20名候选角色", () => {
+test("两种模式创建正确人数、身份与28名候选角色", () => {
   const classic = create("classic8");
   assert.equal(classic.players.length, 8);
   assert.deepEqual([...classic.players.map(p => p.roleId)].sort(), ["lord", "loyal", "loyal", "lone", "rebel", "rebel", "rebel", "rebel"].sort());
@@ -16,9 +17,36 @@ test("两种模式创建正确人数、身份与20名候选角色", () => {
   assert.equal(ranked.players.length, 4);
   assert.deepEqual(ranked.players.map(p => p.roleId), ["azure", "crimson", "azure", "crimson"]);
   assert.ok(ranked.players.every(p => p.revealed));
-  assert.equal(characters.length, 20);
+  assert.equal(characters.length, 28);
   assert.deepEqual(characters.filter(character => character.packId === "naruto_genesis").map(character => character.id).sort(), ["gaara", "hinata", "itachi", "jiraiya", "kakashi", "naruto", "orochimaru", "sakura", "sasuke", "shikamaru"]);
   assert.deepEqual(characterPacks[0].characterIds, ["naruto", "gaara", "sakura", "shikamaru", "itachi", "sasuke", "kakashi", "hinata", "jiraiya", "orochimaru"]);
+  assert.deepEqual(characterPacks[1].characterIds, ["luffy", "zoro", "nami", "usopp", "sanji", "chopper", "robin", "franky", "brook", "jinbe"]);
+  assert.ok(characters.filter(character => character.packId === "one_piece_grand_line").every(character => character.dream));
+});
+
+test("梦想航迹每轮只推进一次并在3点立即觉醒", () => {
+  const game = create("ranked2v2", "luffy");
+  const luffy = game.player("p0");
+  assert.deepEqual(luffy.dreamState, { progress: 0, awakened: false, progressedRound: 0 });
+  handleOnePieceEvent(game, { type: "afterDamage", sourceId: luffy.id, targetId: "p1", origin: "attack", amount: 1 });
+  handleOnePieceEvent(game, { type: "afterDamage", sourceId: luffy.id, targetId: "p1", origin: "attack", amount: 1 });
+  assert.equal(luffy.dreamState.progress, 1);
+  luffy.roundFlags = {};
+  game.round += 1;
+  handleOnePieceEvent(game, { type: "afterDamage", sourceId: luffy.id, targetId: "p1", origin: "attack", amount: 1 });
+  luffy.roundFlags = {};
+  game.round += 1;
+  handleOnePieceEvent(game, { type: "afterDamage", sourceId: luffy.id, targetId: "p1", origin: "attack", amount: 1 });
+  assert.equal(luffy.dreamState.progress, 3);
+  assert.equal(luffy.dreamState.awakened, true);
+});
+
+test("索隆觉醒后招牌技消耗降为3", () => {
+  const game = create("ranked2v2", "zoro");
+  const zoro = game.player("p0");
+  assert.equal(game.signatureCost(zoro.id), 4);
+  zoro.dreamState.awakened = true;
+  assert.equal(game.signatureCost(zoro.id), 3);
 });
 
 test("回合开始摸牌、获得能量并按座次流转", () => {
@@ -367,7 +395,7 @@ test("当前行动者意外退场后自动推进到下一名角色", () => {
   assert.equal(game.player(game.currentPlayerId).alive, true);
 });
 
-test("20名角色均有项目内立绘", () => {
+test("28名角色均有项目内立绘", () => {
   for (const character of characters) {
     const relative = portraitPath(character.id).replace(/^\.\//, "");
     assert.equal(existsSync(new URL(`../${relative}`, import.meta.url)), true, `${character.name}缺少立绘`);
@@ -629,7 +657,7 @@ test("宇智波鼬能布置虚假伏笔并以月读封存手牌", () => {
   assert.equal(target.hand.length, 0);
   assert.equal(target.sealedCards[0].card.id, "focus");
   assert.equal(target.hp, hp - 1);
-  game.returnSealedCards(itachi.id);
+  game.returnSealedCards(target.id);
   assert.equal(target.sealedCards.length, 0);
   assert.equal(target.hand[0].id, "focus");
 });
@@ -732,7 +760,7 @@ test("雏田的白眼公开锁定目标情报并以策略封锁能量", () => {
 
 test("自来也以蛤蟆束缚逼牌，并通过攻防积累仙术印", () => {
   const game = create("ranked2v2", "jiraiya"), jiraiya = game.player("p0"), target = game.player("p1");
-  jiraiya.energy = 1;
+  jiraiya.energy = 2;
   assert.equal(game.useActiveSkill(jiraiya.id, target.id).ok, true);
   assert.equal(jiraiya.toadBindTargetId, target.id);
   const handBeforeCancel = jiraiya.hand.length;
@@ -750,7 +778,7 @@ test("自来也以蛤蟆束缚逼牌，并通过攻防积累仙术印", () => {
   game.currentPlayerId = jiraiya.id;
   game.phase = "play";
   jiraiya.turnFlags = { cardsPlayed: 0 };
-  jiraiya.energy = 1;
+  jiraiya.energy = 2;
   target.human = true;
   target.hand = [{ ...cardDefinitions.attack, uid: "toad-attack-pay" }, { ...cardDefinitions.focus, uid: "toad-cost-pay" }];
   game.useActiveSkill(jiraiya.id, target.id);
@@ -787,7 +815,7 @@ test("自来也的仙法·五右卫门最多连续结算两个目标", () => {
   assert.equal(game.pendingChoice.title, "五右卫门：仙术共鸣");
   game.resolveChoice(jiraiya.id, targets[0]);
   assert.equal(game.player(targets[0]).hp, firstHp - 3);
-  assert.equal(game.player(targets[1]).hp, secondHp - 2);
+  assert.equal(game.player(targets[1]).hp, secondHp - 1);
   assert.equal(jiraiya.sageResonance, false);
 });
 
@@ -927,4 +955,148 @@ test("忍界初阵十名角色均可由AI完成2V2对局", () => {
     assert.equal(game.pendingDiscard, null);
     assert.equal(game.pendingResponse, null);
   }
+});
+
+test("基础系统：护盾统一封顶为3点", () => {
+  const game = create("ranked2v2");
+  const player = game.player("p0");
+  player.shield = 2;
+  assert.equal(game.gainShield(player.id, 5), 1);
+  assert.equal(player.shield, 3);
+  assert.equal(game.gainShield(player.id, 1), 0);
+  assert.equal(player.shield, 3);
+});
+
+test("2V2首行动座位由随机源决定且可复现", () => {
+  const low = new GameEngine({ modeId: "ranked2v2", humanCharacterId: "naruto", random: () => 0.01 }).setup();
+  const high = new GameEngine({ modeId: "ranked2v2", humanCharacterId: "naruto", random: () => 0.99 }).setup();
+  const replay = new GameEngine({ modeId: "ranked2v2", humanCharacterId: "naruto", random: () => 0.01 }).setup();
+  assert.notEqual(low.anchorSeat, high.anchorSeat);
+  assert.equal(low.anchorSeat, replay.anchorSeat);
+  assert.ok(low.anchorSeat >= 0 && low.anchorSeat < 4);
+});
+
+test("布鲁克未觉醒不能触发黄泉复生，觉醒后仅可触发一次", () => {
+  const game = create("ranked2v2", "brook");
+  for (const player of game.players) { player.human = false; player.hand = []; player.equipment = { weapon: null, armor: null, charm: null }; }
+  const brook = game.player("p0");
+  brook.hp = 1;
+  game.dealDamage("p1", brook.id, 1, "attack");
+  assert.equal(brook.alive, false);
+  brook.alive = true; brook.dying = false; brook.hp = 1; brook.reviveUsed = false; brook.dreamState.awakened = true; brook.energy = 2; brook.hand = [{ ...cardDefinitions.attack, uid: "brook-card" }];
+  game.dealDamage("p1", brook.id, 1, "attack");
+  assert.equal(brook.alive, true);
+  assert.equal(brook.hp, 1);
+  assert.equal(brook.reviveUsed, true);
+});
+
+test("第二轮角色平衡边界：防御、伏笔与觉醒资源受限", () => {
+  const gaaraGame = create("ranked2v2", "gaara");
+  const gaara = gaaraGame.player("p0"), gaaraAttacker = gaaraGame.player("p1");
+  gaara.hand = [{ ...cardDefinitions.focus, uid: "gaara-signature-check" }];
+  const gaaraHp = gaara.hp;
+  gaaraGame.beginAttack({ sourceId: gaaraAttacker.id, targetId: gaara.id, damage: 1, requiredGuards: 1, origin: "signature", skipIntervene: true });
+  assert.equal(gaara.hp, gaaraHp - 1, "绝对防御不应取消招牌技攻击");
+
+  const sakuraGame = create("ranked2v2", "sakura");
+  const sakura = sakuraGame.player("p0");
+  sakura.hand = [
+    { ...cardDefinitions.attack, uid: "sakura-store-a" },
+    { ...cardDefinitions.counter, uid: "sakura-store-b" },
+    { ...cardDefinitions.weapon, uid: "sakura-store-c" }
+  ];
+  sakura.energy = 3;
+  for (const uid of ["sakura-store-a", "sakura-store-b", "sakura-store-c"]) {
+    sakura.turnFlags.activeUsed = false;
+    assert.equal(sakuraGame.useActiveSkill(sakura.id, sakura.id).pending, true);
+    sakuraGame.resolveChoice(sakura.id, "store");
+    sakuraGame.resolveChoice(sakura.id, uid);
+  }
+  assert.equal(sakura.specialCards.filter(item => item.kind === "byakugo").length, 3, "樱应能储存三张不同类别百豪牌");
+
+  const robinGame = create("ranked2v2", "robin");
+  const robin = robinGame.player("p0"), robinTarget = robinGame.player("p1");
+  robin.energy = 0;
+  robinTarget.hand = [{ ...cardDefinitions.attack, uid: "robin-target-card" }];
+  assert.ok(robinGame.getActiveSkillTargets(robin.id).includes(robinTarget.id), "罗宾零能量也应可发动百花搜查");
+
+  const luffyGame = create("ranked2v2", "luffy");
+  const luffy = luffyGame.player("p0"), luffyAttacker = luffyGame.player("p1");
+  const omen = { ...cardDefinitions.counter, uid: "luffy-omen" };
+  luffyGame.deck.unshift(omen);
+  luffy.roundFlags.observation = false;
+  luffyGame.beginAttack({ sourceId: luffyAttacker.id, targetId: luffy.id, damage: 1, requiredGuards: 0, origin: "attack", skipIntervene: true });
+  assert.equal(luffy.hand.some(card => card.uid === omen.uid), false, "见闻色获得的非基础牌不应进入手牌");
+  assert.equal(luffyGame.deck.at(-1)?.uid, omen.uid, "见闻色获得的非基础牌应置于牌堆底");
+
+  const brookGame = create("ranked2v2", "brook");
+  const brook = brookGame.player("p0"), brookTarget = brookGame.player("p1");
+  brook.turnFlags.activeUsed = false;
+  assert.ok(brookGame.useActiveSkill(brook.id, brookTarget.id).ok);
+  brook.turnFlags.activeUsed = false;
+  assert.equal(brookGame.getActiveSkillTargets(brook.id).length, 0, "灵魂乐章每轮只能发动一次");
+
+  const jiraiyaGame = create("ranked2v2", "jiraiya");
+  const jiraiya = jiraiyaGame.player("p0"), jiraiyaTarget = jiraiyaGame.player("p1");
+  jiraiya.energy = 2;
+  assert.equal(jiraiyaGame.useActiveSkill(jiraiya.id, jiraiyaTarget.id).ok, true);
+  jiraiya.toadBindTargetId = null;
+  jiraiya.turnFlags.activeUsed = false;
+  assert.equal(jiraiyaGame.getActiveSkillTargets(jiraiya.id).length, 0, "蛤蟆口束缚每轮只能发动一次");
+});
+
+test("卡卡西神威雷切费用为2且拷贝可从全部弃牌中选择", () => {
+  const game = create("ranked2v2", "kakashi");
+  assert.equal(game.signatureCost("p0"), 2);
+  const kakashi = game.player("p0");
+  game.discard = Array.from({ length: 10 }, (_, index) => ({ ...cardDefinitions.attack, uid: `old-${index}` }));
+  kakashi.hand = [];
+  kakashi.turnFlags.activeUsed = false;
+  game.useActiveSkill("p0", "p0");
+  assert.ok(game.pendingChoice?.options?.length >= 10);
+});
+
+test("第二轮数值校准：极端角色回归到可控资源区间", () => {
+  const byId = id => characters.find(character => character.id === id);
+  assert.equal(byId("gaara").signature.text.includes("受到1点伤害"), true);
+  assert.equal(byId("gaara").hp, 3);
+  assert.equal(byId("jiraiya").signature.cost, 4);
+  assert.equal(activeSkills.jiraiya.cost, 2);
+  assert.equal(byId("sakura").handLimit, 5);
+  assert.equal(byId("kakashi").handLimit, 5);
+  assert.equal(byId("orochimaru").signature.cost, 2);
+  assert.equal(byId("orochimaru").hp, 4);
+  assert.equal(byId("brook").handLimit, 4);
+  assert.equal(activeSkills.brook.cost, 1);
+  assert.equal(byId("sakura").signature.cost, 3);
+  assert.equal(byId("kakashi").signature.cost, 2);
+  assert.equal(byId("usopp").signature.cost, 3);
+  assert.equal(byId("robin").signature.cost, 3);
+});
+
+test("我爱罗砂缚命中空手牌目标时造成1点伤害", () => {
+  const game = create("ranked2v2", "gaara");
+  const gaara = game.player("p0");
+  const target = game.player("p1");
+  gaara.energy = 1;
+  target.hand = [];
+  const hp = target.hp;
+  const result = game.useActiveSkill(gaara.id, target.id);
+  assert.equal(result.ok, true);
+  assert.equal(target.hp, hp - 1);
+  assert.equal(target.sandMarkedBy, gaara.id);
+});
+
+test("牌生命周期与装备变更事件带有统一事件字段", () => {
+  const game = create("ranked2v2");
+  const player = game.player("p0");
+  player.hand = [{ ...cardDefinitions.focus, uid: "focus-event" }];
+  game.playCard(player.id, "focus-event", player.id);
+  const cardEvents = game.eventHistory.filter(event => event.card?.uid === "focus-event").map(event => event.type);
+  assert.deepEqual(cardEvents, ["cardDeclared", "cardResolved"]);
+  player.hand = [{ ...cardDefinitions.weapon, uid: "weapon-event" }];
+  game.playCard(player.id, "weapon-event", player.id);
+  const equipmentEvent = game.eventHistory.find(event => event.type === "equipmentChanged" && event.entered?.uid === "weapon-event");
+  assert.equal(equipmentEvent.ownerId, player.id);
+  assert.equal(equipmentEvent.left, null);
 });

@@ -37,4 +37,4 @@ cd packaging/android
 
 APK 位于 `packaging/android/app/build/outputs/apk/debug/app-debug.apk`。应用锁定横屏、最低支持 Android 7/API 24，使用测试签名且不申请网络权限。
 
-推送 `v0.1.0` 标签后，GitHub Actions 会构建两个 EXE 与测试 APK，并将它们连同 SHA-256 校验文件发布到公开 Release。
+推送 `v0.2.0` 标签后，GitHub Actions 会构建两个 EXE 与测试 APK，并将它们连同 SHA-256 校验文件发布到公开 Release。

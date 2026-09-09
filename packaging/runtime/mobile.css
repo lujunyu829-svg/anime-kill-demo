@@ -1,81 +1,85 @@
 .resume-panel{margin-top:18px;padding:18px 20px;border:1px solid rgba(110,205,242,.3);border-radius:18px;background:linear-gradient(135deg,rgba(23,32,60,.95),rgba(9,11,23,.96));display:flex;align-items:center;justify-content:space-between;gap:20px;box-shadow:0 16px 40px rgba(0,0,0,.25)}
 .resume-panel[hidden]{display:none}.resume-panel span{font-size:10px;letter-spacing:.18em;color:#6ecdf2}.resume-panel h3{margin:4px 0;font-size:18px}.resume-panel p{margin:0;color:var(--muted);font-size:13px}.resume-actions{display:flex;gap:10px;flex-shrink:0}.resume-actions button{white-space:nowrap}
-html{background:#090b17}body{padding-top:env(safe-area-inset-top);padding-right:env(safe-area-inset-right);padding-bottom:env(safe-area-inset-bottom);padding-left:env(safe-area-inset-left);overscroll-behavior:none}
+html{background:#090b17}body{overscroll-behavior:none}
 @media(max-width:700px){.resume-panel{align-items:stretch;flex-direction:column}.resume-actions{width:100%}.resume-actions button{flex:1}}
-@media(orientation:landscape) and (max-height:700px){
-  html,body,#app{width:100%;height:100%;min-height:0;overflow:hidden}
-  body{min-height:0}
-  .screen,.game{height:100%;min-height:0}
-  .game-header{height:52px;grid-template-columns:40px minmax(0,1fr) auto;gap:9px;padding:0 12px}
-  .game-header .icon-button{width:36px;height:36px}
-  .game-header h2{font-size:15px}
-  .game-header .eyebrow{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .phase-pill,.header-actions{display:none}
-  .mobile-panel-toggle{display:block}
-  .game-layout{height:calc(100% - 52px);min-height:0;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
-  .timeline-panel{display:none}
-  .battlefield{height:100%;min-height:0;padding:6px 8px 174px}
-  .opponents{inset:4px 4px 174px}
-  .player-card{width:82px;height:106px;padding:5px;border-radius:10px}
-  .portrait{height:37px;border-radius:6px}
-  .seat{left:7px;top:7px;width:16px;height:16px}
-  .identity-dot{right:7px;top:7px;max-width:48px;padding:2px 4px}
-  .player-card h4{margin:4px 0 0;font-size:9px}
-  .player-card .stat-row{margin-top:2px;font-size:7px}
-  .seat-hp{min-height:9px;margin-top:1px}
-  .seat-hp i{font-size:8px}
-  .energy-bar{margin-top:1px}
-  .equipment-mini{display:none}
-  .player-detail-button{right:4px;bottom:3px;min-width:23px;height:14px;padding:0 3px;font-size:6px}
-  .turn-badge,.target-badge{font-size:6px;padding:2px 5px}
-  .arena-center{top:31%;width:26%;transform:translate(-50%,-50%) scale(.78)}
-  .orbit-one{height:230px}
-  .orbit-two{height:160px}
-  .player-area{left:8px;right:8px;bottom:0;height:166px;padding-top:4px}
-  .self-summary{bottom:3px;width:122px;height:132px;grid-template-columns:48px 1fr;gap:6px;padding:6px}
-  .self-summary .mini-avatar{width:48px;height:116px}
-  .self-summary p{display:none}
-  .self-summary .stat-row{gap:2px;font-size:7px}
-  .self-hp{gap:1px;margin-top:2px}
-  .self-hp i{font-size:9px}
-  .self-detail-button{right:3px;top:3px;min-width:28px;min-height:24px;padding:2px 4px;font-size:0}
-  .self-detail-button::after{content:"详情";font-size:7px}
-  .self-equipment{left:128px;bottom:3px;width:138px;height:132px;gap:4px}
-  .self-equip-slot{grid-template-columns:24px 1fr;gap:5px;padding:4px 5px}
-  .self-equip-slot i{width:23px;height:23px;font-size:9px}
-  .self-equip-slot small,.self-equip-slot em{display:none}
-  .self-equip-slot b{font-size:7px}
-  .self-plots{left:272px;top:1px}
-  .self-specials{left:272px;top:27px}
-  .self-plots span,.self-specials span{max-width:88px;padding:3px 5px}
-  .hand{left:272px;height:146px;padding:0 8px 4px 0}
-  .hand-card-shell{width:78px;height:120px;flex-basis:78px;margin-left:-14px;margin-bottom:3px}
-  .hand-icon{left:6px;top:6px;width:24px;height:24px;font-size:12px}
-  .card-type{right:5px;top:7px;font-size:6px}
-  .hand-copy{left:6px;right:5px;bottom:5px}
-  .hand-copy h4{font-size:11px}
-  .hand-copy p{font-size:6px}
-  .hand-detail-trigger{left:6px;top:34px;width:26px;height:26px}
-  .intel-panel{position:fixed;z-index:22;top:calc(env(safe-area-inset-top) + 52px);right:env(safe-area-inset-right);bottom:env(safe-area-inset-bottom);width:min(300px,86vw);transform:translateX(105%);transition:transform .25s;box-shadow:-20px 0 60px rgba(0,0,0,.45)}
-  .intel-panel.open{transform:translateX(0)}
-  .intel-close{display:block;border:0;background:none;color:var(--muted);font-size:22px;cursor:pointer}
-  .intel-scrim{position:fixed;z-index:21;display:block;top:calc(env(safe-area-inset-top) + 52px);right:env(safe-area-inset-right);bottom:env(safe-area-inset-bottom);left:env(safe-area-inset-left);border:0;background:rgba(2,3,8,.64);opacity:0;pointer-events:none;transition:opacity .25s}
-  .intel-scrim.open{opacity:1;pointer-events:auto}
-}
-@media(orientation:landscape) and (max-height:460px){
-  .game-header{height:46px}
-  .game-layout{height:calc(100% - 46px)}
-  .game-header h2{font-size:13px}
-  .battlefield{padding-bottom:146px}
-  .opponents{bottom:146px}
-  .player-card{width:70px;height:91px}
-  .portrait{height:31px}
-  .player-area{height:140px}
-  .self-summary{width:108px;height:110px;grid-template-columns:40px 1fr}
-  .self-summary .mini-avatar{width:40px;height:94px}
-  .self-equipment{left:114px;width:126px;height:110px}
-  .self-plots,.self-specials{left:246px}
-  .hand{left:246px;height:124px}
-  .hand-card-shell{width:66px;height:103px;flex-basis:66px;margin-left:-11px}
-  .intel-panel,.intel-scrim{top:calc(env(safe-area-inset-top) + 46px)}
-}
+html.native-android,html.native-android body{width:var(--native-viewport-width,100vw);height:var(--native-viewport-height,100dvh);min-width:0;min-height:0;overflow:hidden}
+html.native-android body{position:fixed;left:0;top:0;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+html.native-android #app{width:100%;height:100%;min-width:0;min-height:0;overflow:hidden}
+html.native-android .lobby{height:100%;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+html.native-android dialog.modal{max-width:calc(var(--native-viewport-width,100vw) - 16px);max-height:calc(var(--native-viewport-height,100dvh) - 16px);touch-action:pan-y;-webkit-overflow-scrolling:touch}
+html.native-android .hand{overscroll-behavior-x:contain;touch-action:pan-x;-webkit-overflow-scrolling:touch}
+html.native-android.native-landscape .screen,html.native-android.native-landscape .game{height:100%;min-height:0}
+html.native-android.native-landscape .game-header{height:52px;grid-template-columns:40px minmax(0,1fr) auto;gap:9px;padding:0 12px}
+html.native-android.native-landscape .game-header .icon-button{width:36px;height:36px}
+html.native-android.native-landscape .game-header h2{font-size:15px}
+html.native-android.native-landscape .game-header .eyebrow{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html.native-android.native-landscape .phase-pill,html.native-android.native-landscape .header-actions{display:none}
+html.native-android.native-landscape .mobile-action-buttons{display:flex;align-items:center;justify-content:flex-end;gap:6px;min-width:0}
+html.native-android.native-landscape .mobile-panel-toggle{display:block}
+html.native-android.native-landscape .compact-end-turn{display:block;min-width:82px;min-height:32px;padding:7px 10px;font-size:11px;line-height:1;white-space:nowrap}
+html.native-android.native-landscape .game-layout{height:calc(100% - 52px);min-height:0;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+html.native-android.native-landscape .timeline-panel{display:none}
+html.native-android.native-landscape .battlefield{height:100%;min-height:0;padding:6px 8px 174px}
+html.native-android.native-landscape .opponents{inset:4px 4px 174px}
+html.native-android.native-landscape .player-card{width:82px;height:106px;padding:5px;border-radius:10px}
+html.native-android.native-landscape .portrait{height:37px;border-radius:6px}
+html.native-android.native-landscape .seat{left:7px;top:7px;width:16px;height:16px}
+html.native-android.native-landscape .identity-dot{right:7px;top:7px;max-width:48px;padding:2px 4px}
+html.native-android.native-landscape .player-card h4{margin:4px 0 0;font-size:9px}
+html.native-android.native-landscape .player-card .stat-row{margin-top:2px;font-size:7px}
+html.native-android.native-landscape .seat-hp{min-height:9px;margin-top:1px}
+html.native-android.native-landscape .seat-hp i{font-size:8px}
+html.native-android.native-landscape .energy-bar{margin-top:1px}
+html.native-android.native-landscape .equipment-mini{display:none}
+html.native-android.native-landscape .player-detail-button{right:4px;bottom:3px;min-width:23px;height:14px;padding:0 3px;font-size:6px}
+html.native-android.native-landscape .turn-badge,html.native-android.native-landscape .target-badge{font-size:6px;padding:2px 5px}
+html.native-android.native-landscape .arena-center{top:31%;width:26%;transform:translate(-50%,-50%) scale(.78)}
+html.native-android.native-landscape .orbit-one{height:230px}
+html.native-android.native-landscape .orbit-two{height:160px}
+html.native-android.native-landscape .player-area{left:8px;right:8px;bottom:0;height:166px;padding-top:4px}
+html.native-android.native-landscape .self-summary{bottom:3px;width:122px;height:132px;grid-template-columns:48px 1fr;gap:6px;padding:6px}
+html.native-android.native-landscape .self-summary .mini-avatar{width:48px;height:116px}
+html.native-android.native-landscape .self-summary p{display:none}
+html.native-android.native-landscape .self-summary .stat-row{gap:2px;font-size:7px}
+html.native-android.native-landscape .self-hp{gap:1px;margin-top:2px}
+html.native-android.native-landscape .self-hp i{font-size:9px}
+html.native-android.native-landscape .self-detail-button{right:3px;top:3px;min-width:28px;min-height:24px;padding:2px 4px;font-size:0}
+html.native-android.native-landscape .self-detail-button::after{content:"详情";font-size:7px}
+html.native-android.native-landscape .self-equipment{left:128px;bottom:3px;width:138px;height:132px;gap:4px}
+html.native-android.native-landscape .self-equip-slot{grid-template-columns:24px 1fr;gap:5px;padding:4px 5px}
+html.native-android.native-landscape .self-equip-slot i{width:23px;height:23px;font-size:9px}
+html.native-android.native-landscape .self-equip-slot small,html.native-android.native-landscape .self-equip-slot em{display:none}
+html.native-android.native-landscape .self-equip-slot b{font-size:7px}
+html.native-android.native-landscape .self-plots{left:272px;top:1px}
+html.native-android.native-landscape .self-specials{left:272px;top:27px}
+html.native-android.native-landscape .self-plots span,html.native-android.native-landscape .self-specials span{max-width:88px;padding:3px 5px}
+html.native-android.native-landscape .hand{left:272px;height:146px;padding:0 8px 4px 0}
+html.native-android.native-landscape .hand-card-shell{width:78px;height:120px;flex-basis:78px;margin-left:-14px;margin-bottom:3px}
+html.native-android.native-landscape .hand-icon{left:6px;top:6px;width:24px;height:24px;font-size:12px}
+html.native-android.native-landscape .card-type{right:5px;top:7px;font-size:6px}
+html.native-android.native-landscape .hand-copy{left:6px;right:5px;bottom:5px}
+html.native-android.native-landscape .hand-copy h4{font-size:11px}
+html.native-android.native-landscape .hand-copy p{font-size:6px}
+html.native-android.native-landscape .hand-detail-trigger{left:6px;top:34px;width:26px;height:26px}
+html.native-android.native-landscape .intel-panel{position:fixed;z-index:22;top:calc(env(safe-area-inset-top) + 52px);right:env(safe-area-inset-right);bottom:env(safe-area-inset-bottom);width:min(300px,86vw);max-width:calc(var(--native-viewport-width,100vw) - 16px);transform:translateX(105%);transition:transform .25s;box-shadow:-20px 0 60px rgba(0,0,0,.45)}
+html.native-android.native-landscape .intel-panel.open{transform:translateX(0)}
+html.native-android.native-landscape .intel-close{display:block;border:0;background:none;color:var(--muted);font-size:22px;cursor:pointer}
+html.native-android.native-landscape .intel-scrim{position:fixed;z-index:21;display:block;top:calc(env(safe-area-inset-top) + 52px);right:env(safe-area-inset-right);bottom:env(safe-area-inset-bottom);left:env(safe-area-inset-left);border:0;background:rgba(2,3,8,.64);opacity:0;pointer-events:none;transition:opacity .25s}
+html.native-android.native-landscape .intel-scrim.open{opacity:1;pointer-events:auto}
+html.native-android.native-landscape.native-short .game-header{height:46px}
+html.native-android.native-landscape.native-short .game-layout{height:calc(100% - 46px)}
+html.native-android.native-landscape.native-short .game-header h2{font-size:13px}
+html.native-android.native-landscape.native-short .compact-end-turn{min-width:44px;padding-left:8px;padding-right:8px;font-size:0}
+html.native-android.native-landscape.native-short .compact-end-turn::after{content:"结束";font-size:11px}
+html.native-android.native-landscape.native-short .battlefield{padding-bottom:146px}
+html.native-android.native-landscape.native-short .opponents{bottom:146px}
+html.native-android.native-landscape.native-short .player-card{width:70px;height:91px}
+html.native-android.native-landscape.native-short .portrait{height:31px}
+html.native-android.native-landscape.native-short .player-area{height:140px}
+html.native-android.native-landscape.native-short .self-summary{width:108px;height:110px;grid-template-columns:40px 1fr}
+html.native-android.native-landscape.native-short .self-summary .mini-avatar{width:40px;height:94px}
+html.native-android.native-landscape.native-short .self-equipment{left:114px;width:126px;height:110px}
+html.native-android.native-landscape.native-short .self-plots,html.native-android.native-landscape.native-short .self-specials{left:246px}
+html.native-android.native-landscape.native-short .hand{left:246px;height:124px}
+html.native-android.native-landscape.native-short .hand-card-shell{width:66px;height:103px;flex-basis:66px;margin-left:-11px}
+html.native-android.native-landscape.native-short .intel-panel,html.native-android.native-landscape.native-short .intel-scrim{top:calc(env(safe-area-inset-top) + 46px)}
