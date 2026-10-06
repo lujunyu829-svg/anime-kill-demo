@@ -51,6 +51,7 @@ export function stateDigest(engine) {
     turnNumber: engine.turnNumber,
     phase: engine.phase,
     currentPlayerId: engine.currentPlayerId,
+    riftCollapseActive: Boolean(engine.riftCollapseActive),
     pendingKind: pendingKind(engine),
     winner: engine.winner?.camp || null,
     deckCount: engine.deck.length,

@@ -1,0 +1,1912 @@
+{
+  "version": "0.2.1",
+  "pool": "one_piece_grand_line",
+  "mode": "ranked2v2",
+  "scenario": "balance",
+  "seedBase": 20260917,
+  "seedStep": 7919,
+  "generatedAt": "2026-09-29T08:48:52.236Z",
+  "games": 10000,
+  "unfinished": 0,
+  "camps": {
+    "azure": 4938,
+    "crimson": 5062
+  },
+  "residual": {},
+  "avgRounds": 6.8749,
+  "p95Rounds": 15,
+  "p99Rounds": 25,
+  "maxRounds": 44,
+  "over80": 0,
+  "maxSteps": 544,
+  "roles": [
+    {
+      "character": "luffy",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 131,
+      "metrics": {
+        "activeDeclared": 1030,
+        "activeEffective": 1030,
+        "activeTargets": {
+          "self": 1030
+        },
+        "signatureDeclared": 511,
+        "signatureEffective": 511,
+        "signatureCosts": {
+          "4": 511
+        },
+        "damage": 964,
+        "healing": 463,
+        "shield": 0,
+        "drawn": 5002,
+        "discarded": 734,
+        "cancelled": 70,
+        "equipmentChanges": 557,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "技能失血": 612,
+          "突击命中": 30
+        },
+        "awakeRound": 559
+      },
+      "dreamProgress": 642,
+      "awakened": 170,
+      "awakenedWins": 108,
+      "unawakenedWins": 23,
+      "awakeRounds": 559,
+      "winRate": 52.400000000000006,
+      "avgRounds": 6.492,
+      "p99Rounds": 22,
+      "avgDreamProgress": 2.568,
+      "awakenRate": 68,
+      "avgAwakenRound": 3.288235294117647,
+      "awakenedWinRate": 63.52941176470588,
+      "unawakenedWinRate": 28.749999999999996
+    },
+    {
+      "character": "luffy",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 105,
+      "metrics": {
+        "activeDeclared": 985,
+        "activeEffective": 985,
+        "activeTargets": {
+          "self": 985
+        },
+        "signatureDeclared": 504,
+        "signatureEffective": 504,
+        "signatureCosts": {
+          "4": 504
+        },
+        "damage": 902,
+        "healing": 439,
+        "shield": 0,
+        "drawn": 5269,
+        "discarded": 779,
+        "cancelled": 53,
+        "equipmentChanges": 532,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "技能失血": 544,
+          "突击命中": 46
+        },
+        "awakeRound": 522
+      },
+      "dreamProgress": 590,
+      "awakened": 158,
+      "awakenedWins": 80,
+      "unawakenedWins": 25,
+      "awakeRounds": 522,
+      "winRate": 42,
+      "avgRounds": 7.068,
+      "p99Rounds": 23,
+      "avgDreamProgress": 2.36,
+      "awakenRate": 63.2,
+      "avgAwakenRound": 3.3037974683544302,
+      "awakenedWinRate": 50.63291139240506,
+      "unawakenedWinRate": 27.173913043478258
+    },
+    {
+      "character": "luffy",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 117,
+      "metrics": {
+        "activeDeclared": 1084,
+        "activeEffective": 1084,
+        "activeTargets": {
+          "self": 1084
+        },
+        "signatureDeclared": 575,
+        "signatureEffective": 575,
+        "signatureCosts": {
+          "4": 575
+        },
+        "damage": 989,
+        "healing": 472,
+        "shield": 0,
+        "drawn": 5748,
+        "discarded": 826,
+        "cancelled": 74,
+        "equipmentChanges": 565,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "技能失血": 626,
+          "突击命中": 49
+        },
+        "awakeRound": 650
+      },
+      "dreamProgress": 675,
+      "awakened": 198,
+      "awakenedWins": 100,
+      "unawakenedWins": 17,
+      "awakeRounds": 650,
+      "winRate": 46.800000000000004,
+      "avgRounds": 6.872,
+      "p99Rounds": 22,
+      "avgDreamProgress": 2.7,
+      "awakenRate": 79.2,
+      "avgAwakenRound": 3.282828282828283,
+      "awakenedWinRate": 50.505050505050505,
+      "unawakenedWinRate": 32.69230769230769
+    },
+    {
+      "character": "luffy",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 119,
+      "metrics": {
+        "activeDeclared": 1014,
+        "activeEffective": 1014,
+        "activeTargets": {
+          "self": 1014
+        },
+        "signatureDeclared": 494,
+        "signatureEffective": 494,
+        "signatureCosts": {
+          "4": 494
+        },
+        "damage": 865,
+        "healing": 441,
+        "shield": 0,
+        "drawn": 5350,
+        "discarded": 792,
+        "cancelled": 60,
+        "equipmentChanges": 527,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "技能失血": 590,
+          "突击命中": 35
+        },
+        "awakeRound": 529
+      },
+      "dreamProgress": 625,
+      "awakened": 162,
+      "awakenedWins": 88,
+      "unawakenedWins": 31,
+      "awakeRounds": 529,
+      "winRate": 47.599999999999994,
+      "avgRounds": 6.776,
+      "p99Rounds": 22,
+      "avgDreamProgress": 2.5,
+      "awakenRate": 64.8,
+      "avgAwakenRound": 3.265432098765432,
+      "awakenedWinRate": 54.32098765432099,
+      "unawakenedWinRate": 35.22727272727273
+    },
+    {
+      "character": "zoro",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 154,
+      "metrics": {
+        "activeDeclared": 898,
+        "activeEffective": 898,
+        "activeTargets": {
+          "self": 898
+        },
+        "signatureDeclared": 409,
+        "signatureEffective": 409,
+        "signatureCosts": {
+          "2": 5,
+          "3": 310,
+          "4": 94
+        },
+        "damage": 1407,
+        "healing": 74,
+        "shield": 0,
+        "drawn": 2228,
+        "discarded": 234,
+        "cancelled": 25,
+        "equipmentChanges": 328,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "强化斩击命中": 360
+        },
+        "awakeRound": 201
+      },
+      "dreamProgress": 360,
+      "awakened": 31,
+      "awakenedWins": 25,
+      "unawakenedWins": 129,
+      "awakeRounds": 201,
+      "winRate": 61.6,
+      "avgRounds": 5.668,
+      "p99Rounds": 20,
+      "avgDreamProgress": 1.44,
+      "awakenRate": 12.4,
+      "avgAwakenRound": 6.483870967741935,
+      "awakenedWinRate": 80.64516129032258,
+      "unawakenedWinRate": 58.9041095890411
+    },
+    {
+      "character": "zoro",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 134,
+      "metrics": {
+        "activeDeclared": 841,
+        "activeEffective": 841,
+        "activeTargets": {
+          "self": 841
+        },
+        "signatureDeclared": 423,
+        "signatureEffective": 423,
+        "signatureCosts": {
+          "2": 12,
+          "3": 262,
+          "4": 149
+        },
+        "damage": 1287,
+        "healing": 95,
+        "shield": 0,
+        "drawn": 2572,
+        "discarded": 283,
+        "cancelled": 30,
+        "equipmentChanges": 329,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "强化斩击命中": 329
+        },
+        "awakeRound": 230
+      },
+      "dreamProgress": 329,
+      "awakened": 33,
+      "awakenedWins": 30,
+      "unawakenedWins": 104,
+      "awakeRounds": 230,
+      "winRate": 53.6,
+      "avgRounds": 5.78,
+      "p99Rounds": 14,
+      "avgDreamProgress": 1.316,
+      "awakenRate": 13.200000000000001,
+      "avgAwakenRound": 6.96969696969697,
+      "awakenedWinRate": 90.9090909090909,
+      "unawakenedWinRate": 47.926267281105986
+    },
+    {
+      "character": "zoro",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 162,
+      "metrics": {
+        "activeDeclared": 900,
+        "activeEffective": 900,
+        "activeTargets": {
+          "self": 900
+        },
+        "signatureDeclared": 441,
+        "signatureEffective": 441,
+        "signatureCosts": {
+          "2": 7,
+          "3": 298,
+          "4": 136
+        },
+        "damage": 1384,
+        "healing": 80,
+        "shield": 0,
+        "drawn": 2781,
+        "discarded": 262,
+        "cancelled": 36,
+        "equipmentChanges": 344,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "强化斩击命中": 356
+        },
+        "awakeRound": 217
+      },
+      "dreamProgress": 356,
+      "awakened": 33,
+      "awakenedWins": 31,
+      "unawakenedWins": 131,
+      "awakeRounds": 217,
+      "winRate": 64.8,
+      "avgRounds": 5.236,
+      "p99Rounds": 14,
+      "avgDreamProgress": 1.424,
+      "awakenRate": 13.200000000000001,
+      "avgAwakenRound": 6.575757575757576,
+      "awakenedWinRate": 93.93939393939394,
+      "unawakenedWinRate": 60.36866359447005
+    },
+    {
+      "character": "zoro",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 132,
+      "metrics": {
+        "activeDeclared": 842,
+        "activeEffective": 842,
+        "activeTargets": {
+          "self": 842
+        },
+        "signatureDeclared": 387,
+        "signatureEffective": 387,
+        "signatureCosts": {
+          "2": 6,
+          "3": 273,
+          "4": 108
+        },
+        "damage": 1269,
+        "healing": 109,
+        "shield": 0,
+        "drawn": 2630,
+        "discarded": 261,
+        "cancelled": 40,
+        "equipmentChanges": 339,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "强化斩击命中": 322
+        },
+        "awakeRound": 157
+      },
+      "dreamProgress": 322,
+      "awakened": 24,
+      "awakenedWins": 23,
+      "unawakenedWins": 109,
+      "awakeRounds": 157,
+      "winRate": 52.800000000000004,
+      "avgRounds": 5.524,
+      "p99Rounds": 16,
+      "avgDreamProgress": 1.288,
+      "awakenRate": 9.6,
+      "avgAwakenRound": 6.541666666666667,
+      "awakenedWinRate": 95.83333333333334,
+      "unawakenedWinRate": 48.23008849557522
+    },
+    {
+      "character": "nami",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 172,
+      "metrics": {
+        "activeDeclared": 872,
+        "activeEffective": 872,
+        "activeTargets": {
+          "self": 872
+        },
+        "signatureDeclared": 557,
+        "signatureEffective": 556,
+        "signatureCosts": {
+          "3": 277,
+          "4": 280
+        },
+        "damage": 1136,
+        "healing": 167,
+        "shield": 0,
+        "drawn": 2130,
+        "discarded": 422,
+        "cancelled": 58,
+        "equipmentChanges": 477,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "航海记录": 562
+        },
+        "awakeRound": 417
+      },
+      "dreamProgress": 562,
+      "awakened": 110,
+      "awakenedWins": 92,
+      "unawakenedWins": 80,
+      "awakeRounds": 417,
+      "winRate": 68.8,
+      "avgRounds": 5.952,
+      "p99Rounds": 28,
+      "avgDreamProgress": 2.248,
+      "awakenRate": 44,
+      "avgAwakenRound": 3.790909090909091,
+      "awakenedWinRate": 83.63636363636363,
+      "unawakenedWinRate": 57.14285714285714
+    },
+    {
+      "character": "nami",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 119,
+      "metrics": {
+        "activeDeclared": 655,
+        "activeEffective": 655,
+        "activeTargets": {
+          "self": 655
+        },
+        "signatureDeclared": 456,
+        "signatureEffective": 455,
+        "signatureCosts": {
+          "3": 202,
+          "4": 254
+        },
+        "damage": 812,
+        "healing": 162,
+        "shield": 0,
+        "drawn": 2011,
+        "discarded": 418,
+        "cancelled": 41,
+        "equipmentChanges": 416,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "航海记录": 443
+        },
+        "awakeRound": 268
+      },
+      "dreamProgress": 443,
+      "awakened": 75,
+      "awakenedWins": 54,
+      "unawakenedWins": 65,
+      "awakeRounds": 268,
+      "winRate": 47.599999999999994,
+      "avgRounds": 6.092,
+      "p99Rounds": 18,
+      "avgDreamProgress": 1.772,
+      "awakenRate": 30,
+      "avgAwakenRound": 3.5733333333333333,
+      "awakenedWinRate": 72,
+      "unawakenedWinRate": 37.142857142857146
+    },
+    {
+      "character": "nami",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 158,
+      "metrics": {
+        "activeDeclared": 857,
+        "activeEffective": 857,
+        "activeTargets": {
+          "self": 857
+        },
+        "signatureDeclared": 596,
+        "signatureEffective": 596,
+        "signatureCosts": {
+          "3": 278,
+          "4": 318
+        },
+        "damage": 1113,
+        "healing": 175,
+        "shield": 0,
+        "drawn": 2592,
+        "discarded": 478,
+        "cancelled": 59,
+        "equipmentChanges": 478,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "航海记录": 539
+        },
+        "awakeRound": 416
+      },
+      "dreamProgress": 539,
+      "awakened": 111,
+      "awakenedWins": 88,
+      "unawakenedWins": 70,
+      "awakeRounds": 416,
+      "winRate": 63.2,
+      "avgRounds": 6.016,
+      "p99Rounds": 18,
+      "avgDreamProgress": 2.156,
+      "awakenRate": 44.4,
+      "avgAwakenRound": 3.7477477477477477,
+      "awakenedWinRate": 79.27927927927928,
+      "unawakenedWinRate": 50.35971223021583
+    },
+    {
+      "character": "nami",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 144,
+      "metrics": {
+        "activeDeclared": 774,
+        "activeEffective": 774,
+        "activeTargets": {
+          "self": 774
+        },
+        "signatureDeclared": 516,
+        "signatureEffective": 515,
+        "signatureCosts": {
+          "3": 242,
+          "4": 274
+        },
+        "damage": 982,
+        "healing": 166,
+        "shield": 0,
+        "drawn": 2333,
+        "discarded": 478,
+        "cancelled": 41,
+        "equipmentChanges": 464,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "航海记录": 505
+        },
+        "awakeRound": 355
+      },
+      "dreamProgress": 505,
+      "awakened": 94,
+      "awakenedWins": 79,
+      "unawakenedWins": 65,
+      "awakeRounds": 355,
+      "winRate": 57.599999999999994,
+      "avgRounds": 6.704,
+      "p99Rounds": 32,
+      "avgDreamProgress": 2.02,
+      "awakenRate": 37.6,
+      "avgAwakenRound": 3.776595744680851,
+      "awakenedWinRate": 84.04255319148936,
+      "unawakenedWinRate": 41.66666666666667
+    },
+    {
+      "character": "usopp",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 130,
+      "metrics": {
+        "activeDeclared": 907,
+        "activeEffective": 907,
+        "activeTargets": {
+          "other": 907
+        },
+        "signatureDeclared": 328,
+        "signatureEffective": 328,
+        "signatureCosts": {
+          "2": 225,
+          "3": 103
+        },
+        "damage": 842,
+        "healing": 120,
+        "shield": 0,
+        "drawn": 2720,
+        "discarded": 316,
+        "cancelled": 32,
+        "equipmentChanges": 377,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "谎言弹": 476
+        },
+        "awakeRound": 364
+      },
+      "dreamProgress": 476,
+      "awakened": 89,
+      "awakenedWins": 66,
+      "unawakenedWins": 64,
+      "awakeRounds": 364,
+      "winRate": 52,
+      "avgRounds": 6.972,
+      "p99Rounds": 27,
+      "avgDreamProgress": 1.904,
+      "awakenRate": 35.6,
+      "avgAwakenRound": 4.089887640449438,
+      "awakenedWinRate": 74.15730337078652,
+      "unawakenedWinRate": 39.75155279503105
+    },
+    {
+      "character": "usopp",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 110,
+      "metrics": {
+        "activeDeclared": 755,
+        "activeEffective": 755,
+        "activeTargets": {
+          "other": 755
+        },
+        "signatureDeclared": 325,
+        "signatureEffective": 325,
+        "signatureCosts": {
+          "2": 161,
+          "3": 164
+        },
+        "damage": 699,
+        "healing": 147,
+        "shield": 0,
+        "drawn": 2702,
+        "discarded": 350,
+        "cancelled": 25,
+        "equipmentChanges": 315,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "谎言弹": 333
+        },
+        "awakeRound": 329
+      },
+      "dreamProgress": 333,
+      "awakened": 60,
+      "awakenedWins": 39,
+      "unawakenedWins": 71,
+      "awakeRounds": 329,
+      "winRate": 44,
+      "avgRounds": 6.984,
+      "p99Rounds": 23,
+      "avgDreamProgress": 1.332,
+      "awakenRate": 24,
+      "avgAwakenRound": 5.483333333333333,
+      "awakenedWinRate": 65,
+      "unawakenedWinRate": 37.368421052631575
+    },
+    {
+      "character": "usopp",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 110,
+      "metrics": {
+        "activeDeclared": 864,
+        "activeEffective": 864,
+        "activeTargets": {
+          "other": 864
+        },
+        "signatureDeclared": 325,
+        "signatureEffective": 325,
+        "signatureCosts": {
+          "2": 184,
+          "3": 141
+        },
+        "damage": 806,
+        "healing": 132,
+        "shield": 0,
+        "drawn": 3085,
+        "discarded": 353,
+        "cancelled": 29,
+        "equipmentChanges": 370,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "谎言弹": 387
+        },
+        "awakeRound": 362
+      },
+      "dreamProgress": 387,
+      "awakened": 70,
+      "awakenedWins": 45,
+      "unawakenedWins": 65,
+      "awakeRounds": 362,
+      "winRate": 44,
+      "avgRounds": 6.788,
+      "p99Rounds": 21,
+      "avgDreamProgress": 1.548,
+      "awakenRate": 28.000000000000004,
+      "avgAwakenRound": 5.171428571428572,
+      "awakenedWinRate": 64.28571428571429,
+      "unawakenedWinRate": 36.11111111111111
+    },
+    {
+      "character": "usopp",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 120,
+      "metrics": {
+        "activeDeclared": 797,
+        "activeEffective": 797,
+        "activeTargets": {
+          "other": 797
+        },
+        "signatureDeclared": 310,
+        "signatureEffective": 310,
+        "signatureCosts": {
+          "2": 174,
+          "3": 136
+        },
+        "damage": 740,
+        "healing": 131,
+        "shield": 0,
+        "drawn": 2898,
+        "discarded": 302,
+        "cancelled": 26,
+        "equipmentChanges": 384,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "谎言弹": 398
+        },
+        "awakeRound": 307
+      },
+      "dreamProgress": 398,
+      "awakened": 68,
+      "awakenedWins": 55,
+      "unawakenedWins": 65,
+      "awakeRounds": 307,
+      "winRate": 48,
+      "avgRounds": 6.216,
+      "p99Rounds": 16,
+      "avgDreamProgress": 1.592,
+      "awakenRate": 27.200000000000003,
+      "avgAwakenRound": 4.514705882352941,
+      "awakenedWinRate": 80.88235294117648,
+      "unawakenedWinRate": 35.714285714285715
+    },
+    {
+      "character": "sanji",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 141,
+      "metrics": {
+        "activeDeclared": 221,
+        "activeEffective": 221,
+        "activeTargets": {
+          "ally": 221
+        },
+        "signatureDeclared": 452,
+        "signatureEffective": 452,
+        "signatureCosts": {
+          "3": 277,
+          "4": 175
+        },
+        "damage": 961,
+        "healing": 352,
+        "shield": 0,
+        "drawn": 2453,
+        "discarded": 570,
+        "cancelled": 42,
+        "equipmentChanges": 361,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "援护": 209
+        },
+        "awakeRound": 125
+      },
+      "dreamProgress": 209,
+      "awakened": 23,
+      "awakenedWins": 23,
+      "unawakenedWins": 118,
+      "awakeRounds": 125,
+      "winRate": 56.39999999999999,
+      "avgRounds": 6.152,
+      "p99Rounds": 18,
+      "avgDreamProgress": 0.836,
+      "awakenRate": 9.2,
+      "avgAwakenRound": 5.434782608695652,
+      "awakenedWinRate": 100,
+      "unawakenedWinRate": 51.98237885462555
+    },
+    {
+      "character": "sanji",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 118,
+      "metrics": {
+        "activeDeclared": 294,
+        "activeEffective": 294,
+        "activeTargets": {
+          "ally": 294
+        },
+        "signatureDeclared": 410,
+        "signatureEffective": 410,
+        "signatureCosts": {
+          "3": 220,
+          "4": 190
+        },
+        "damage": 862,
+        "healing": 429,
+        "shield": 0,
+        "drawn": 2578,
+        "discarded": 671,
+        "cancelled": 30,
+        "equipmentChanges": 338,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "援护": 266
+        },
+        "awakeRound": 165
+      },
+      "dreamProgress": 266,
+      "awakened": 37,
+      "awakenedWins": 31,
+      "unawakenedWins": 87,
+      "awakeRounds": 165,
+      "winRate": 47.199999999999996,
+      "avgRounds": 6.524,
+      "p99Rounds": 20,
+      "avgDreamProgress": 1.064,
+      "awakenRate": 14.799999999999999,
+      "avgAwakenRound": 4.45945945945946,
+      "awakenedWinRate": 83.78378378378379,
+      "unawakenedWinRate": 40.845070422535215
+    },
+    {
+      "character": "sanji",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 151,
+      "metrics": {
+        "activeDeclared": 348,
+        "activeEffective": 348,
+        "activeTargets": {
+          "ally": 348
+        },
+        "signatureDeclared": 526,
+        "signatureEffective": 526,
+        "signatureCosts": {
+          "3": 284,
+          "4": 242
+        },
+        "damage": 1058,
+        "healing": 490,
+        "shield": 0,
+        "drawn": 3247,
+        "discarded": 730,
+        "cancelled": 37,
+        "equipmentChanges": 402,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "援护": 307
+        },
+        "awakeRound": 178
+      },
+      "dreamProgress": 307,
+      "awakened": 41,
+      "awakenedWins": 38,
+      "unawakenedWins": 113,
+      "awakeRounds": 178,
+      "winRate": 60.4,
+      "avgRounds": 6.852,
+      "p99Rounds": 24,
+      "avgDreamProgress": 1.228,
+      "awakenRate": 16.400000000000002,
+      "avgAwakenRound": 4.341463414634147,
+      "awakenedWinRate": 92.6829268292683,
+      "unawakenedWinRate": 54.066985645933016
+    },
+    {
+      "character": "sanji",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 119,
+      "metrics": {
+        "activeDeclared": 277,
+        "activeEffective": 277,
+        "activeTargets": {
+          "ally": 277
+        },
+        "signatureDeclared": 427,
+        "signatureEffective": 427,
+        "signatureCosts": {
+          "3": 234,
+          "4": 193
+        },
+        "damage": 902,
+        "healing": 390,
+        "shield": 0,
+        "drawn": 2701,
+        "discarded": 628,
+        "cancelled": 29,
+        "equipmentChanges": 359,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "援护": 256
+        },
+        "awakeRound": 172
+      },
+      "dreamProgress": 256,
+      "awakened": 36,
+      "awakenedWins": 33,
+      "unawakenedWins": 86,
+      "awakeRounds": 172,
+      "winRate": 47.599999999999994,
+      "avgRounds": 6.26,
+      "p99Rounds": 18,
+      "avgDreamProgress": 1.024,
+      "awakenRate": 14.399999999999999,
+      "avgAwakenRound": 4.777777777777778,
+      "awakenedWinRate": 91.66666666666666,
+      "unawakenedWinRate": 40.18691588785047
+    },
+    {
+      "character": "chopper",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 143,
+      "metrics": {
+        "activeDeclared": 194,
+        "activeEffective": 194,
+        "activeTargets": {
+          "ally": 194
+        },
+        "signatureDeclared": 471,
+        "signatureEffective": 471,
+        "signatureCosts": {
+          "4": 471
+        },
+        "damage": 598,
+        "healing": 324,
+        "shield": 772,
+        "drawn": 3544,
+        "discarded": 645,
+        "cancelled": 57,
+        "equipmentChanges": 468,
+        "healingOpportunities": 0,
+        "healingUsed": 194,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "医术": 184
+        },
+        "awakeRound": 106
+      },
+      "dreamProgress": 184,
+      "awakened": 20,
+      "awakenedWins": 18,
+      "unawakenedWins": 125,
+      "awakeRounds": 106,
+      "winRate": 57.199999999999996,
+      "avgRounds": 6.792,
+      "p99Rounds": 17,
+      "avgDreamProgress": 0.736,
+      "awakenRate": 8,
+      "avgAwakenRound": 5.3,
+      "awakenedWinRate": 90,
+      "unawakenedWinRate": 54.347826086956516
+    },
+    {
+      "character": "chopper",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 126,
+      "metrics": {
+        "activeDeclared": 190,
+        "activeEffective": 190,
+        "activeTargets": {
+          "ally": 190
+        },
+        "signatureDeclared": 456,
+        "signatureEffective": 456,
+        "signatureCosts": {
+          "4": 456
+        },
+        "damage": 513,
+        "healing": 341,
+        "shield": 735,
+        "drawn": 3946,
+        "discarded": 797,
+        "cancelled": 48,
+        "equipmentChanges": 435,
+        "healingOpportunities": 0,
+        "healingUsed": 190,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "医术": 175
+        },
+        "awakeRound": 79
+      },
+      "dreamProgress": 175,
+      "awakened": 16,
+      "awakenedWins": 13,
+      "unawakenedWins": 113,
+      "awakeRounds": 79,
+      "winRate": 50.4,
+      "avgRounds": 7.56,
+      "p99Rounds": 22,
+      "avgDreamProgress": 0.7,
+      "awakenRate": 6.4,
+      "avgAwakenRound": 4.9375,
+      "awakenedWinRate": 81.25,
+      "unawakenedWinRate": 48.29059829059829
+    },
+    {
+      "character": "chopper",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 155,
+      "metrics": {
+        "activeDeclared": 260,
+        "activeEffective": 260,
+        "activeTargets": {
+          "ally": 260
+        },
+        "signatureDeclared": 548,
+        "signatureEffective": 548,
+        "signatureCosts": {
+          "4": 548
+        },
+        "damage": 663,
+        "healing": 405,
+        "shield": 876,
+        "drawn": 4824,
+        "discarded": 888,
+        "cancelled": 59,
+        "equipmentChanges": 483,
+        "healingOpportunities": 0,
+        "healingUsed": 260,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "医术": 234
+        },
+        "awakeRound": 133
+      },
+      "dreamProgress": 234,
+      "awakened": 31,
+      "awakenedWins": 28,
+      "unawakenedWins": 127,
+      "awakeRounds": 133,
+      "winRate": 62,
+      "avgRounds": 8.176,
+      "p99Rounds": 41,
+      "avgDreamProgress": 0.936,
+      "awakenRate": 12.4,
+      "avgAwakenRound": 4.290322580645161,
+      "awakenedWinRate": 90.32258064516128,
+      "unawakenedWinRate": 57.99086757990868
+    },
+    {
+      "character": "chopper",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 131,
+      "metrics": {
+        "activeDeclared": 185,
+        "activeEffective": 185,
+        "activeTargets": {
+          "ally": 185
+        },
+        "signatureDeclared": 459,
+        "signatureEffective": 459,
+        "signatureCosts": {
+          "4": 459
+        },
+        "damage": 530,
+        "healing": 345,
+        "shield": 752,
+        "drawn": 4218,
+        "discarded": 757,
+        "cancelled": 68,
+        "equipmentChanges": 469,
+        "healingOpportunities": 0,
+        "healingUsed": 185,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "医术": 177
+        },
+        "awakeRound": 83
+      },
+      "dreamProgress": 177,
+      "awakened": 17,
+      "awakenedWins": 14,
+      "unawakenedWins": 117,
+      "awakeRounds": 83,
+      "winRate": 52.400000000000006,
+      "avgRounds": 7.46,
+      "p99Rounds": 22,
+      "avgDreamProgress": 0.708,
+      "awakenRate": 6.800000000000001,
+      "avgAwakenRound": 4.882352941176471,
+      "awakenedWinRate": 82.35294117647058,
+      "unawakenedWinRate": 50.21459227467812
+    },
+    {
+      "character": "robin",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 130,
+      "metrics": {
+        "activeDeclared": 738,
+        "activeEffective": 738,
+        "activeTargets": {
+          "other": 738
+        },
+        "signatureDeclared": 762,
+        "signatureEffective": 760,
+        "signatureCosts": {
+          "2": 116,
+          "3": 646
+        },
+        "damage": 655,
+        "healing": 139,
+        "shield": 0,
+        "drawn": 2804,
+        "discarded": 287,
+        "cancelled": 33,
+        "equipmentChanges": 415,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "历史学者": 554
+        },
+        "awakeRound": 381
+      },
+      "dreamProgress": 554,
+      "awakened": 107,
+      "awakenedWins": 69,
+      "unawakenedWins": 61,
+      "awakeRounds": 381,
+      "winRate": 52,
+      "avgRounds": 6.86,
+      "p99Rounds": 26,
+      "avgDreamProgress": 2.216,
+      "awakenRate": 42.8,
+      "avgAwakenRound": 3.560747663551402,
+      "awakenedWinRate": 64.48598130841121,
+      "unawakenedWinRate": 42.65734265734265
+    },
+    {
+      "character": "robin",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 99,
+      "metrics": {
+        "activeDeclared": 586,
+        "activeEffective": 586,
+        "activeTargets": {
+          "other": 586
+        },
+        "signatureDeclared": 639,
+        "signatureEffective": 636,
+        "signatureCosts": {
+          "2": 71,
+          "3": 568
+        },
+        "damage": 550,
+        "healing": 121,
+        "shield": 0,
+        "drawn": 2665,
+        "discarded": 304,
+        "cancelled": 25,
+        "equipmentChanges": 367,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "历史学者": 421
+        },
+        "awakeRound": 301
+      },
+      "dreamProgress": 421,
+      "awakened": 79,
+      "awakenedWins": 51,
+      "unawakenedWins": 48,
+      "awakeRounds": 301,
+      "winRate": 39.6,
+      "avgRounds": 6.644,
+      "p99Rounds": 22,
+      "avgDreamProgress": 1.684,
+      "awakenRate": 31.6,
+      "avgAwakenRound": 3.810126582278481,
+      "awakenedWinRate": 64.55696202531645,
+      "unawakenedWinRate": 28.07017543859649
+    },
+    {
+      "character": "robin",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 122,
+      "metrics": {
+        "activeDeclared": 734,
+        "activeEffective": 734,
+        "activeTargets": {
+          "other": 734
+        },
+        "signatureDeclared": 817,
+        "signatureEffective": 816,
+        "signatureCosts": {
+          "2": 96,
+          "3": 721
+        },
+        "damage": 685,
+        "healing": 180,
+        "shield": 0,
+        "drawn": 3324,
+        "discarded": 306,
+        "cancelled": 22,
+        "equipmentChanges": 436,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "历史学者": 516
+        },
+        "awakeRound": 386
+      },
+      "dreamProgress": 516,
+      "awakened": 103,
+      "awakenedWins": 63,
+      "unawakenedWins": 59,
+      "awakeRounds": 386,
+      "winRate": 48.8,
+      "avgRounds": 6.748,
+      "p99Rounds": 31,
+      "avgDreamProgress": 2.064,
+      "awakenRate": 41.199999999999996,
+      "avgAwakenRound": 3.7475728155339807,
+      "awakenedWinRate": 61.165048543689316,
+      "unawakenedWinRate": 40.136054421768705
+    },
+    {
+      "character": "robin",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 102,
+      "metrics": {
+        "activeDeclared": 669,
+        "activeEffective": 669,
+        "activeTargets": {
+          "other": 669
+        },
+        "signatureDeclared": 706,
+        "signatureEffective": 705,
+        "signatureCosts": {
+          "2": 104,
+          "3": 602
+        },
+        "damage": 595,
+        "healing": 130,
+        "shield": 0,
+        "drawn": 2936,
+        "discarded": 297,
+        "cancelled": 20,
+        "equipmentChanges": 406,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "历史学者": 494
+        },
+        "awakeRound": 303
+      },
+      "dreamProgress": 494,
+      "awakened": 88,
+      "awakenedWins": 56,
+      "unawakenedWins": 46,
+      "awakeRounds": 303,
+      "winRate": 40.8,
+      "avgRounds": 6.66,
+      "p99Rounds": 23,
+      "avgDreamProgress": 1.976,
+      "awakenRate": 35.199999999999996,
+      "avgAwakenRound": 3.4431818181818183,
+      "awakenedWinRate": 63.63636363636363,
+      "unawakenedWinRate": 28.39506172839506
+    },
+    {
+      "character": "franky",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 74,
+      "metrics": {
+        "activeDeclared": 679,
+        "activeEffective": 679,
+        "activeTargets": {
+          "self": 679
+        },
+        "signatureDeclared": 574,
+        "signatureEffective": 574,
+        "signatureCosts": {
+          "3": 121,
+          "4": 453
+        },
+        "damage": 592,
+        "healing": 289,
+        "shield": 552,
+        "drawn": 5382,
+        "discarded": 1271,
+        "cancelled": 95,
+        "equipmentChanges": 1257,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "装备改造": 589
+        },
+        "awakeRound": 688
+      },
+      "dreamProgress": 589,
+      "awakened": 128,
+      "awakenedWins": 28,
+      "unawakenedWins": 46,
+      "awakeRounds": 688,
+      "winRate": 29.599999999999998,
+      "avgRounds": 8.18,
+      "p99Rounds": 24,
+      "avgDreamProgress": 2.356,
+      "awakenRate": 51.2,
+      "avgAwakenRound": 5.375,
+      "awakenedWinRate": 21.875,
+      "unawakenedWinRate": 37.704918032786885
+    },
+    {
+      "character": "franky",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 55,
+      "metrics": {
+        "activeDeclared": 638,
+        "activeEffective": 638,
+        "activeTargets": {
+          "self": 638
+        },
+        "signatureDeclared": 506,
+        "signatureEffective": 506,
+        "signatureCosts": {
+          "3": 105,
+          "4": 401
+        },
+        "damage": 587,
+        "healing": 300,
+        "shield": 483,
+        "drawn": 5404,
+        "discarded": 1272,
+        "cancelled": 73,
+        "equipmentChanges": 1099,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "装备改造": 567
+        },
+        "awakeRound": 620
+      },
+      "dreamProgress": 567,
+      "awakened": 123,
+      "awakenedWins": 23,
+      "unawakenedWins": 32,
+      "awakeRounds": 620,
+      "winRate": 22,
+      "avgRounds": 8.536,
+      "p99Rounds": 35,
+      "avgDreamProgress": 2.268,
+      "awakenRate": 49.2,
+      "avgAwakenRound": 5.040650406504065,
+      "awakenedWinRate": 18.69918699186992,
+      "unawakenedWinRate": 25.196850393700785
+    },
+    {
+      "character": "franky",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 61,
+      "metrics": {
+        "activeDeclared": 731,
+        "activeEffective": 731,
+        "activeTargets": {
+          "self": 731
+        },
+        "signatureDeclared": 600,
+        "signatureEffective": 600,
+        "signatureCosts": {
+          "3": 129,
+          "4": 471
+        },
+        "damage": 649,
+        "healing": 272,
+        "shield": 579,
+        "drawn": 5947,
+        "discarded": 1444,
+        "cancelled": 67,
+        "equipmentChanges": 1293,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "装备改造": 614
+        },
+        "awakeRound": 730
+      },
+      "dreamProgress": 614,
+      "awakened": 144,
+      "awakenedWins": 34,
+      "unawakenedWins": 27,
+      "awakeRounds": 730,
+      "winRate": 24.4,
+      "avgRounds": 8.48,
+      "p99Rounds": 23,
+      "avgDreamProgress": 2.456,
+      "awakenRate": 57.599999999999994,
+      "avgAwakenRound": 5.069444444444445,
+      "awakenedWinRate": 23.61111111111111,
+      "unawakenedWinRate": 25.471698113207548
+    },
+    {
+      "character": "franky",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 56,
+      "metrics": {
+        "activeDeclared": 702,
+        "activeEffective": 702,
+        "activeTargets": {
+          "self": 702
+        },
+        "signatureDeclared": 583,
+        "signatureEffective": 583,
+        "signatureCosts": {
+          "3": 116,
+          "4": 467
+        },
+        "damage": 583,
+        "healing": 244,
+        "shield": 569,
+        "drawn": 5476,
+        "discarded": 1354,
+        "cancelled": 87,
+        "equipmentChanges": 1245,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "装备改造": 587
+        },
+        "awakeRound": 661
+      },
+      "dreamProgress": 587,
+      "awakened": 132,
+      "awakenedWins": 35,
+      "unawakenedWins": 21,
+      "awakeRounds": 661,
+      "winRate": 22.400000000000002,
+      "avgRounds": 8.08,
+      "p99Rounds": 20,
+      "avgDreamProgress": 2.348,
+      "awakenRate": 52.800000000000004,
+      "avgAwakenRound": 5.007575757575758,
+      "awakenedWinRate": 26.515151515151516,
+      "unawakenedWinRate": 17.796610169491526
+    },
+    {
+      "character": "brook",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 137,
+      "metrics": {
+        "activeDeclared": 1001,
+        "activeEffective": 1001,
+        "activeTargets": {
+          "other": 1001
+        },
+        "signatureDeclared": 207,
+        "signatureEffective": 207,
+        "signatureCosts": {
+          "3": 116,
+          "4": 91
+        },
+        "damage": 799,
+        "healing": 179,
+        "shield": 0,
+        "drawn": 3364,
+        "discarded": 449,
+        "cancelled": 45,
+        "equipmentChanges": 452,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "令他人摸后弃牌": 614
+        },
+        "awakeRound": 494
+      },
+      "dreamProgress": 614,
+      "awakened": 152,
+      "awakenedWins": 107,
+      "unawakenedWins": 30,
+      "awakeRounds": 494,
+      "winRate": 54.800000000000004,
+      "avgRounds": 6.732,
+      "p99Rounds": 18,
+      "avgDreamProgress": 2.456,
+      "awakenRate": 60.8,
+      "avgAwakenRound": 3.25,
+      "awakenedWinRate": 70.39473684210526,
+      "unawakenedWinRate": 30.612244897959183
+    },
+    {
+      "character": "brook",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 109,
+      "metrics": {
+        "activeDeclared": 850,
+        "activeEffective": 850,
+        "activeTargets": {
+          "other": 850
+        },
+        "signatureDeclared": 205,
+        "signatureEffective": 205,
+        "signatureCosts": {
+          "3": 109,
+          "4": 96
+        },
+        "damage": 614,
+        "healing": 184,
+        "shield": 0,
+        "drawn": 3485,
+        "discarded": 594,
+        "cancelled": 37,
+        "equipmentChanges": 390,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "令他人摸后弃牌": 484
+        },
+        "awakeRound": 341
+      },
+      "dreamProgress": 484,
+      "awakened": 101,
+      "awakenedWins": 70,
+      "unawakenedWins": 39,
+      "awakeRounds": 341,
+      "winRate": 43.6,
+      "avgRounds": 7.32,
+      "p99Rounds": 28,
+      "avgDreamProgress": 1.936,
+      "awakenRate": 40.400000000000006,
+      "avgAwakenRound": 3.376237623762376,
+      "awakenedWinRate": 69.3069306930693,
+      "unawakenedWinRate": 26.174496644295303
+    },
+    {
+      "character": "brook",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 126,
+      "metrics": {
+        "activeDeclared": 968,
+        "activeEffective": 968,
+        "activeTargets": {
+          "other": 968
+        },
+        "signatureDeclared": 234,
+        "signatureEffective": 234,
+        "signatureCosts": {
+          "3": 118,
+          "4": 116
+        },
+        "damage": 785,
+        "healing": 183,
+        "shield": 0,
+        "drawn": 3903,
+        "discarded": 551,
+        "cancelled": 51,
+        "equipmentChanges": 470,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "令他人摸后弃牌": 597
+        },
+        "awakeRound": 486
+      },
+      "dreamProgress": 597,
+      "awakened": 149,
+      "awakenedWins": 97,
+      "unawakenedWins": 29,
+      "awakeRounds": 486,
+      "winRate": 50.4,
+      "avgRounds": 6.568,
+      "p99Rounds": 24,
+      "avgDreamProgress": 2.388,
+      "awakenRate": 59.599999999999994,
+      "avgAwakenRound": 3.261744966442953,
+      "awakenedWinRate": 65.1006711409396,
+      "unawakenedWinRate": 28.71287128712871
+    },
+    {
+      "character": "brook",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 126,
+      "metrics": {
+        "activeDeclared": 941,
+        "activeEffective": 941,
+        "activeTargets": {
+          "other": 941
+        },
+        "signatureDeclared": 237,
+        "signatureEffective": 237,
+        "signatureCosts": {
+          "3": 136,
+          "4": 101
+        },
+        "damage": 778,
+        "healing": 212,
+        "shield": 0,
+        "drawn": 3798,
+        "discarded": 517,
+        "cancelled": 42,
+        "equipmentChanges": 443,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "令他人摸后弃牌": 572
+        },
+        "awakeRound": 457
+      },
+      "dreamProgress": 572,
+      "awakened": 141,
+      "awakenedWins": 100,
+      "unawakenedWins": 26,
+      "awakeRounds": 457,
+      "winRate": 50.4,
+      "avgRounds": 6.752,
+      "p99Rounds": 21,
+      "avgDreamProgress": 2.288,
+      "awakenRate": 56.39999999999999,
+      "avgAwakenRound": 3.2411347517730498,
+      "awakenedWinRate": 70.92198581560284,
+      "unawakenedWinRate": 23.853211009174313
+    },
+    {
+      "character": "jinbe",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 146,
+      "metrics": {
+        "activeDeclared": 1496,
+        "activeEffective": 1479,
+        "activeTargets": {
+          "self": 1314,
+          "ally": 182
+        },
+        "signatureDeclared": 634,
+        "signatureEffective": 633,
+        "signatureCosts": {
+          "3": 384,
+          "4": 250
+        },
+        "damage": 1168,
+        "healing": 84,
+        "shield": 1548,
+        "drawn": 3769,
+        "discarded": 1816,
+        "cancelled": 66,
+        "equipmentChanges": 402,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "侠义": 24,
+          "海流护航": 138
+        },
+        "awakeRound": 170
+      },
+      "dreamProgress": 162,
+      "awakened": 30,
+      "awakenedWins": 30,
+      "unawakenedWins": 116,
+      "awakeRounds": 170,
+      "winRate": 58.4,
+      "avgRounds": 7.392,
+      "p99Rounds": 25,
+      "avgDreamProgress": 0.648,
+      "awakenRate": 12,
+      "avgAwakenRound": 5.666666666666667,
+      "awakenedWinRate": 100,
+      "unawakenedWinRate": 52.72727272727272
+    },
+    {
+      "character": "jinbe",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 124,
+      "metrics": {
+        "activeDeclared": 1275,
+        "activeEffective": 1258,
+        "activeTargets": {
+          "self": 1110,
+          "ally": 165
+        },
+        "signatureDeclared": 556,
+        "signatureEffective": 556,
+        "signatureCosts": {
+          "3": 302,
+          "4": 254
+        },
+        "damage": 1005,
+        "healing": 119,
+        "shield": 1331,
+        "drawn": 3700,
+        "discarded": 1649,
+        "cancelled": 57,
+        "equipmentChanges": 359,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "海流护航": 103,
+          "侠义": 40
+        },
+        "awakeRound": 148
+      },
+      "dreamProgress": 143,
+      "awakened": 29,
+      "awakenedWins": 29,
+      "unawakenedWins": 95,
+      "awakeRounds": 148,
+      "winRate": 49.6,
+      "avgRounds": 7.604,
+      "p99Rounds": 27,
+      "avgDreamProgress": 0.572,
+      "awakenRate": 11.600000000000001,
+      "avgAwakenRound": 5.103448275862069,
+      "awakenedWinRate": 100,
+      "unawakenedWinRate": 42.98642533936652
+    },
+    {
+      "character": "jinbe",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 151,
+      "metrics": {
+        "activeDeclared": 1419,
+        "activeEffective": 1398,
+        "activeTargets": {
+          "self": 1183,
+          "ally": 236
+        },
+        "signatureDeclared": 632,
+        "signatureEffective": 632,
+        "signatureCosts": {
+          "3": 364,
+          "4": 268
+        },
+        "damage": 1162,
+        "healing": 99,
+        "shield": 1489,
+        "drawn": 3961,
+        "discarded": 1681,
+        "cancelled": 45,
+        "equipmentChanges": 427,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "海流护航": 160,
+          "侠义": 59
+        },
+        "awakeRound": 257
+      },
+      "dreamProgress": 219,
+      "awakened": 49,
+      "awakenedWins": 49,
+      "unawakenedWins": 102,
+      "awakeRounds": 257,
+      "winRate": 60.4,
+      "avgRounds": 7.328,
+      "p99Rounds": 22,
+      "avgDreamProgress": 0.876,
+      "awakenRate": 19.6,
+      "avgAwakenRound": 5.244897959183674,
+      "awakenedWinRate": 100,
+      "unawakenedWinRate": 50.74626865671642
+    },
+    {
+      "character": "jinbe",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 119,
+      "metrics": {
+        "activeDeclared": 1605,
+        "activeEffective": 1591,
+        "activeTargets": {
+          "self": 1483,
+          "ally": 122
+        },
+        "signatureDeclared": 672,
+        "signatureEffective": 672,
+        "signatureCosts": {
+          "3": 403,
+          "4": 269
+        },
+        "damage": 1206,
+        "healing": 127,
+        "shield": 1694,
+        "drawn": 4498,
+        "discarded": 2066,
+        "cancelled": 53,
+        "equipmentChanges": 415,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "海流护航": 85,
+          "侠义": 29
+        },
+        "awakeRound": 111
+      },
+      "dreamProgress": 114,
+      "awakened": 18,
+      "awakenedWins": 18,
+      "unawakenedWins": 101,
+      "awakeRounds": 111,
+      "winRate": 47.599999999999994,
+      "avgRounds": 8.196,
+      "p99Rounds": 23,
+      "avgDreamProgress": 0.456,
+      "awakenRate": 7.199999999999999,
+      "avgAwakenRound": 6.166666666666667,
+      "awakenedWinRate": 100,
+      "unawakenedWinRate": 43.53448275862069
+    }
+  ]
+}

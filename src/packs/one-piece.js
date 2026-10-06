@@ -11,6 +11,8 @@ export function initializeOnePieceState(player, character) {
   player.dreamState = { progress: 0, awakened: false, progressedRound: 0 };
   player.reviveUsed = false;
   player.navigationWind = false;
+  player.lieReturnedRound = 0;
+  player.supportCounter = false;
   return player;
 }
 
@@ -25,6 +27,7 @@ function progress(game, targetId, reason) {
   state.progressedRound = game.round;
   state.progress += 1;
   game.log("event", game.nameOf(target) + "的梦想航迹推进至" + state.progress + "/3（" + reason + "）");
+  game.emitOnePieceEvent?.({ type: "dreamProgress", sourceId: targetId, targetId, reason, progress: state.progress });
   if (state.progress >= 3) {
     state.progress = 3;
     state.awakened = true;
@@ -59,10 +62,10 @@ export function getOnePieceActiveTargets(game, playerId, skill) {
     case "lieShot": return current.energy >= 1 && !current.specialCards.some(item => item.kind === "lie") && nonResponseCards(current).length ? enemyIds : [];
     case "allBlueKitchen": return current.hand.some(card => card.type === "strategy" || card.type === "equipment") ? game.players.filter(target => target.alive && target.id !== playerId && target.hp < target.maxHp && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id) : [];
     case "medicine": return current.hand.some(card => card.type === "basic") ? game.players.filter(target => target.alive && target.id !== playerId && (game.mode.id === "classic8" || game.isAlly(playerId, target.id)) && (target.hp < target.maxHp || current.dreamState?.awakened && (target.poison || target.frozenDraw || target.energyLocked || target.signatureLocked))).map(target => target.id) : [];
-    case "flowerSeizure": return enemyIds;
+    case "flowerSeizure": return enemyIds.filter(id => nonResponseCards(getPlayer(game, id)).length > 0);
     case "workshop": return current.energy >= 1 && game.discard.some(card => card.type === "equipment") ? [playerId] : [];
     case "soulConcert": return current.roundFlags.soulConcertUsed ? [] : enemyIds;
-    case "oceanGuard": return game.players.filter(target => target.alive && target.id !== playerId).map(target => target.id);
+    case "oceanGuard": return game.players.filter(target => target.alive && (current.hand.length > 0 || current.dreamState?.awakened && target.id !== playerId)).map(target => target.id);
     default: return [];
   }
 }
@@ -78,7 +81,7 @@ export function useOnePieceActive(game, playerId, targetId, skill) {
   switch (skill.effect) {
     case "secondGear":
       game.loseHp(playerId, 1, null, "skill");
-      if (current.alive) { game.draw(playerId, 2); current.attackLimit += 1; }
+      if (current.alive) { game.draw(playerId, 1); current.attackLimit += 1; }
       return { ok: true };
     case "threeSwordStyle": {
       const cards = nonResponseCards(current);
@@ -86,7 +89,7 @@ export function useOnePieceActive(game, playerId, targetId, skill) {
         title: "三刀流：选择弃牌",
         text: "下一次突击伤害+1且额外需要1张防御；若弃置装备牌则忽略防具。",
         options: cards.map(card => ({ value: card.uid, label: "弃置【" + card.name + "】", description: card.type === "equipment" ? "下一次突击忽略防具" : "下一次突击伤害+1" })),
-        aiChoice: cards[0]?.uid,
+        aiChoice: [...cards].sort((a, b) => game.aiCardValue(current, a) - game.aiCardValue(current, b))[0]?.uid,
         onResolve: uid => {
           const chosen = current.hand.find(card => card.uid === uid && !card.responseOnly);
           if (!chosen) return;
@@ -127,12 +130,13 @@ export function useOnePieceActive(game, playerId, targetId, skill) {
         if (index >= pickCount || picked.length >= revealed.length) return finish();
         const allAvailable = revealed.filter(card => !picked.some(item => item.uid === card.uid));
         const distinct = current.dreamState?.awakened && picked.length ? allAvailable.filter(card => !picked.some(item => item.type === card.type)) : allAvailable;
+        if (current.dreamState?.awakened && picked.length && !distinct.length) return finish();
         const available = distinct.length ? distinct : allAvailable;
         return choose(game, playerId, {
           title: "航海术：选择第" + (index + 1) + "张牌",
           text: "从展示的" + revealed.length + "张牌中获得" + pickCount + "张。",
           options: available.map(card => ({ value: card.uid, label: "获得【" + card.name + "】", description: card.description })),
-          aiChoice: available[0]?.uid,
+          aiChoice: [...available].sort((a, b) => game.aiCardValue(current, b) - game.aiCardValue(current, a))[0]?.uid,
           onResolve: uid => { const card = available.find(item => item.uid === uid); if (card) picked.push(card); choosePick(index + 1); }
         });
       };
@@ -164,39 +168,71 @@ export function useOnePieceActive(game, playerId, targetId, skill) {
         onComplete: () => {
           const target = getPlayer(game, targetId);
           if (!target?.alive) return;
-          game.resolveHeal(playerId, targetId);
-          if (skill.effect === "allBlueKitchen" && current.dreamState?.awakened) game.draw(targetId, 1);
-          if (skill.effect === "medicine" && current.dreamState?.awakened) {
-            target.poison = 0; target.frozenDraw = 0; target.energyLocked = false; target.signatureLocked = 0;
+          if (skill.effect === "allBlueKitchen") {
+            game.resolveHeal(playerId, targetId);
+            if (current.dreamState?.awakened) game.draw(targetId, 1);
+            return;
           }
+          if (!current.dreamState?.awakened || target.hp < target.maxHp) {
+            game.resolveHeal(playerId, targetId);
+            return;
+          }
+          const ailments = [
+            ...(target.poison > 0 ? [{ value: "poison", label: "清除1层毒素" }] : []),
+            ...(target.frozenDraw > 0 ? [{ value: "frozenDraw", label: "清除少摸牌" }] : []),
+            ...(target.energyLocked ? [{ value: "energyLocked", label: "解除能量封锁" }] : []),
+            ...(target.signatureLocked > 0 ? [{ value: "signatureLocked", label: "解除招牌技封锁" }] : [])
+          ];
+          if (!ailments.length) return;
+          choose(game, playerId, {
+            title: "医术：选择净化项目",
+            text: "觉醒医术只能清除一项异常状态。",
+            options: ailments,
+            aiChoice: ailments[0].value,
+            onResolve: kind => {
+              if (kind === "poison") target.poison = Math.max(0, target.poison - 1);
+              if (kind === "frozenDraw") target.frozenDraw = 0;
+              if (kind === "energyLocked") target.energyLocked = false;
+              if (kind === "signatureLocked") target.signatureLocked = Math.max(0, target.signatureLocked - 1);
+              game.emitOnePieceEvent?.({ type: "abnormalityCleansed", sourceId: playerId, targetId, kind, amount: 1 });
+              game.log("heal", game.nameOf(current) + "以医术清除了" + game.nameOf(target) + "的一项异常");
+            }
+          });
         }
       });
     }
     case "flowerSeizure": {
       const target = getPlayer(game, targetId), cards = target.hand.filter(card => !card.responseOnly);
       if (!cards.length) return { ok: true };
-      const shown = cards[Math.floor(game.random() * cards.length)];
-      game.emitOnePieceEvent?.({ type: "hiddenCardViewed", sourceId: playerId, viewerId: playerId, ownerId: targetId, card: shown });
-      const matches = current.hand.filter(card => card.type === shown.type);
+      const revealCount = current.dreamState?.awakened ? Math.min(2, cards.length) : 1;
+      const shownCards = [];
+      const remaining = [...cards];
+      while (shownCards.length < revealCount && remaining.length) shownCards.push(remaining.splice(Math.floor(game.random() * remaining.length), 1)[0]);
+      for (const shown of shownCards) game.emitOnePieceEvent?.({ type: "hiddenCardViewed", sourceId: playerId, viewerId: playerId, ownerId: targetId, card: shown });
+      const shownByUid = new Map(shownCards.map(card => [card.uid, card]));
+      const matches = current.hand.filter(card => shownCards.some(shown => shown.type === card.type));
       return choose(game, playerId, {
         title: "百花搜查：是否封存",
-        text: "你查看到目标的一张隐藏手牌，可弃置同类别牌将其封存。",
-        options: [{ value: "pass", label: "不封存" }, ...matches.map(card => ({ value: card.uid, label: "弃置【" + card.name + "】并封存" }))],
-        aiChoice: matches[0]?.uid || "pass",
-        onResolve: uid => {
-          if (uid === "pass") return;
-          const paid = current.hand.find(card => card.uid === uid && card.type === shown.type);
-          const index = target.hand.findIndex(card => card.uid === shown.uid);
+        text: current.dreamState?.awakened ? "你查看到目标至多两张隐藏手牌，选择其中一张并弃置同类别牌即可封存。" : "你查看到目标的一张隐藏手牌，可弃置同类别牌将其封存。",
+        options: [{ value: "pass", label: "不封存" }, ...shownCards.flatMap(shown => matches.filter(card => card.type === shown.type).map(card => ({ value: shown.uid + ":" + card.uid, label: "封存【" + shown.name + "】 · 弃置【" + card.name + "】" })))],
+        aiChoice: (() => { const pairs = shownCards.flatMap(shown => matches.filter(paid => paid.type === shown.type).map(paid => ({ shown, paid }))).sort((a, b) => game.aiCardValue(target, b.shown) - game.aiCardValue(current, b.paid) - (game.aiCardValue(target, a.shown) - game.aiCardValue(current, a.paid))); return pairs[0] ? pairs[0].shown.uid + ":" + pairs[0].paid.uid : "pass"; })(),
+        onResolve: value => {
+          if (value === "pass") return;
+          const [shownUid, paidUid] = String(value).split(":");
+          const selected = shownByUid.get(shownUid);
+          const paid = current.hand.find(card => card.uid === paidUid && card.type === selected?.type);
+          const index = target.hand.findIndex(card => card.uid === selected?.uid);
           if (!paid || index < 0) return;
           game.removeCard(playerId, paid.uid);
           const sealed = target.hand.splice(index, 1)[0];
           target.sealedCards.push({ uid: "sealed-" + sealed.uid, card: sealed, sealedBy: playerId, returnAtPlayerId: targetId, setTurn: game.turnNumber });
+          game.gainEnergy(playerId, 1);
         }
       });
     }
     case "workshop": {
       const equipments = game.discard.filter(card => card.type === "equipment");
-      return choose(game, playerId, { title: "改造工坊：选择装备", options: equipments.map(card => ({ value: card.uid, label: "取得【" + card.name + "】" })), aiChoice: equipments[0]?.uid, onResolve: uid => {
+      return choose(game, playerId, { title: "改造工坊：选择装备", options: equipments.map(card => ({ value: card.uid, label: "取得【" + card.name + "】" })), aiChoice: [...equipments].sort((a,b) => game.aiEquipmentGain(current, b) - game.aiEquipmentGain(current, a))[0]?.uid, onResolve: uid => {
         const index = game.discard.findIndex(card => card.uid === uid && card.type === "equipment");
         if (index < 0) return;
         const card = game.discard.splice(index, 1)[0];
@@ -234,13 +270,18 @@ export function useOnePieceSignature(game, playerId, targetId, signature) {
       current.hp = Math.min(current.maxHp, current.hp + 1); game.draw(playerId, 2); current.attackLimit += 1;
       if (current.dreamState?.awakened) { current.rangeInfinite = true; current.turnFlags.nextAttackIgnoreArmor = true; }
       return { ok: true };
-    case "asura": {
-      const hpBefore = target.hp;
-      return game.beginAttack({ sourceId: playerId, targetId, damage: 2, requiredGuards: 2, origin: "asura", skipIntervene: false, onComplete: () => { if (target.hp < hpBefore && current.dreamState?.awakened) game.draw(playerId, 1); } });
+    case "asura":
+      return game.beginAttack({ sourceId: playerId, targetId, damage: 2, requiredGuards: 2, origin: "asura", skipIntervene: false });
+    case "zeus": {
+      if (target.hand.length < 2) { game.dealDamage(playerId, targetId, 2, "strategy"); return { ok: true }; }
+      return choose(game, targetId, {
+        title: "雷云宙斯",
+        text: "选择弃置2张手牌，或承受2点策略伤害。",
+        options: [{ value: "discard", label: "弃置2张手牌" }, { value: "damage", label: "承受2点策略伤害" }],
+        aiChoice: target.hp <= 2 ? "discard" : "damage",
+        onResolve: value => value === "discard" ? game.requestDiscard(targetId, 2, { reason: "雷云宙斯：请选择2张手牌弃置" }) : game.dealDamage(playerId, targetId, 2, "strategy")
+      });
     }
-    case "zeus":
-      if (target.hand.length >= 2) return game.requestDiscard(targetId, 2, { reason: "雷云宙斯：请选择2张手牌弃置" });
-      game.dealDamage(playerId, targetId, 2, "strategy"); return { ok: true };
     case "impactWolf": {
       const lie = lieForTarget(current, targetId);
       if (lie) { current.specialCards = current.specialCards.filter(item => item.uid !== lie.uid); game.discard.push(lie.card); current.turnFlags.nextAttackIgnoreArmor = true; }
@@ -251,7 +292,7 @@ export function useOnePieceSignature(game, playerId, targetId, signature) {
     case "monsterPoint":
       game.gainShield(playerId, 2); game.draw(playerId, 1); current.attackLimit += 1; current.turnFlags.rangeBonus = (current.turnFlags.rangeBonus || 0) + 1; return { ok: true };
     case "giganteFleur": {
-      const targets = game.clockwiseTargets(playerId).filter(id => !game.isAlly(playerId, id));
+      const targets = game.mode.id === "classic8" ? game.clockwiseTargets(playerId) : game.clockwiseTargets(playerId).filter(id => !game.isAlly(playerId, id));
       const step = index => {
         if (index >= targets.length) return;
         const id = targets[index], foe = getPlayer(game, id);
@@ -268,12 +309,12 @@ export function useOnePieceSignature(game, playerId, targetId, signature) {
         if (index >= slots.length) { game.gainShield(playerId, 1); return; }
         const slot = slots[index], cards = game.discard.filter(card => card.type === "equipment" && card.slot === slot);
         if (!cards.length) { game.draw(playerId, 1); return equipNext(index + 1); }
-        return choose(game, playerId, { title: "弗兰奇将军：选择装备", options: cards.map(card => ({ value: card.uid, label: "装备【" + card.name + "】" })), aiChoice: cards[0].uid, onResolve: uid => { const pos = game.discard.findIndex(card => card.uid === uid); if (pos >= 0) game.equip(playerId, game.discard.splice(pos, 1)[0]); equipNext(index + 1); } });
+        return choose(game, playerId, { title: "弗兰奇将军：选择装备", options: [{ value: "pass", label: "保留当前装备" }, ...cards.map(card => ({ value: card.uid, label: "装备【" + card.name + "】" }))], aiChoice: [...cards].sort((a,b) => game.aiEquipmentGain(current,b) - game.aiEquipmentGain(current,a)).find(card => game.aiEquipmentGain(current,card) > 0)?.uid || "pass", onResolve: uid => { const pos = game.discard.findIndex(card => card.uid === uid); if (pos >= 0) game.equip(playerId, game.discard.splice(pos, 1)[0]); equipNext(index + 1); } });
       };
       return equipNext(0) || { ok: true };
     }
     case "arrowNotch": {
-      const finish = () => { if (target.alive) target.frozenDraw = Math.max(1, target.frozenDraw); };
+      const finish = () => { if (target.alive && target.frozenDraw < 1) { target.frozenDraw = 1; game.emitOnePieceEvent({ type: "drawReduced", sourceId: playerId, targetId, amount: 1 }); } };
       return game.beginAttack({ sourceId: playerId, targetId, damage: 2, requiredGuards: 2, origin: "arrowNotch", onComplete: finish });
     }
     case "vagabondDrill": {
@@ -287,51 +328,97 @@ export function useOnePieceSignature(game, playerId, targetId, signature) {
 export function handleOnePieceEvent(game, event) {
   const source = getPlayer(game, event.sourceId), target = getPlayer(game, event.targetId);
   switch (event.type) {
-    case "turnStart": if (source) resetLie(game, source); break;
+    case "turnStart":
+      if (source) resetLie(game, source);
+      break;
     case "afterDamage":
+      if (!(event.amount > 0)) break;
       if (source?.characterId === "luffy" && event.origin === "attack") progress(game, source.id, "突击命中");
-      if (source?.characterId === "zoro" && event.origin === "asura") progress(game, source.id, "阿修罗");
-      if (source?.characterId === "usopp" && event.lieTriggered) progress(game, source.id, "谎言弹");
-      if (source?.characterId === "brook" && event.origin === "attack" && target) target.frozenDraw = Math.max(1, target.frozenDraw);
+      if (source?.characterId === "zoro" && (event.origin === "asura" || event.zoroEnhanced)) progress(game, source.id, "强化斩击命中");
+      if (source?.characterId === "brook" && event.origin === "attack" && target && !source.turnFlags.brookCold) {
+        source.turnFlags.brookCold = true;
+        const before = target.frozenDraw;
+        target.frozenDraw = Math.max(1, target.frozenDraw);
+        if (before < target.frozenDraw) progress(game,source.id,"黄泉寒气");
+      }
+      if (target?.characterId === "luffy" && source && source.id !== target.id) progress(game, target.id, "受到他人伤害");
+      if (target?.characterId === "luffy" && source && source.id !== target.id && !target.roundFlags.luffyRage) {
+        target.roundFlags.luffyRage = true;
+        target.turnFlags.nextAttackBonus = true;
+        game.log("event", game.nameOf(target) + "因伙伴造成的伤害进入“越战越勇”");
+      }
       break;
     case "lieTriggered":
       if (source?.characterId === "usopp") progress(game, source.id, "谎言弹");
       break;
+    case "cardsDiscarded":
+      if (source?.characterId === "usopp" && source.id !== event.targetId && event.amount > 0) progress(game,source.id,"令他人弃牌");
+      break;
+    case "drawReduced":
+      if (source?.characterId === "brook" && source.id !== event.targetId && event.amount > 0) progress(game,source.id,"少摸牌状态");
+      break;
     case "afterHpLoss":
-      if (source?.characterId === "luffy" && event.origin === "skill") progress(game, source.id, "二档失血");
       break;
     case "beforeDamage":
       if (target?.characterId === "franky" && event.origin === "attack" && !target.equipment.armor && !target.roundFlags.frankySteel) { target.roundFlags.frankySteel = true; event.amount = Math.max(0, event.amount - 1); }
       if (target?.characterId === "brook" && event.origin === "strategy" && !target.roundFlags.soulCold) { target.roundFlags.soulCold = true; event.amount = Math.max(0, event.amount - 1); }
-      const protector = game.players.find(player => player.alive && player.characterId === "jinbe" && player.id !== event.targetId && !player.roundFlags.jinbeGuard && player.hand.some(card => card.type === "basic") && game.distance(player.id, event.targetId) <= 1 && (game.mode.id === "classic8" || game.isAlly(player.id, event.targetId)));
+      break;
+    case "beforeProtectedDamage":
+      if (!(event.amount > 0)) break;
+      const protector = game.players.find(player => player.alive && player.characterId === "jinbe" && player.id !== event.targetId && !player.roundFlags.jinbeGuard && player.hand.some(card => card.type === "basic") && game.distance(player.id, event.targetId) <= 1 && (game.mode.id === "classic8" || game.aiIsAlly(player.id, event.targetId)));
       if (protector?.human) event.optionalProtector = protector.id;
       if (protector && !protector.human) {
-        const basic = protector.hand.find(card => card.type === "basic");
+        const basic = [...protector.hand].filter(card => card.type === "basic").sort((a,b) => game.aiCardValue(protector,a) - game.aiCardValue(protector,b))[0];
         game.removeCard(protector.id, basic.uid); protector.roundFlags.jinbeGuard = true; event.amount = Math.max(0, event.amount - 1); progress(game, protector.id, "侠义");
       }
       break;
+    case "damageProtected":
+      if (source?.characterId === "jinbe" && event.amount > 0) progress(game, source.id, "侠义");
+      break;
     case "afterHeal":
-      if (source?.characterId === "chopper" && source.id !== target?.id) progress(game, source.id, "医术");
-      if (source?.characterId === "sanji" && source.id !== target?.id) progress(game, source.id, "援护");
+      if (source?.characterId === "chopper" && source.id !== target?.id && event.amount > 0) progress(game, source.id, "医术");
+      if (source?.characterId === "sanji" && source.id !== target?.id && event.amount > 0) { if (!source.roundFlags.supportGranted) { source.roundFlags.supportGranted = true; source.turnFlags.supportCounter = true; } progress(game, source.id, "援护"); }
       break;
-    case "equipmentChanged":
-      if (source?.characterId === "franky") { if (!source.roundFlags.colaEnergy) { source.roundFlags.colaEnergy = true; game.gainEnergy(source.id, 1); } progress(game, source.id, "装备改造"); }
+    case "abnormalityCleansed":
+      if (source?.characterId === "chopper" && source.id !== target?.id && event.amount > 0) progress(game, source.id, "医术净化");
       break;
+    case "cardTransferred":
+      if (source?.characterId === "sanji" && source.id !== target?.id && event.card) { if (!source.roundFlags.supportGranted) { source.roundFlags.supportGranted = true; source.turnFlags.supportCounter = true; } progress(game, source.id, "交付援助"); }
+      break;
+    case "equipmentChanged": {
+      const owner = getPlayer(game, event.ownerId || event.targetId);
+      const changed = Boolean(event.entered || event.left) && event.entered?.uid !== event.left?.uid;
+      if (owner?.characterId === "franky" && changed) {
+        if (!owner.roundFlags.colaEnergy) { owner.roundFlags.colaEnergy = true; game.gainEnergy(owner.id, 1); }
+        progress(game, owner.id, "装备改造");
+      }
+      break;
+    }
     case "hiddenCardViewed": {
       const viewer = getPlayer(game, event.viewerId || event.sourceId);
-      if (viewer?.characterId === "robin") { game.draw(viewer.id, 1); progress(game, viewer.id, "历史学者"); }
+      if (viewer?.characterId === "robin" && (event.card || event.plot) && !viewer.roundFlags.historian) { viewer.roundFlags.historian = true; game.draw(viewer.id, 1); progress(game, viewer.id, "历史学者"); }
       break;
     }
     case "shieldGranted":
-      if (source?.characterId === "jinbe" && event.targetId !== source.id) progress(game, source.id, "海流护航");
+      if (source?.characterId === "jinbe" && event.targetId !== source.id && event.amount > 0) progress(game, source.id, "海流护航");
       break;
     case "beforeDying":
-      if (target?.characterId === "brook" && target.dreamState?.awakened && !target.reviveUsed && ["damage", "attack", "strategy", "signature", "asura", "arrowNotch", "vagabondDrill", "impactWolf", "diableJambe"].includes(event.origin)) { target.reviveUsed = true; target.hp = 1; target.dying = false; target.hand = []; target.energy = 0; game.log("heal", game.nameOf(target) + "以“灵魂出窍”保留1点体力"); return { rescued: true }; }
+      if (target?.characterId === "brook" && target.dreamState?.awakened && !target.reviveUsed && event.isDamage) { target.reviveUsed = true; target.hp = 1; target.dying = false; game.discard.push(...target.hand); target.hand = []; target.energy = 0; game.log("heal", game.nameOf(target) + "以“灵魂出窍”保留1点体力"); return { rescued: true }; }
       break;
     case "cardResolved":
-      if (source?.characterId === "nami" && source.navigationWind && event.card?.type === "strategy" && event.card?.targetMode !== "self" && event.card?.targetMode !== "allOther") source.navigationWind = false;
-      if (source?.characterId === "nami" && event.card?.type === "strategy" && !source.roundFlags.weatherEnergy) { source.roundFlags.weatherEnergy = true; game.gainEnergy(source.id, 1); }
-      if (source?.characterId === "nami") {
+    case "cardCancelled":
+      if (source?.characterId === "nami" && source.navigationWind && event.card?.type === "strategy" && event.card.targetMode !== "self" && event.card.targetMode !== "allOther") {
+        source.navigationWind = false;
+        if (event.type === "cardCancelled" && event.card?.uid) {
+          const index = game.discard.findIndex(card => card.uid === event.card.uid);
+          if (index >= 0 && source.alive) {
+            source.hand.push(game.discard.splice(index, 1)[0]);
+            game.log("event", game.nameOf(source) + "的顺风航线将被反制的策略牌返还手牌");
+          }
+        }
+      }
+      if (event.type === "cardResolved" && source?.characterId === "nami") {
+        if (event.card?.type === "strategy" && !source.roundFlags.weatherEnergy) { source.roundFlags.weatherEnergy = true; game.gainEnergy(source.id, 1); }
         const categories = source.turnFlags.cardCategories || (source.turnFlags.cardCategories = []);
         if (event.card?.type && !categories.includes(event.card.type)) categories.push(event.card.type);
         if (categories.length >= 2) progress(game, source.id, "航海记录");

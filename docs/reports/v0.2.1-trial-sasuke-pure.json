@@ -1,0 +1,267 @@
+{
+  "version": "0.2.1",
+  "sourceHash": "9e1770bd81be54c57afded0893cc409aaf130e22de573aa938d1a35af4b76751",
+  "pool": "naruto_genesis",
+  "mode": "ranked2v2",
+  "scenario": "balance",
+  "seedBase": 20260917,
+  "seedStep": 7919,
+  "seeds": [
+    {
+      "anchor": 0,
+      "first": 20260917,
+      "last": 24212498,
+      "gamesPerCharacter": 500
+    },
+    {
+      "anchor": 1,
+      "first": 20360917,
+      "last": 24312498,
+      "gamesPerCharacter": 500
+    },
+    {
+      "anchor": 2,
+      "first": 20460917,
+      "last": 24412498,
+      "gamesPerCharacter": 500
+    },
+    {
+      "anchor": 3,
+      "first": 20560917,
+      "last": 24512498,
+      "gamesPerCharacter": 500
+    }
+  ],
+  "generatedAt": "2026-09-30T02:56:29.789Z",
+  "games": 2000,
+  "unfinished": 0,
+  "camps": {
+    "azure": 923,
+    "crimson": 1077
+  },
+  "residual": {},
+  "avgRounds": 7.403,
+  "p95Rounds": 20,
+  "p99Rounds": 41,
+  "maxRounds": 46,
+  "over80": 0,
+  "maxSteps": 362,
+  "roles": [
+    {
+      "character": "sasuke",
+      "pack": "naruto_genesis",
+      "anchor": 0,
+      "games": 500,
+      "wins": 253,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 500
+      },
+      "supportOpportunityHistogram": {
+        "0": 500
+      },
+      "metrics": {
+        "activeDeclared": 905,
+        "activeEffective": 905,
+        "activeTargets": {
+          "other": 905
+        },
+        "signatureDeclared": 579,
+        "signatureEffective": 579,
+        "signatureCosts": {
+          "4": 579
+        },
+        "damage": 1995,
+        "healing": 338,
+        "shield": 0,
+        "drawn": 6164,
+        "discarded": 904,
+        "cancelled": 139,
+        "equipmentChanges": 1643,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 253,
+      "awakeRounds": 0,
+      "winRate": 50.6,
+      "avgRounds": 7.312,
+      "p95Rounds": 20,
+      "p99Rounds": 41,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 50.6
+    },
+    {
+      "character": "sasuke",
+      "pack": "naruto_genesis",
+      "anchor": 1,
+      "games": 500,
+      "wins": 195,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 500
+      },
+      "supportOpportunityHistogram": {
+        "0": 500
+      },
+      "metrics": {
+        "activeDeclared": 951,
+        "activeEffective": 951,
+        "activeTargets": {
+          "other": 951
+        },
+        "signatureDeclared": 470,
+        "signatureEffective": 470,
+        "signatureCosts": {
+          "4": 470
+        },
+        "damage": 1589,
+        "healing": 301,
+        "shield": 0,
+        "drawn": 5311,
+        "discarded": 1006,
+        "cancelled": 110,
+        "equipmentChanges": 1507,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 195,
+      "awakeRounds": 0,
+      "winRate": 39,
+      "avgRounds": 7.354,
+      "p95Rounds": 18,
+      "p99Rounds": 42,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 39
+    },
+    {
+      "character": "sasuke",
+      "pack": "naruto_genesis",
+      "anchor": 2,
+      "games": 500,
+      "wins": 273,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 500
+      },
+      "supportOpportunityHistogram": {
+        "0": 500
+      },
+      "metrics": {
+        "activeDeclared": 1014,
+        "activeEffective": 1014,
+        "activeTargets": {
+          "other": 1014
+        },
+        "signatureDeclared": 577,
+        "signatureEffective": 577,
+        "signatureCosts": {
+          "4": 577
+        },
+        "damage": 2053,
+        "healing": 343,
+        "shield": 0,
+        "drawn": 6587,
+        "discarded": 1040,
+        "cancelled": 150,
+        "equipmentChanges": 1723,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 273,
+      "awakeRounds": 0,
+      "winRate": 54.6,
+      "avgRounds": 7.244,
+      "p95Rounds": 17,
+      "p99Rounds": 34,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 54.6
+    },
+    {
+      "character": "sasuke",
+      "pack": "naruto_genesis",
+      "anchor": 3,
+      "games": 500,
+      "wins": 202,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 500
+      },
+      "supportOpportunityHistogram": {
+        "0": 500
+      },
+      "metrics": {
+        "activeDeclared": 1085,
+        "activeEffective": 1085,
+        "activeTargets": {
+          "other": 1085
+        },
+        "signatureDeclared": 583,
+        "signatureEffective": 583,
+        "signatureCosts": {
+          "4": 583
+        },
+        "damage": 2052,
+        "healing": 373,
+        "shield": 0,
+        "drawn": 7449,
+        "discarded": 1158,
+        "cancelled": 137,
+        "equipmentChanges": 1772,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 202,
+      "awakeRounds": 0,
+      "winRate": 40.400000000000006,
+      "avgRounds": 7.702,
+      "p95Rounds": 21,
+      "p99Rounds": 42,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 40.400000000000006
+    }
+  ]
+}

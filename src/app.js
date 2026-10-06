@@ -392,6 +392,7 @@ function playerStatusItems(player) {
   if (player.shield > 0) add("护盾", `可抵消 ${player.shield} 点伤害`, "buff");
   if (player.poison > 0) add("毒素", `${player.poison}层，回合结束失去体力`, "danger");
   if (player.frozenDraw > 0) add("冻结", `下回合少摸 ${player.frozenDraw} 张牌`, "danger");
+  if (engine.riftCollapseActive) add("裂隙收束", "第40轮起回合结束失去1点体力（绕过护盾与减伤）", "danger");
   if (player.skipOffense) add("白霞罚", "本回合不能使用攻击和策略牌", "danger");
   if (player.dying) add("重伤", "正在等待其他角色救援", "danger");
   if (player.signatureLocked > 0) add("招牌技封存", "直到下个回合结束无法释放", "danger");
@@ -399,6 +400,7 @@ function playerStatusItems(player) {
   if (player.rangeInfinite) add("无限距离", "本回合攻击距离无限", "buff");
   if (player.turnFlags.rangeBonus) add("距离强化", `本回合攻击距离 +${player.turnFlags.rangeBonus}`, "buff");
   if (player.turnFlags.nextAttackPoison) add("毒刃涂布", "下一次攻击附加毒素", "buff");
+  if (player.turnFlags.supportCounter) add("援护反击", "下一次普通突击无视距离并额外需要1张防御；魔神风脚不可介入", "buff");
   if (player.turnFlags.nextAttackBonus) {
     const attackBuffNames = { naruto: "影分身蓄势", sakura: "怪力蓄势", itachi: "月读前兆", kakashi: "复制强化", yuji: "径庭拳蓄势" };
     add(attackBuffNames[player.characterId] || "攻击强化", "下一次攻击伤害 +1", "buff");
@@ -414,6 +416,7 @@ function playerStatusItems(player) {
   if (player.roundFlags.diagnosis) add("诊断", "本轮已经触发", "used");
   if (player.roundFlags.resolve) add("不屈容器", "本轮已经触发", "used");
   if (player.roundFlags.cover) add("战术掩护", "本轮已经触发", "used");
+  if (player.roundFlags.jinbeGuard) add("侠义", "本轮已经使用", "used");
   if (player.roundFlags.damageEnergy) add("造成伤害能量", "本轮奖励已经获得", "used");
   if (player.roundFlags.hurtEnergy) add("受到伤害能量", "本轮奖励已经获得", "used");
   if (player.roundFlags.foresight) add("战术预读", "本轮行动后移效果已经触发", "used");

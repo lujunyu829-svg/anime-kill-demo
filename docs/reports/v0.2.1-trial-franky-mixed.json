@@ -1,0 +1,275 @@
+{
+  "version": "0.2.1",
+  "sourceHash": "833a51e166575a3b945bbd0abd9c97a2e5788087e82ad0785edb4b962339ed41",
+  "pool": "mixed",
+  "mode": "ranked2v2",
+  "scenario": "balance",
+  "seedBase": 20260917,
+  "seedStep": 7919,
+  "seeds": [
+    {
+      "anchor": 0,
+      "first": 20260917,
+      "last": 22628698,
+      "gamesPerCharacter": 300
+    },
+    {
+      "anchor": 1,
+      "first": 20360917,
+      "last": 22728698,
+      "gamesPerCharacter": 300
+    },
+    {
+      "anchor": 2,
+      "first": 20460917,
+      "last": 22828698,
+      "gamesPerCharacter": 300
+    },
+    {
+      "anchor": 3,
+      "first": 20560917,
+      "last": 22928698,
+      "gamesPerCharacter": 300
+    }
+  ],
+  "generatedAt": "2026-09-30T02:54:11.263Z",
+  "games": 1200,
+  "unfinished": 0,
+  "camps": {
+    "azure": 610,
+    "crimson": 590
+  },
+  "residual": {},
+  "avgRounds": 13.9975,
+  "p95Rounds": 43,
+  "p99Rounds": 45,
+  "maxRounds": 49,
+  "over80": 0,
+  "maxSteps": 563,
+  "roles": [
+    {
+      "character": "franky",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 300,
+      "wins": 162,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 300
+      },
+      "supportOpportunityHistogram": {
+        "0": 300
+      },
+      "metrics": {
+        "activeDeclared": 770,
+        "activeEffective": 770,
+        "activeTargets": {
+          "self": 770
+        },
+        "signatureDeclared": 2281,
+        "signatureEffective": 2221,
+        "signatureCosts": {
+          "3": 2281
+        },
+        "damage": 1305,
+        "healing": 445,
+        "shield": 2060,
+        "drawn": 11670,
+        "discarded": 2642,
+        "cancelled": 276,
+        "equipmentChanges": 1732,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "装备改造": 808
+        },
+        "awakeRound": 1114
+      },
+      "dreamProgress": 808,
+      "awakened": 230,
+      "awakenedWins": 119,
+      "unawakenedWins": 43,
+      "awakeRounds": 1114,
+      "winRate": 54,
+      "avgRounds": 13.8,
+      "p95Rounds": 43,
+      "p99Rounds": 44,
+      "maxRounds": 44,
+      "avgDreamProgress": 2.6933333333333334,
+      "awakenRate": 76.66666666666667,
+      "avgAwakenRound": 4.843478260869565,
+      "awakenedWinRate": 51.73913043478261,
+      "unawakenedWinRate": 61.42857142857143
+    },
+    {
+      "character": "franky",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 300,
+      "wins": 159,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 300
+      },
+      "supportOpportunityHistogram": {
+        "0": 300
+      },
+      "metrics": {
+        "activeDeclared": 795,
+        "activeEffective": 795,
+        "activeTargets": {
+          "self": 795
+        },
+        "signatureDeclared": 2095,
+        "signatureEffective": 2072,
+        "signatureCosts": {
+          "3": 2095
+        },
+        "damage": 1282,
+        "healing": 472,
+        "shield": 1961,
+        "drawn": 10963,
+        "discarded": 2501,
+        "cancelled": 244,
+        "equipmentChanges": 1747,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "装备改造": 750
+        },
+        "awakeRound": 915
+      },
+      "dreamProgress": 750,
+      "awakened": 203,
+      "awakenedWins": 108,
+      "unawakenedWins": 51,
+      "awakeRounds": 915,
+      "winRate": 53,
+      "avgRounds": 13.266666666666667,
+      "p95Rounds": 43,
+      "p99Rounds": 45,
+      "maxRounds": 47,
+      "avgDreamProgress": 2.5,
+      "awakenRate": 67.66666666666666,
+      "avgAwakenRound": 4.5073891625615765,
+      "awakenedWinRate": 53.20197044334976,
+      "unawakenedWinRate": 52.57731958762887
+    },
+    {
+      "character": "franky",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 300,
+      "wins": 165,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 300
+      },
+      "supportOpportunityHistogram": {
+        "0": 300
+      },
+      "metrics": {
+        "activeDeclared": 855,
+        "activeEffective": 855,
+        "activeTargets": {
+          "self": 855
+        },
+        "signatureDeclared": 2424,
+        "signatureEffective": 2392,
+        "signatureCosts": {
+          "3": 2424
+        },
+        "damage": 1431,
+        "healing": 520,
+        "shield": 2235,
+        "drawn": 13160,
+        "discarded": 2959,
+        "cancelled": 292,
+        "equipmentChanges": 1902,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "装备改造": 791
+        },
+        "awakeRound": 1062
+      },
+      "dreamProgress": 791,
+      "awakened": 210,
+      "awakenedWins": 109,
+      "unawakenedWins": 56,
+      "awakeRounds": 1062,
+      "winRate": 55.00000000000001,
+      "avgRounds": 15.52,
+      "p95Rounds": 44,
+      "p99Rounds": 45,
+      "maxRounds": 49,
+      "avgDreamProgress": 2.6366666666666667,
+      "awakenRate": 70,
+      "avgAwakenRound": 5.057142857142857,
+      "awakenedWinRate": 51.90476190476191,
+      "unawakenedWinRate": 62.22222222222222
+    },
+    {
+      "character": "franky",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 300,
+      "wins": 124,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 300
+      },
+      "supportOpportunityHistogram": {
+        "0": 300
+      },
+      "metrics": {
+        "activeDeclared": 746,
+        "activeEffective": 746,
+        "activeTargets": {
+          "self": 746
+        },
+        "signatureDeclared": 2274,
+        "signatureEffective": 2235,
+        "signatureCosts": {
+          "3": 2274
+        },
+        "damage": 1250,
+        "healing": 499,
+        "shield": 2137,
+        "drawn": 11867,
+        "discarded": 2521,
+        "cancelled": 286,
+        "equipmentChanges": 1791,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "装备改造": 798
+        },
+        "awakeRound": 1111
+      },
+      "dreamProgress": 798,
+      "awakened": 220,
+      "awakenedWins": 89,
+      "unawakenedWins": 35,
+      "awakeRounds": 1111,
+      "winRate": 41.333333333333336,
+      "avgRounds": 13.403333333333334,
+      "p95Rounds": 42,
+      "p99Rounds": 45,
+      "maxRounds": 46,
+      "avgDreamProgress": 2.66,
+      "awakenRate": 73.33333333333333,
+      "avgAwakenRound": 5.05,
+      "awakenedWinRate": 40.45454545454545,
+      "unawakenedWinRate": 43.75
+    }
+  ]
+}

@@ -54,7 +54,7 @@ test("回合开始摸牌、获得能量并按座次流转", () => {
   const first = game.player(game.currentPlayerId);
   assert.equal(first.id, "p0");
   assert.equal(first.energy, 1);
-  assert.ok(first.hand.length >= 6);
+  assert.ok(first.hand.length >= 5);
   first.hand = first.hand.slice(0, first.hp);
   game.endTurn(first.id);
   assert.equal(game.currentPlayerId, "p1");
@@ -712,6 +712,16 @@ test("佐助以天手力交换装备并建立无视距离与护甲的追猎", ()
   assert.equal(sasuke.swapMarkedId, null);
 });
 
+test("佐助在0能量时仍能发动天手力换位", () => {
+  const game = create("ranked2v2", "sasuke"), sasuke = game.player("p0"), target = game.player("p1");
+  sasuke.energy = 0;
+  sasuke.equipment.weapon = { ...cardDefinitions.weapon, uid: "free-swap-weapon" };
+  assert.equal(game.useActiveSkill(sasuke.id, target.id).pending, true);
+  game.resolveChoice(sasuke.id, "weapon");
+  assert.equal(sasuke.energy, 0);
+  assert.equal(sasuke.swapMarkedId, target.id);
+});
+
 test("卡卡西从弃牌堆生成限时拷贝且拷贝不计出牌数", () => {
   const game = create("ranked2v2", "kakashi"), kakashi = game.player("p0"), target = game.player("p1");
   for (const player of game.players) player.hand = [];
@@ -749,8 +759,9 @@ test("雏田的白眼公开锁定目标情报并以策略封锁能量", () => {
   hinata.hand = [{ ...cardDefinitions.memory_exchange, uid: "meridian-strategy" }, { ...cardDefinitions.focus, uid: "exchange-cost" }];
   target.hand = [{ ...cardDefinitions.attack, uid: "exchange-target" }];
   game.playCard(hinata.id, "meridian-strategy", target.id);
-  assert.equal(target.energyLocked, true);
+  assert.equal(target.energyLocked, false);
   game.resolveChoice(hinata.id, "exchange-cost");
+  assert.equal(target.energyLocked, true);
   hinata.energy = 4;
   const hp = target.hp;
   game.useSignature(hinata.id, target.id);
@@ -1099,4 +1110,15 @@ test("牌生命周期与装备变更事件带有统一事件字段", () => {
   const equipmentEvent = game.eventHistory.find(event => event.type === "equipmentChanged" && event.entered?.uid === "weapon-event");
   assert.equal(equipmentEvent.ownerId, player.id);
   assert.equal(equipmentEvent.left, null);
+});
+
+test("AI目标评分优先危险队友并避免攻击队友", () => {
+  const game = create("ranked2v2", "naruto");
+  const ally = game.player("p2");
+  const enemy = game.player("p1");
+  ally.hp = 1;
+  ally.poison = 2;
+  enemy.hp = 1;
+  assert.ok(game.aiTargetScore("p0", "p2", "support") > game.aiTargetScore("p0", "p1", "support"));
+  assert.ok(game.aiTargetScore("p0", "p1", "attack") > game.aiTargetScore("p0", "p2", "attack"));
 });

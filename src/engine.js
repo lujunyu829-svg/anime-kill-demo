@@ -4,9 +4,10 @@ import { handleOnePieceEvent, initializeOnePieceState, isOnePieceCharacter, getO
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
 export class GameEngine {
-  constructor({ modeId, humanCharacterId, random = Math.random, fixedAnchorSeat = null } = {}) {
+  constructor({ modeId, humanCharacterId, random = Math.random, fixedAnchorSeat = null, characterPool = null } = {}) {
     this.random = random;
     this.fixedAnchorSeat = fixedAnchorSeat;
+    this.characterPool = characterPool;
     this.mode = getMode(modeId) || getMode("classic8");
     this.humanCharacterId = humanCharacterId || characters[0].id;
     this.players = [];
@@ -14,7 +15,7 @@ export class GameEngine {
     this.discard = [];
     this.logs = [];
     this.eventHistory = [];
-    this.telemetry = { rounds: 0, turns: 0, damage: 0, cardDeclared: 0, cardResolved: 0, cardCancelled: 0, shieldGranted: 0 };
+    this.telemetry = { rounds: 0, turns: 0, damage: 0, healing: 0, shieldGained: 0, cardsDrawn: 0, cardsDiscarded: 0, activeSkillUses: 0, signatureUses: 0, cardDeclared: 0, cardResolved: 0, cardCancelled: 0, shieldGranted: 0 };
     this.visualEvents = [];
     this.round = 0;
     this.phase = "setup";
@@ -31,11 +32,16 @@ export class GameEngine {
     this.winner = null;
     this.instance = 0;
     this.turnNumber = 0;
+    this.cardTerminalUids = new Set();
+    this.activeCardContext = null;
+    this.riftCollapseActive = false;
+    this.riftCollapseAnnounced = false;
   }
 
   setup() {
     this.deck = this.shuffle(this.buildDeck());
-    const available = this.shuffle(characters.filter(c => c.id !== this.humanCharacterId));
+    const pool = Array.isArray(this.characterPool) && this.characterPool.length ? new Set(this.characterPool) : null;
+    const available = this.shuffle(characters.filter(c => c.id !== this.humanCharacterId && (!pool || pool.has(c.id))));
     let roleList = [...this.mode.roles];
     if (this.mode.id === "classic8") roleList = this.shuffle(roleList);
     this.players = Array.from({ length: this.mode.playerCount }, (_, seat) => {
@@ -131,6 +137,11 @@ export class GameEngine {
   startRound() {
     if (this.winner) return;
     this.round += 1;
+    this.riftCollapseActive = this.round >= 40;
+    if (this.riftCollapseActive && !this.riftCollapseAnnounced) {
+      this.riftCollapseAnnounced = true;
+      this.log("system", "第40轮起裂隙收束：每名角色回合结束时失去1点体力");
+    }
     this.telemetry.rounds += 1;
     for (const player of this.players) {
       player.roundFlags = {};
@@ -194,6 +205,7 @@ export class GameEngine {
       nextAttackBonus: Boolean(carry.bonus),
       nextAttackIgnoreArmor: Boolean(carry.ignoreArmor),
       nextAttackRequiredGuard: carry.requiredGuards || 0,
+      supportCounter: Boolean(prior.supportCounter),
       shadowNeckTarget: carry.shadowNeckTarget || null
     };
     player.nextAttackState = { bonus: false, ignoreArmor: false, requiredGuards: 0, shadowNeckTarget: null };
@@ -205,6 +217,7 @@ export class GameEngine {
     this.gainEnergy(player.id, 1 + (player.equipment.charm?.id === "charm" ? 1 : 0));
 
     let drawCount = Math.max(0, 2 - player.frozenDraw);
+    if (this.mode.id === "ranked2v2" && this.round === 1 && this.turnNumber === 1) drawCount = Math.min(drawCount, 1);
     player.frozenDraw = 0;
     this.draw(player.id, drawCount);
     if (player.characterId === "tanjiro") {
@@ -265,6 +278,12 @@ export class GameEngine {
 
   finishTurnAfterEffects(playerId) {
     const player = this.player(playerId);
+    if (this.riftCollapseActive && player?.alive && !player.turnFlags.riftCollapseApplied) {
+      player.turnFlags.riftCollapseApplied = true;
+      this.log("damage", `${this.nameOf(player)}受到裂隙收束影响，失去1点体力`);
+      this.loseHp(playerId, 1, null, "riftCollapse", () => this.finishTurnAfterEffects(playerId));
+      return true;
+    }
     if (player?.signatureLocked > 0) player.signatureLocked -= 1;
     if (player?.energyLocked) player.energyLocked = false;
     this.expireEchoAtTurnEnd(playerId);
@@ -304,6 +323,7 @@ export class GameEngine {
       cards.push(card);
     }
     if (shouldLog && cards.length) this.log("system", `${this.nameOf(player)}摸了${cards.length}张牌`);
+    this.telemetry.cardsDrawn += cards.length;
     return cards;
   }
 
@@ -313,6 +333,40 @@ export class GameEngine {
   characterOf(playerOrId) { const player = typeof playerOrId === "string" ? this.player(playerOrId) : playerOrId; return getCharacter(player?.characterId); }
   nameOf(playerOrId) { return this.characterOf(playerOrId)?.name || "未知角色"; }
   roleOf(playerOrId) { const player = typeof playerOrId === "string" ? this.player(playerOrId) : playerOrId; return roles[player?.roleId]; }
+  emitCardDeclared(sourceId, targetIds, card) {
+    if (!card?.uid) return;
+    // A card returned to hand starts a fresh declaration lifecycle.
+    this.cardTerminalUids.delete(card.uid);
+    const declaredTargets = Array.isArray(targetIds) ? targetIds : [targetIds].filter(Boolean);
+    const ids = [...new Set([sourceId, ...declaredTargets])];
+    const before = Object.fromEntries(ids.map(id => {
+      const player = this.player(id);
+      return [id, player ? { hp: player.hp, energy: player.energy, shield: player.shield, hand: player.hand.length, alive: player.alive } : null];
+    }));
+    this.activeCardContext = { sourceId, targetIds: declaredTargets, card, before };
+    this.emitOnePieceEvent({ type: "cardDeclared", sourceId, targetIds: declaredTargets, targetId: declaredTargets[0], card });
+  }
+
+  finalizeCardResolved(sourceId, targetIds, card) {
+    if (!card?.uid || this.cardTerminalUids.has(card.uid)) return;
+    this.cardTerminalUids.add(card.uid);
+    const context = this.activeCardContext?.card?.uid === card.uid ? this.activeCardContext : null;
+    const resolvedTargets = Array.isArray(targetIds) ? targetIds : [targetIds].filter(Boolean);
+    const ids = [...new Set([sourceId, ...resolvedTargets])];
+    const changes = Object.fromEntries(ids.map(id => {
+      const player = this.player(id), before = context?.before?.[id];
+      if (!player || !before) return [id, null];
+      return [id, { hp: player.hp - before.hp, energy: player.energy - before.energy, shield: player.shield - before.shield, hand: player.hand.length - before.hand, alive: player.alive !== before.alive }];
+    }));
+    if (context) this.activeCardContext = null;
+    const source = this.player(sourceId);
+    if (source?.characterId === "hinata" && card.type === "strategy" && resolvedTargets.includes(source.scoutedTargetId) && !source.roundFlags.meridianSeal) {
+      const target = this.player(source.scoutedTargetId);
+      if (target?.alive) { source.roundFlags.meridianSeal = true; target.energyLocked = true; this.log("event", `${this.nameOf(source)}以“经络封锁”阻断${this.nameOf(target)}的能量获取`); }
+    }
+    this.emitOnePieceEvent({ type: "cardResolved", sourceId, targetIds: resolvedTargets, targetId: resolvedTargets[0], card, summary: card._resolutionSummary || { changes } });
+  }
+
   emitOnePieceEvent(event) {
     if (event?.type) {
       this.eventHistory.push({ ...event });
@@ -342,7 +396,7 @@ export class GameEngine {
     const before = player.shield;
     player.shield = clamp(player.shield + amount, 0, 3);
     const gained = player.shield - before;
-    if (gained > 0) this.emitOnePieceEvent({ type: "shieldGranted", sourceId, targetId: playerId, amount: gained });
+    if (gained > 0) { this.telemetry.shieldGained += gained; this.emitOnePieceEvent({ type: "shieldGranted", sourceId, targetId: playerId, amount: gained }); }
     return gained;
   }
 
@@ -480,16 +534,17 @@ export class GameEngine {
     const markedId = targetId || owner?.chessTargetId;
     if (owner?.characterId !== "shikamaru" || owner.roundFlags.foresight || !markedId || owner.chessTargetId !== markedId) return false;
     const index = this.turnQueue.indexOf(markedId);
-    if (index < 0 || index >= this.turnQueue.length - 1) return false;
-    [this.turnQueue[index], this.turnQueue[index + 1]] = [this.turnQueue[index + 1], this.turnQueue[index]];
+    if (index >= 0 && index < this.turnQueue.length - 1) [this.turnQueue[index], this.turnQueue[index + 1]] = [this.turnQueue[index + 1], this.turnQueue[index]];
     owner.roundFlags.foresight = true;
     owner.turnFlags.shadowNeckTarget = markedId;
     this.log("event", `${this.nameOf(owner)}因${reason}发动“战术预读”，令${this.nameOf(markedId)}的行动后移一位`);
     return true;
   }
 
-  notifyCardCancelled(playerId, reason = "出牌被取消") {
-    this.emitOnePieceEvent({ type: "cardCancelled", sourceId: playerId, reason });
+  notifyCardCancelled(playerId, reason = "出牌被取消", card = null, targetIds = [], cancelledById = null) {
+    if (card?.uid && this.cardTerminalUids.has(card.uid)) return;
+    if (card?.uid) { this.cardTerminalUids.add(card.uid); if (this.activeCardContext?.card?.uid === card.uid) this.activeCardContext = null; }
+    this.emitOnePieceEvent({ type: "cardCancelled", sourceId: playerId, targetIds: Array.isArray(targetIds) ? targetIds : [targetIds].filter(Boolean), targetId: Array.isArray(targetIds) ? targetIds[0] : targetIds, card, reason, cancelledById });
     const owner = this.findChessOwner(playerId);
     if (owner) this.triggerTacticalForesight(owner.id, playerId, reason);
   }
@@ -499,20 +554,26 @@ export class GameEngine {
   }
 
   requestChoice(playerId, { title = "请选择", text = "", options = [], onResolve = null, aiChoice = null } = {}) {
+    if (this.winner) return { ok: true, pending: false };
     const player = this.player(playerId);
+    const cardContext = this.activeCardContext;
+    const resolve = value => {
+      if (onResolve) onResolve(value);
+      if (cardContext && !this.pendingChoice && !this.pendingResponse && !this.pendingDiscard) this.finalizeCardResolved(cardContext.sourceId, cardContext.targetIds, cardContext.card);
+    };
     const available = options.filter(option => !option.disabled);
     if (!player?.alive || !available.length) {
-      if (onResolve) onResolve(null);
+      resolve(null);
       return { ok: true, pending: false };
     }
     if (!player.human) {
       const value = typeof aiChoice === "function" ? aiChoice(available, player) : aiChoice;
       const chosen = available.find(option => option.value === value) || available[0];
-      if (onResolve) onResolve(chosen.value);
+      resolve(chosen.value);
       return { ok: true, pending: false, value: chosen.value };
     }
     this.pendingChoice = { id: ++this.choicePromptId, playerId, title, text, options: available.map(option => ({ value: option.value, label: option.label, description: option.description || "" })) };
-    this.pendingChoiceResolver = onResolve;
+    this.pendingChoiceResolver = resolve;
     return { ok: true, pending: true };
   }
 
@@ -563,6 +624,12 @@ export class GameEngine {
     if (player.navigationWind && card.type === "strategy" && card.targetMode !== "self" && card.targetMode !== "allOther") {
       return this.players.filter(target => target.alive && target.id !== playerId).map(target => target.id);
     }
+    if (card.type === "strategy" && card.targetMode === "other" && player.characterId === "robin") {
+      return this.players.filter(target => target.alive && target.id !== playerId).map(target => target.id);
+    }
+    if (card.type === "strategy" && card.targetMode === "other" && player.characterId === "usopp") {
+      return this.players.filter(target => target.alive && target.id !== playerId && player.specialCards.some(item => item.kind === "lie" && item.targetId === target.id)).map(target => target.id);
+    }
     if (card.type === "equipment" || ["focus", "overdrive", "energy_auction", "delayed_cast", "echo_script", "dimensional_barrage", "rift_invasion"].includes(card.id)) return [playerId];
     if (card.id === "adapt") return this.players.filter(target => target.alive && (target.id === playerId || this.distance(playerId, target.id) <= this.attackRange(playerId))).map(target => target.id);
     if (card.id === "heal") {
@@ -576,6 +643,8 @@ export class GameEngine {
       || (player.characterId === "shikamaru" && player.turnFlags.shadowNeckTarget === p.id)
       || (player.characterId === "gaara" && p.sandMarkedBy === playerId)
       || (player.characterId === "hinata" && player.scoutedTargetId === p.id)
+      || (player.characterId === "usopp" && player.specialCards.some(item => item.kind === "lie" && item.targetId === p.id))
+      || (player.characterId === "sanji" && player.turnFlags.supportCounter)
     )).map(p => p.id);
     if (card.id === "memory_exchange") return this.players.filter(p => p.alive && p.id !== playerId && p.hand.length && player.hand.some(item => item.uid !== card.uid)).map(p => p.id);
     if (card.id === "tactical_relay") return player.hand.some(item => item.uid !== card.uid && item.type === "basic") ? this.players.filter(p => p.alive && p.id !== playerId).map(p => p.id) : [];
@@ -655,6 +724,7 @@ export class GameEngine {
     if (!this.canAct(playerId)) return { ok: false, reason: "现在不能发动技能" };
     if (!skill || player.turnFlags.activeUsed) return { ok: false, reason: "主动技本回合已经使用" };
     if (!this.getActiveSkillTargets(playerId).includes(targetId)) return { ok: false, reason: "消耗不足或目标不合法" };
+    this.telemetry.activeSkillUses += 1;
     if (isOnePieceCharacter(player)) return useOnePieceActive(this, playerId, targetId, skill);
     if (skill.cost) player.energy -= skill.cost;
     player.turnFlags.activeUsed = true;
@@ -722,7 +792,7 @@ export class GameEngine {
       case "odmGear": return this.requestDiscard(playerId, 1, { reason: "立体机动：请选择1张手牌弃置", shouldLog: false, onComplete: () => { player.attackLimit += 1; player.turnFlags.rangeBonus = (player.turnFlags.rangeBonus || 0) + 1; } });
       case "tacticalGift": {
         const [card] = player.hand.splice(0, 1);
-        if (card) this.player(targetId).hand.push(card);
+        if (card) { this.player(targetId).hand.push(card); this.emitOnePieceEvent({ type: "cardTransferred", sourceId: playerId, targetId, card, amount: 1 }); }
         this.draw(targetId, 1);
         break;
       }
@@ -791,7 +861,7 @@ export class GameEngine {
       title: "天手力：选择换位槽位",
       text: `与${this.nameOf(target)}交换对应装备，并建立追猎标记。`,
       options: slots.map(slot => ({ value: slot, label: { weapon: "武器", armor: "防具", charm: "饰品" }[slot], description: `${source.equipment[slot]?.name || "空槽"} ↔ ${target.equipment[slot]?.name || "空槽"}` })),
-      aiChoice: slots[0],
+      aiChoice: [...slots].sort((a,b) => (this.aiEquipmentValue(target.equipment[b]) - this.aiEquipmentValue(source.equipment[b])) - (this.aiEquipmentValue(target.equipment[a]) - this.aiEquipmentValue(source.equipment[a])))[0],
       onResolve: slot => {
         const sourceEquip = source.equipment[slot], targetEquip = target.equipment[slot];
         this.moveEquipment(source.id, slot, targetEquip, sourceId);
@@ -809,7 +879,7 @@ export class GameEngine {
       title: "拷贝忍术：选择术式",
       text: "生成的拷贝不计出牌数，仅持续到本回合结束。",
       options: candidates.map(card => ({ value: card.uid, label: `复刻【${card.name}】`, description: card.description })),
-      aiChoice: candidates.find(card => card.type === "strategy")?.uid || candidates[0]?.uid,
+      aiChoice: candidates.find(card => card.id === "attack")?.uid || candidates[0]?.uid,
       onResolve: uid => {
         const original = candidates.find(card => card.uid === uid);
         if (!original) return;
@@ -824,8 +894,11 @@ export class GameEngine {
 
   resolveCurseExperiment(sourceId, targetId) {
     const source = this.player(sourceId), target = this.player(targetId);
+    const basic = source.hand.filter(card => card.type === "basic" && !card._curseSpoil).sort((a,b) => this.aiCardValue(source,a) - this.aiCardValue(source,b));
+    const sample = basic.find(card => card.id !== "attack") || (basic.length > 1 ? basic[0] : null) || [...source.hand].filter(card => !card._curseSpoil).sort((a,b) => this.aiCardValue(source,a) - this.aiCardValue(source,b))[0];
     return this.requestDiscard(sourceId, 1, {
       reason: "咒印实验：选择1张手牌作为类别样本",
+      allowedUids: source.human ? null : [sample?.uid].filter(Boolean),
       onComplete: removed => {
         const sample = removed[0];
         if (!sample || !target?.alive) return;
@@ -854,7 +927,7 @@ export class GameEngine {
       markTriggered();
       this.removeCard(playerId, cardUid);
       this.log("event", `${this.nameOf(player)}被“影缝”打断了【${card.name}】`);
-      this.notifyCardCancelled(playerId, "棋子出牌被取消");
+      this.notifyCardCancelled(playerId, "棋子出牌被取消", card, targetId, owner.id);
       return { ok: true, cancelled: true };
     };
     const proceed = () => {
@@ -910,7 +983,7 @@ export class GameEngine {
       this.log("event", `${this.nameOf(player)}被“蛤蟆口束缚”打断了【${card.name}】`);
       this.draw(owner.id, 1);
       this.log("event", `${this.nameOf(owner)}发动“蛤蟆协攻”摸1张牌`);
-      this.notifyCardCancelled(playerId, "出牌被蛤蟆束缚取消");
+      this.notifyCardCancelled(playerId, "出牌被蛤蟆束缚取消", card, targetId, owner.id);
       return { ok: true, cancelled: true };
     };
     const proceed = () => {
@@ -937,24 +1010,28 @@ export class GameEngine {
   }
 
   handleUsoppLie(playerId, card, cardUid, targetId, options = {}) {
-    if (options.ignoreLie || card.responseOnly || (card.id !== "attack" && card.type !== "strategy")) return null;
+    if (options.ignoreLie || card.responseOnly) return null;
     const owner = this.players.find(player => player.alive && player.characterId === "usopp" && player.specialCards.some(item => item.kind === "lie" && item.targetId === playerId));
     if (!owner) return null;
     const lie = owner.specialCards.find(item => item.kind === "lie" && item.targetId === playerId);
-    const clear = () => {
+    const clear = outcome => {
       owner.specialCards = owner.specialCards.filter(item => item.uid !== lie.uid);
-      this.discard.push(lie.card);
-      this.emitOnePieceEvent({ type: "lieTriggered", sourceId: owner.id, targetId: playerId });
+      const returnToHand = owner.dreamState?.awakened && owner.lieReturnedRound !== this.round;
+      if (returnToHand) { owner.lieReturnedRound = this.round; owner.hand.push(lie.card); }
+      else this.discard.push(lie.card);
+      this.emitOnePieceEvent({ type: "lieTriggered", sourceId: owner.id, targetId: playerId, outcome, returned: returnToHand });
     };
     const cancel = () => {
-      clear();
       this.removeCard(playerId, cardUid);
-      this.notifyCardCancelled(playerId, "出牌被谎言弹取消");
-      this.log("event", `${this.nameOf(playerId)}被乌索普的“谎言弹”取消了【${card.name}】`);
+      clear("cancel");
+      this.gainEnergy(owner.id, 1);
+      this.log("event", this.nameOf(playerId) + "被乌索普的“谎言弹”取消了【" + card.name + "】，乌索普获得1点能量");
+      this.notifyCardCancelled(playerId, "出牌被谎言弹取消", card, targetId, owner.id);
       return { ok: true, cancelled: true };
     };
     const proceed = () => {
-      clear();
+      clear("continue");
+      this.draw(owner.id, 1);
       return this.playCard(playerId, cardUid, targetId, { ...options, ignoreLie: true });
     };
     const payable = this.player(playerId).hand.filter(item => item.uid !== cardUid);
@@ -965,14 +1042,13 @@ export class GameEngine {
     }
     return this.requestChoice(playerId, {
       title: "谎言弹触发",
-      text: `你被${this.nameOf(owner)}的未知谎言标记。弃置另一张手牌可继续，否则当前牌被取消。`,
+      text: "你被" + this.nameOf(owner) + "的未知谎言标记。弃置另一张手牌可继续，否则当前牌被取消。",
       options: [{ value: "pay", label: "弃牌继续" }, { value: "cancel", label: "取消当前牌" }],
       onResolve: value => value === "pay"
         ? this.requestDiscard(playerId, 1, { reason: "谎言弹：请弃置另一张手牌", allowedUids: payable.map(item => item.uid), onComplete: proceed })
         : cancel()
     });
   }
-
   playCard(playerId, cardUid, targetId, options = {}) {
     const player = this.player(playerId);
     if (!options.freeUse && !this.canAct(playerId)) return { ok: false, reason: "现在不能出牌" };
@@ -983,6 +1059,7 @@ export class GameEngine {
     if (!this.getCardTargets(playerId, card).includes(targetId)) return { ok: false, reason: "目标不合法" };
     if (card.id === "attack" && !options.freeUse && (player.skipOffense || player.attacksUsed >= player.attackLimit)) return { ok: false, reason: player.skipOffense ? "你本回合无法攻击" : "本回合攻击次数已用完" };
     if (card.type === "strategy" && player.skipOffense) return { ok: false, reason: "你本回合无法使用策略牌" };
+    if (this.activeCardContext?.card?.uid !== card.uid) this.emitCardDeclared(playerId, [targetId], card);
     if (player.curseSeal?.type === card.type) {
       const curse = player.curseSeal;
       const experimenter = this.player(curse.sourceId);
@@ -993,11 +1070,10 @@ export class GameEngine {
         experimenter.hand.push(card);
         this.gainEnergy(experimenter.id, 1);
         this.log("event", `${this.nameOf(player)}触发咒印，【${card.name}】被${this.nameOf(experimenter)}夺为实验牌`);
-        this.notifyCardCancelled(playerId, "出牌被咒印夺取");
+        this.notifyCardCancelled(playerId, "出牌被咒印夺取", card, targetId, experimenter.id);
         return { ok: true, cancelled: true };
       }
     }
-    this.emitOnePieceEvent({ type: "cardDeclared", sourceId: playerId, targetId, card });
     if (!options.freeUse) {
       const checkmate = this.plotsTargeting(playerId, "checkmateTrap")[0];
       if (checkmate) {
@@ -1006,7 +1082,7 @@ export class GameEngine {
         } else {
           this.removePlot(checkmate);
           this.log("event", `${this.nameOf(player)}被“将军”中断了出牌阶段`);
-          this.notifyCardCancelled(playerId, "出牌被将军取消");
+          this.notifyCardCancelled(playerId, "出牌被将军取消", card, targetId, checkmate.ownerId);
           return this.forceEndPlayPhase(playerId);
         }
       }
@@ -1025,7 +1101,6 @@ export class GameEngine {
     if (card.type !== "equipment" && card.strategyKind !== "plot" && !card._ephemeral) this.discard.push(card);
     if (!options.freeUse && !card._copiedBy) player.turnFlags.cardsPlayed = (player.turnFlags.cardsPlayed || 0) + 1;
     this.log("card", `${this.nameOf(player)}使用了【${card.name}】${targetId !== playerId ? `，目标是${this.nameOf(targetId)}` : ""}`);
-    this.emitOnePieceEvent({ type: "cardResolved", sourceId: playerId, targetId, card });
     if (player.characterId === "kakashi" && card._copiedBy === playerId && !player.roundFlags.copyRecovery) {
       player.roundFlags.copyRecovery = true;
       this.gainEnergy(playerId, 1);
@@ -1035,35 +1110,26 @@ export class GameEngine {
       this.gainEnergy(playerId, 1);
       this.log("event", `${this.nameOf(player)}使用研究类别牌，获得1点能量`);
     }
-    if (player.characterId === "hinata" && card.type === "strategy" && targetId === player.scoutedTargetId && !player.roundFlags.meridianSeal) {
-      player.roundFlags.meridianSeal = true;
-      const target = this.player(targetId);
-      if (target?.alive) {
-        target.energyLocked = true;
-        this.log("event", `${this.nameOf(player)}以“经络封锁”阻断${this.nameOf(target)}的能量获取`);
-      }
-    }
-
     if (card.id === "attack") {
       if (!options.freeUse) player.attacksUsed += 1;
-      const result = this.beginAttack({ sourceId: playerId, targetId, damage: 1, requiredGuards: 1, origin: "attack", freeUse: options.freeUse });
-      return this.finishBasicUse(playerId, card, result);
+      const result = this.beginAttack({ sourceId: playerId, targetId, damage: 1, requiredGuards: 1, origin: "attack", freeUse: options.freeUse, onComplete: () => this.finalizeCardResolved(playerId, [targetId], card) });
+      return this.finishBasicUse(playerId, card, result, targetId);
     }
-    if (card.id === "heal") return this.finishBasicUse(playerId, card, this.resolveHeal(playerId, targetId));
-    if (card.id === "focus") { this.gainEnergy(playerId, 1); this.draw(playerId, 1); return this.finishBasicUse(playerId, card, { ok: true }); }
+    if (card.id === "heal") return this.finishBasicUse(playerId, card, this.resolveHeal(playerId, targetId), targetId);
+    if (card.id === "focus") { this.gainEnergy(playerId, 1); this.draw(playerId, 1); return this.finishBasicUse(playerId, card, { ok: true }, targetId); }
     if (card.id === "overdrive") {
       if (player.turnFlags.overdriveUsed) { player.hand.push(this.discard.pop()); return { ok: false, reason: "本回合已使用超载" }; }
       player.turnFlags.overdriveUsed = true;
       player.turnFlags.nextAttackBonus = true;
-      return this.finishBasicUse(playerId, card, { ok: true });
+      return this.finishBasicUse(playerId, card, { ok: true }, targetId);
     }
     if (card.id === "adapt") return this.resolveAdapt(playerId, card, targetId, options);
-    if (card.type === "strategy") return this.resolveStrategyCard(playerId, targetId, card);
-    if (card.type === "equipment") return this.equip(playerId, card);
+    if (card.type === "strategy") { const result = this.resolveStrategyCard(playerId, targetId, card); if (!result?.pending && !this.pendingChoice && !this.pendingResponse && !this.pendingDiscard) this.finalizeCardResolved(playerId, [targetId], card); return result; }
+    if (card.type === "equipment") { const result = this.equip(playerId, card); this.finalizeCardResolved(playerId, [targetId], card); return result; }
     return { ok: true };
   }
 
-  finishBasicUse(playerId, card, result) {
+  finishBasicUse(playerId, card, result, targetId = null) {
     const echo = this.player(playerId)?.plots.find(plot => plot.effect === "echoScript" && plot.armed);
     if (echo) {
       this.removePlot(echo);
@@ -1073,6 +1139,7 @@ export class GameEngine {
         this.log("event", `【招式残响】将【${card.name}】送回了${this.nameOf(playerId)}的手牌`);
       }
     }
+    if (!result?.pending && !this.pendingChoice && !this.pendingResponse && !this.pendingDiscard) this.finalizeCardResolved(playerId, targetId ? [targetId] : [], card);
     return result;
   }
 
@@ -1096,7 +1163,7 @@ export class GameEngine {
       onResolve: form => {
         if (form === "attack") {
           if (!options.freeUse) player.attacksUsed += 1;
-          this.beginAttack({ sourceId: playerId, targetId, damage: 1, requiredGuards: 1, origin: "attack", freeUse: options.freeUse });
+          this.beginAttack({ sourceId: playerId, targetId, damage: 1, requiredGuards: 1, origin: "attack", freeUse: options.freeUse, onComplete: () => this.finalizeCardResolved(playerId, [targetId], physicalCard) });
         } else if (form === "heal") this.resolveHeal(playerId, playerId);
         else if (form === "focus") { this.gainEnergy(playerId, 1); this.draw(playerId, 1); }
         else if (form === "overdrive") { player.turnFlags.overdriveUsed = true; player.turnFlags.nextAttackBonus = true; }
@@ -1135,8 +1202,8 @@ export class GameEngine {
     const before = target.hp;
     target.hp = clamp(target.hp + 1, 0, target.maxHp);
     this.log("heal", `${this.nameOf(target)}回复了1点体力`);
-    if (target.hp > before) this.emitOnePieceEvent({ type: "afterHeal", sourceId, targetId, amount: target.hp - before });
-    if (source.characterId === "chopper" && sourceId !== targetId && !source.roundFlags.diagnosis) {
+    if (target.hp > before) { this.telemetry.healing += target.hp - before; this.emitOnePieceEvent({ type: "afterHeal", sourceId, targetId, amount: target.hp - before }); }
+    if (target.hp > before && source.characterId === "chopper" && sourceId !== targetId && !source.roundFlags.diagnosis) {
       source.roundFlags.diagnosis = true;
       this.draw(sourceId, 1); this.draw(targetId, 1);
       this.log("event", `${this.nameOf(source)}发动“诊断”，双方各摸1张牌`);
@@ -1200,7 +1267,7 @@ export class GameEngine {
       if (target.hand.some(item => item.id === "counter")) options.push({ value: "counter", label: "打出反制", description: "仅免除对自己的效果，不影响其他目标" });
       options.push({ value: "take", label: "不响应", description: "受到1点策略伤害" });
       const aiChoice = options.some(option => option.value === "respond") ? "respond"
-        : options.some(option => option.value === "counter") && (target.hp <= 1 || !this.isAlly(sourceId, targetId)) ? "counter" : "take";
+        : options.some(option => option.value === "counter") && (target.hp <= 1 || !this.aiIsAlly(targetId, sourceId)) ? "counter" : "take";
       return this.requestChoice(targetId, {
         title: `${card.name} · 响应 ${index + 1}/${total}`,
         text: `${this.nameOf(sourceId)}发动【${card.name}】，${this.nameOf(targetId)}须打出${responseLabel}，否则受到1点策略伤害。`,
@@ -1307,25 +1374,29 @@ export class GameEngine {
 
   offerCounter(sourceId, targetId, card, onResolve, { hidden = false, onCounter = null } = {}) {
     const target = this.player(targetId);
+    const finish = () => {
+      onResolve();
+      const context = this.activeCardContext;
+      if (context && !this.pendingChoice && !this.pendingResponse && !this.pendingDiscard) this.finalizeCardResolved(context.sourceId, context.targetIds, context.card);
+    };
     const counter = target?.hand.find(item => item.id === "counter");
-    if (!counter || targetId === sourceId) { onResolve(); return { ok: true }; }
+    if (!counter || targetId === sourceId) { finish(); return { ok: true }; }
     if (target.human) {
-      this.pendingResponse = { type: "counter", sourceId, targetId, cardName: hidden ? "未知伏笔" : card.name, required: 1, onDecline: onResolve, onCounter, hidden, strategyCard: card };
+      this.pendingResponse = { type: "counter", sourceId, targetId, cardName: hidden ? "未知伏笔" : card.name, required: 1, onDecline: finish, onCounter, hidden, strategyCard: card };
       return { ok: true, pending: true };
     }
-    const shouldCounter = hidden ? this.random() < .42 : !this.isAlly(sourceId, targetId) && this.random() < .72;
+    const shouldCounter = hidden ? this.random() < .42 : !this.aiIsAlly(targetId, sourceId) && this.random() < .72;
     if (shouldCounter) {
       this.removeCard(targetId, counter.uid);
       if (card.strategyKind === "plot") this.discard.push(card._physicalCard || card);
       this.log("event", `${this.nameOf(target)}打出【反制】，${hidden ? "伏笔布置" : "策略牌"}无效`);
-      this.notifyCardCancelled(sourceId, "策略牌被反制");
+      this.notifyCardCancelled(sourceId, "策略牌被反制", card, targetId, targetId);
       if (onCounter) onCounter();
       return { ok: true, countered: true };
     }
-    onResolve();
+    finish();
     return { ok: true };
   }
-
   offerStrategyIntervention(sourceId, targetId, card, onTarget) {
     const source = this.player(sourceId);
     if (source?.turnFlags.copyNoIntervene) {
@@ -1335,7 +1406,7 @@ export class GameEngine {
     }
     if (!card.redirectable) { onTarget(targetId); return { ok: true }; }
     const eligible = this.players.filter(player => player.alive && player.id !== sourceId && player.id !== targetId && player.hand.some(item => item.id === "intervene") && (card.id !== "mind_burn" || player.hand.length > 1));
-    const candidate = eligible.find(player => player.human) || eligible.find(player => this.isAlly(player.id, targetId) && !this.isAlly(player.id, sourceId));
+    const candidate = eligible.find(player => player.human) || eligible.find(player => this.aiIsAlly(player.id, targetId) && !this.aiIsAlly(player.id, sourceId));
     if (!candidate) { onTarget(targetId); return { ok: true }; }
     const decide = use => {
       if (!use) return onTarget(targetId);
@@ -1354,6 +1425,7 @@ export class GameEngine {
   }
 
   triggerRhythmBreak(plot, playerId, cardUid, targetId) {
+    const card = this.player(playerId)?.hand.find(item => item.uid === cardUid);
     if (this.consumeByakugo(playerId, "strategy", "解除了【节奏断点】")) {
       this.removePlot(plot);
       return this.playCard(playerId, cardUid, targetId, { skipRhythm: true });
@@ -1364,7 +1436,7 @@ export class GameEngine {
     const finishPlay = () => this.playCard(playerId, cardUid, targetId, { skipRhythm: true });
     if (!payable.length) {
       this.log("event", `${this.nameOf(player)}被【节奏断点】中断了出牌阶段`);
-      this.notifyCardCancelled(playerId, "出牌被节奏断点取消");
+      this.notifyCardCancelled(playerId, "出牌被节奏断点取消", card, targetId, plot.ownerId);
       return this.forceEndPlayPhase(playerId);
     }
     return this.requestChoice(playerId, {
@@ -1375,7 +1447,7 @@ export class GameEngine {
       onResolve: value => {
         if (value === "pay") this.requestDiscard(playerId, 1, { reason: "节奏断点：请弃置当前待使用牌之外的1张牌", allowedUids: payable.map(card => card.uid), onComplete: finishPlay });
         else {
-          this.notifyCardCancelled(playerId, "出牌被节奏断点取消");
+          this.notifyCardCancelled(playerId, "出牌被节奏断点取消", card, targetId, plot.ownerId);
           this.forceEndPlayPhase(playerId);
         }
       }
@@ -1514,6 +1586,8 @@ export class GameEngine {
             if (si < 0 || ti < 0) return;
             const [a] = source.hand.splice(si, 1), [b] = target.hand.splice(ti, 1);
             source.hand.push(b); target.hand.push(a);
+            this.emitOnePieceEvent({ type: "cardTransferred", sourceId, targetId, card: a, amount: 1 });
+            this.emitOnePieceEvent({ type: "cardTransferred", sourceId: targetId, targetId: sourceId, card: b, amount: 1 });
             this.log("event", `${this.nameOf(source)}与${this.nameOf(target)}完成了记忆交换`);
           }
         });
@@ -1565,6 +1639,7 @@ export class GameEngine {
         const index = source.hand.findIndex(card => card.uid === uid);
         if (index < 0) return;
         const [given] = source.hand.splice(index, 1); target.hand.push(given);
+        this.emitOnePieceEvent({ type: "cardTransferred", sourceId, targetId, card: given, amount: 1 });
         const uses = this.relayUseOptions(targetId, given);
         this.requestChoice(targetId, {
           title: "战术接力",
@@ -1642,24 +1717,41 @@ export class GameEngine {
     });
   }
 
-  beginAttack({ sourceId, targetId, damage = 1, requiredGuards = 1, origin = "attack", alwaysPoison = false, onComplete = null, skipIntervene = false, skipRaven = false, freeUse = false }) {
+  beginAttack({ sourceId, targetId, damage = 1, requiredGuards = 1, origin = "attack", alwaysPoison = false, onComplete = null, skipIntervene = false, skipRaven = false, freeUse = false, jinbePiercing = false }) {
+    if (this.winner) return { ok: false, reason: "对局已经结束" };
     const source = this.player(sourceId), target = this.player(targetId);
     if (!source?.alive || !target?.alive) return { ok: false, reason: "目标已经退场" };
-    if (target.characterId === "luffy" && !target.roundFlags.observation) {
+    let observationDefended = false;
+    if (origin === "attack" && target.characterId === "luffy" && !target.roundFlags.observation) {
       target.roundFlags.observation = true;
       const omen = this.takeTop();
       if (omen) {
-        if (omen.type === "basic") this.discard.push(omen);
-        else this.deck.push(omen);
-        this.log("event", `${this.nameOf(target)}发动“见闻色”，${omen.type === "basic" ? "将牌堆顶基础牌视为防御弃置" : `将【${omen.name}】置于牌堆底`}`);
+        if (omen.type === "basic") {
+          this.discard.push(omen);
+          requiredGuards = Math.max(0, requiredGuards - 1);
+          observationDefended = true;
+        } else this.deck.push(omen);
+        this.log("event", this.nameOf(target) + "发动“见闻色”，" + (omen.type === "basic" ? "将牌堆顶基础牌视为防御并减少1张防御需求" : "将【" + omen.name + "】置于牌堆底"));
       }
     }
+    if (source.characterId === "sanji" && ["attack", "diableJambe"].includes(origin) && source.turnFlags.supportCounter) {
+      source.turnFlags.supportCounter = false;
+      if (origin === "attack") requiredGuards += 1;
+      source.turnFlags.ignoreArmorTarget = targetId;
+      if (origin === "diableJambe") skipIntervene = true;
+      this.log("event", this.nameOf(source) + "发动“援护反击”，本次攻击无视距离" + (origin === "attack" ? "并额外需要1张防御" : "且不可介入"));
+    }
+    if (source.characterId === "jinbe" && origin === "attack" && (source.shield > 0 || jinbePiercing)) {
+      if (!jinbePiercing) { source.shield -= 1; jinbePiercing = true; }
+      source.turnFlags.ignoreArmorTarget = targetId;
+      this.log("event", this.nameOf(source) + "以护盾施展“鱼人空手道”，本次突击无视防具");
+    }
     if (!skipRaven) {
-      const raven = this.offerRavenSubstitution({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipIntervene, freeUse });
+      const raven = this.offerRavenSubstitution({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipIntervene, freeUse, jinbePiercing });
       if (raven) return raven;
     }
     if (!skipIntervene) {
-      const intervention = this.offerAttackIntervention({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, freeUse });
+      const intervention = this.offerAttackIntervention({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, freeUse, jinbePiercing });
       if (intervention) return intervention;
     }
     if (source.characterId === "itachi" && origin === "attack" && source.plots.some(plot => plot.isFalse && plot.targetId === targetId)) {
@@ -1704,8 +1796,14 @@ export class GameEngine {
       source.turnFlags.ignoreArmorTarget = targetId;
       this.log("event", `${this.nameOf(source)}的蓄势令下一次攻击忽略防护装甲`);
     }
-    if (source.turnFlags.nextAttackBonus) { damage += 1; source.turnFlags.nextAttackBonus = false; }
+    if (source.turnFlags.nextAttackBonus && (source.characterId !== "luffy" || origin === "attack")) {
+      if (source.characterId === "zoro" && origin === "attack") source.turnFlags.zoroDreamAttack = true;
+      damage += 1; source.turnFlags.nextAttackBonus = false;
+    }
     if (source.turnFlags.nextAttackPoison) { alwaysPoison = true; source.turnFlags.nextAttackPoison = false; }
+    if (observationDefended && requiredGuards <= 0) {
+      return this.afterDefended(sourceId, targetId, origin, alwaysPoison, onComplete);
+    }
     const returnPlot = origin === "attack" ? this.plotsTargeting(targetId, "returnRoute")[0] : null;
     if (returnPlot) {
       this.removePlot(returnPlot);
@@ -1762,7 +1860,7 @@ export class GameEngine {
         onResolve: perform
       });
     }
-    const enemy = candidates.find(player => !this.isAlly(targetId, player.id));
+    const enemy = candidates.find(player => !this.aiIsAlly(targetId, player.id));
     perform((enemy || candidates[0])?.id || "cancel");
     return { ok: true, pending: Boolean(this.pendingChoice || this.pendingResponse || this.pendingDiscard) };
   }
@@ -1791,7 +1889,7 @@ export class GameEngine {
       return useShield();
     }
     const resources = this.guardResources(targetId);
-    if (resources >= requiredGuards) {
+    if (requiredGuards > 0 && resources >= requiredGuards) {
       if (target.human) {
         this.pendingResponse = { type: "guard", sourceId, targetId, damage, required: requiredGuards, origin, alwaysPoison, onComplete };
         return { ok: true, pending: true };
@@ -1809,7 +1907,7 @@ export class GameEngine {
     if (!["attack", "signature", "goemon", "asura", "diableJambe", "impactWolf", "vagabondDrill", "arrowNotch", "blackFlash", "active"].includes(origin)) return null;
     const eligible = this.players.filter(player => player.alive && player.id !== sourceId && player.id !== targetId && player.hand.some(card => card.id === "intervene"));
     if (!eligible.length) return null;
-    const candidate = eligible.find(player => player.human) || eligible.find(player => this.isAlly(player.id, targetId) && !this.isAlly(player.id, sourceId));
+    const candidate = eligible.find(player => player.human) || eligible.find(player => this.aiIsAlly(player.id, targetId) && !this.aiIsAlly(player.id, sourceId));
     if (!candidate) return null;
     const perform = use => {
       if (!use) return this.beginAttack({ ...payload, skipIntervene: true });
@@ -1850,9 +1948,10 @@ export class GameEngine {
     const player = this.player(playerId);
     const guards = player.hand.filter(card => card.id === "guard" || card.id === "adapt").length;
     const armorSubstitute = player.equipment.armor?.id === "adaptive_armor" && !player.roundFlags.adaptiveGuard && player.hand.some(card => card.type === "basic" && !["guard", "adapt"].includes(card.id));
+    const chopperSubstitute = player.characterId === "chopper" && !player.roundFlags.chopperFur && player.hand.some(card => card.type === "basic" && !card.responseOnly && !["guard", "adapt"].includes(card.id));
     const canSubstitute = player.characterId === "mikasa" && !player.roundFlags.substitute && player.hand.some(card => card.id !== "guard");
     const clone = player.characterId === "naruto" && this.getSpecialCards(playerId, "clone").length ? 1 : 0;
-    return guards + (armorSubstitute ? 1 : 0) + (canSubstitute ? 1 : 0) + clone;
+    return guards + (armorSubstitute ? 1 : 0) + (chopperSubstitute ? 1 : 0) + (canSubstitute ? 1 : 0) + clone;
   }
 
   spendGuards(playerId, count) {
@@ -1876,6 +1975,10 @@ export class GameEngine {
           left -= 1;
           continue;
         }
+      }
+      if (player.characterId === "chopper" && !player.roundFlags.chopperFur) {
+        const substitute = player.hand.find(card => card.type === "basic" && !card.responseOnly && !["guard", "adapt"].includes(card.id));
+        if (substitute) { this.removeCard(playerId, substitute.uid); player.roundFlags.chopperFur = true; left -= 1; continue; }
       }
       if (player.characterId === "mikasa" && !player.roundFlags.substitute) {
         const substitute = player.hand.find(card => card.id !== "guard");
@@ -1906,7 +2009,7 @@ export class GameEngine {
         if (card) this.removeCard(response.targetId, card.uid);
         if (response.hidden && response.strategyCard) this.discard.push(response.strategyCard._physicalCard || response.strategyCard);
         this.log("event", `${this.nameOf(response.targetId)}打出【反制】，策略牌无效`);
-        this.notifyCardCancelled(response.sourceId, "策略牌被反制");
+        this.notifyCardCancelled(response.sourceId, "策略牌被反制", response.strategyCard, response.targetId, response.targetId);
         if (response.onCounter) response.onCounter();
       } else if (response.onDecline) response.onDecline();
     } else if (["intervene", "interveneStrategy"].includes(response.type)) {
@@ -1919,6 +2022,7 @@ export class GameEngine {
     const source = this.player(sourceId);
     if (source?.turnFlags.ignoreArmorTarget === targetId) source.turnFlags.ignoreArmorTarget = null;
     if (source?.turnFlags.goemonIgnoreArmorTarget === targetId) source.turnFlags.goemonIgnoreArmorTarget = null;
+    if (source?.characterId === "zoro") source.turnFlags.zoroDreamAttack = false;
     if (source?.characterId === "ichigo" && !source.turnFlags.resolve) { source.turnFlags.resolve = true; this.draw(sourceId, 1); }
     if (source?.characterId === "sasuke" && source.turnFlags.pursuitTarget === targetId) {
       source.turnFlags.pursuitTarget = null;
@@ -1958,7 +2062,7 @@ export class GameEngine {
     if (markedPierce) source.turnFlags.ignoreArmorTarget = null;
     const goemonPierce = source?.turnFlags.goemonIgnoreArmorTarget === targetId;
     if (goemonPierce) source.turnFlags.goemonIgnoreArmorTarget = null;
-    const ignoresArmor = (source?.equipment.weapon?.id === "piercer" && origin === "attack") || markedPierce || goemonPierce || (source?.characterId === "hinata" && source.scoutedTargetId === targetId);
+    const ignoresArmor = (source?.equipment.weapon?.id === "piercer" && origin === "attack") || markedPierce || goemonPierce || (source?.characterId === "hinata" && source.scoutedTargetId === targetId) || origin === "asura" || (source?.characterId === "sanji" && origin === "attack" && !source.equipment.weapon) || (source?.characterId === "jinbe" && origin === "attack" && source.shield > 0);
     if (!ignoresArmor && target.equipment.armor?.id === "armor" && target.armorReady) {
       target.armorReady = false;
       damage = Math.max(0, damage - 1);
@@ -1987,9 +2091,14 @@ export class GameEngine {
   dealDamage(sourceId, targetId, amount, origin = "damage", onComplete = null, options = {}) {
     const source = this.player(sourceId), target = this.player(targetId);
     if (!target?.alive || amount <= 0) { if (onComplete) onComplete(); return; }
-    const beforeEvent = { type: "beforeDamage", sourceId, targetId, amount, origin };
-    this.emitOnePieceEvent(beforeEvent);
-    amount = beforeEvent.amount;
+    if (!options.modifiersApplied) {
+      const event = { type: "beforeDamage", sourceId, targetId, amount, origin };
+      this.emitOnePieceEvent(event);
+      amount = event.amount;
+    }
+    const remaining = Math.max(0, amount - target.shield - this.plotsTargeting(targetId, "guardianOath").length);
+    const beforeEvent = { type: "beforeProtectedDamage", sourceId, targetId, amount: remaining, origin };
+    if (!options.skipOptionalDefense) this.emitOnePieceEvent(beforeEvent);
     if (beforeEvent.optionalProtector && !options.skipOptionalDefense) {
       const protector = this.player(beforeEvent.optionalProtector);
       return this.requestChoice(protector.id, {
@@ -2004,13 +2113,15 @@ export class GameEngine {
               this.removeCard(protector.id, basic.uid);
               protector.roundFlags.jinbeGuard = true;
               amount = Math.max(0, amount - 1);
+              this.emitOnePieceEvent({ type: "damageProtected", sourceId: protector.id, targetId, amount: 1 });
               this.log("event", `${this.nameOf(protector)}发动“侠义”保护${this.nameOf(target)}`);
             }
           }
-          this.dealDamage(sourceId, targetId, amount, origin, onComplete, { skipOptionalDefense: true });
+          this.dealDamage(sourceId, targetId, amount, origin, onComplete, { skipOptionalDefense: true, modifiersApplied: true });
         }
       });
     }
+    amount -= Math.max(0, remaining - beforeEvent.amount);
     if (amount <= 0) { if (onComplete) onComplete(); return; }
     if (target.equipment.armor?.id === "limit_shield" && amount >= 2) {
       amount = 1;
@@ -2028,8 +2139,10 @@ export class GameEngine {
     }
     if (amount > 0 && this.consumeByakugo(targetId, "basic", `令${this.nameOf(target)}受到的伤害-1`)) amount = Math.max(0, amount - 1);
     if (amount > 0 && target.characterId === "orochimaru" && !target.roundFlags.shed) {
-      const spoil = target.hand.find(card => card._curseSpoil === targetId);
-      if (spoil) {
+      const spoils = target.hand.filter(card => card._curseSpoil === targetId);
+      const shed = uid => {
+        const spoil = spoils.find(card => card.uid === uid);
+        if (!spoil) return false;
         target.roundFlags.shed = true;
         target.curseResearchType = spoil.type;
         const index = target.hand.findIndex(card => card.uid === spoil.uid);
@@ -2038,8 +2151,21 @@ export class GameEngine {
         this.discard.push(spoil);
         amount = Math.max(0, amount - 1);
         this.log("event", `${this.nameOf(target)}消耗实验牌【${spoil.name}】完成蛇蜕，伤害-1`);
+        return true;
       }
+      if (spoils.length && target.human) return this.requestChoice(targetId, {
+        title: "蛇蜕", text: "可以消耗一张实验牌减伤1，也可以保留实验牌。",
+        options: [{ value: "pass", label: "暂不发动" }, ...spoils.map(card => ({ value: card.uid, label: "消耗【" + card.name + "】" }))],
+        onResolve: uid => { shed(uid); this.applyDamage(sourceId,targetId,amount,origin,onComplete); }
+      });
+      const spoil = [...spoils].sort((a,b) => this.aiCardValue(target,a) - this.aiCardValue(target,b))[0];
+      if (spoil && (target.hp <= amount + 1 || amount >= 2 || this.aiCardValue(target,spoil) < 10)) shed(spoil.uid);
     }
+    return this.applyDamage(sourceId,targetId,amount,origin,onComplete);
+  }
+
+  applyDamage(sourceId, targetId, amount, origin, onComplete) {
+    const source = this.player(sourceId), target = this.player(targetId);
     if (amount <= 0) { if (onComplete) onComplete(); return; }
     target.hp -= amount;
     this.telemetry.damage += amount;
@@ -2050,7 +2176,8 @@ export class GameEngine {
     this.addSageMark(sourceId, "dealt");
     this.addSageMark(targetId, "taken");
     this.log("damage", `${this.nameOf(sourceId)}对${this.nameOf(target)}造成${amount}点伤害`);
-    this.emitOnePieceEvent({ type: "afterDamage", sourceId, targetId, amount, origin });
+    this.emitOnePieceEvent({ type: "afterDamage", sourceId, targetId, amount, origin, zoroEnhanced: Boolean(source?.turnFlags.zoroDreamAttack) });
+    if (source?.characterId === "zoro") source.turnFlags.zoroDreamAttack = false;
     const causalPlots = source ? this.plotsTargeting(sourceId, "causalMark") : [];
     for (const causal of causalPlots) { this.removePlot(causal); this.draw(causal.ownerId, 2); this.gainEnergy(causal.ownerId, 1); }
 
@@ -2085,16 +2212,16 @@ export class GameEngine {
     target.hp -= amount;
     this.pushDamageFeedback(targetId, amount);
     if (amount > 0) this.emitOnePieceEvent({ type: "afterHpLoss", sourceId: sourceId || targetId, targetId, amount, origin });
-    if (target.hp <= 0) return this.startDying(targetId, sourceId, onComplete, origin);
+    if (target.hp <= 0) return this.startDying(targetId, sourceId, onComplete, origin, false);
     if (onComplete) onComplete();
   }
 
-  startDying(targetId, sourceId = null, onComplete = null, origin = "damage") {
+  startDying(targetId, sourceId = null, onComplete = null, origin = "damage", isDamage = true) {
     const target = this.player(targetId);
     if (!target?.alive || target.dying) return;
     target.dying = true;
     this.log("event", `${this.nameOf(target)}进入重伤，等待救援`);
-    const rescue = this.emitOnePieceEvent({ type: "beforeDying", sourceId, targetId, origin });
+    const rescue = this.emitOnePieceEvent({ type: "beforeDying", sourceId, targetId, origin, isDamage });
     if (rescue?.rescued) { if (onComplete) onComplete(); return rescue; }
     if (target.equipment.charm?.id === "life_pendant") {
       this.discard.push(target.equipment.charm);
@@ -2130,7 +2257,7 @@ export class GameEngine {
     const rescuerId = state.order[state.index], rescuer = this.player(rescuerId);
     if (!rescuer?.alive) return this.continueRescue({ ...state, index: state.index + 1 });
     const valid = rescuer.hand.filter(card => card.id === "heal" || card.id === "adapt" || (rescuerId === state.targetId && card.id === "overdrive"));
-    if (!valid.length || (!rescuer.human && rescuerId !== state.targetId && !this.isAlly(rescuerId, state.targetId))) return this.continueRescue({ ...state, index: state.index + 1 });
+    if (!valid.length || (!rescuer.human && rescuerId !== state.targetId && !this.aiIsAlly(rescuerId, state.targetId))) return this.continueRescue({ ...state, index: state.index + 1 });
     return this.requestChoice(rescuerId, {
       title: `救援${this.nameOf(target)}`,
       text: `${this.nameOf(target)}当前体力为${target.hp}，须回复至至少1点。`,
@@ -2196,7 +2323,18 @@ export class GameEngine {
         else this.winner = { camp: "chaos", label: "破界者获胜" };
       } else if (!alive.some(player => player.roleId === "rebel" || player.roleId === "lone")) this.winner = { camp: "order", label: "界主阵营获胜" };
     }
-    if (this.winner) { this.phase = "ended"; this.log("victory", this.winner.label); }
+    if (this.winner) {
+      this.phase = "ended";
+      this.pendingResponse = null;
+      this.pendingDiscard = null;
+      this.pendingChoice = null;
+      this.pendingChoiceResolver = null;
+      this.pendingStrategySequence = null;
+      this.pendingDiscardResolver = null;
+      this.activeCardContext = null;
+      for (const player of this.players) player.dying = false;
+      this.log("victory", this.winner.label);
+    }
     return this.winner;
   }
 
@@ -2229,6 +2367,7 @@ export class GameEngine {
     if (player.signatureLocked > 0) return { ok: false, reason: "招牌技正在封存中" };
     if (!this.getSignatureTargets(playerId).includes(targetId)) return { ok: false, reason: "目标不合法" };
     player.energy -= cost;
+    this.telemetry.signatureUses += 1;
     this.log("signature", `${this.nameOf(player)}释放招牌技「${sig.name}」！`);
     if (isOnePieceCharacter(player)) return useOnePieceSignature(this, playerId, targetId, sig);
     switch (sig.effect) {
@@ -2270,7 +2409,7 @@ export class GameEngine {
       }
       case "goemon": return this.resolveGoemon(playerId, targetId);
       case "immortality": return this.resolveImmortality(playerId);
-      case "discardOrDamage": return this.forceDiscardOrDamage(playerId, targetId, 2, 2);
+      case "discardOrDamage": return this.forceDiscardOrDamage(playerId, targetId, 2, 1);
       case "gearFive": player.hp = clamp(player.hp + 1, 0, player.maxHp); this.draw(playerId, 2); player.attackLimit += 1; return { ok: true };
       case "miracleCure": { const target = this.player(targetId); target.hp = clamp(target.hp + 1, 0, target.maxHp); this.draw(targetId, 2); return { ok: true }; }
       case "bankai": player.rangeInfinite = true; player.attackLimit += 1; this.drawSpecific(playerId, "attack"); return { ok: true };
@@ -2420,7 +2559,7 @@ export class GameEngine {
       title: "不尸转生：选择实验牌",
       text: "基础牌转化为生命与护盾；策略牌净化伏笔与封锁；装备牌直接装入对应槽位。",
       options: spoils.map(card => ({ value: card.uid, label: `转化【${card.name}】`, description: { basic: "回复1点体力并获得1点护盾", strategy: "移除指向你的伏笔并解除异常封锁", equipment: "直接装备并获得1点护盾" }[card.type] })),
-      aiChoice: spoils[0]?.uid,
+      aiChoice: [...spoils].sort((a,b) => this.aiImmortalityValue(player,b) - this.aiImmortalityValue(player,a))[0]?.uid,
       onResolve: uid => {
         const index = player.hand.findIndex(card => card.uid === uid && card._curseSpoil === playerId);
         if (index < 0) return;
@@ -2476,16 +2615,22 @@ export class GameEngine {
   removeCard(playerId, uid) {
     const player = this.player(playerId), index = player.hand.findIndex(card => card.uid === uid);
     if (index < 0) return null;
-    const [card] = player.hand.splice(index, 1); this.discard.push(card); return card;
+    const [card] = player.hand.splice(index, 1); this.discard.push(card); this.telemetry.cardsDiscarded += 1; return card;
   }
 
   requestDiscard(playerId, count = 1, { reason = "请选择要弃置的手牌", allowedUids = null, shouldLog = true, onComplete = null } = {}) {
+    if (this.winner) return { ok: true, pending: false, removed: [] };
     const player = this.player(playerId);
-    if (!player?.alive) { if (onComplete) onComplete([]); return { ok: true, pending: false, removed: [] }; }
+    const cardContext = this.activeCardContext;
+    const complete = removed => {
+      if (onComplete) onComplete(removed);
+      if (cardContext && !this.pendingChoice && !this.pendingResponse && !this.pendingDiscard) this.finalizeCardResolved(cardContext.sourceId, cardContext.targetIds, cardContext.card);
+    };
+    if (!player?.alive) { complete([]); return { ok: true, pending: false, removed: [] }; }
     const allowed = allowedUids ? new Set(allowedUids) : null;
     const eligible = player.hand.filter(card => !allowed || allowed.has(card.uid));
     const required = Math.min(Math.max(0, count), eligible.length);
-    if (!required) { if (onComplete) onComplete([]); return { ok: true, pending: false, removed: [] }; }
+    if (!required) { complete([]); return { ok: true, pending: false, removed: [] }; }
     if (player.human) {
       this.pendingDiscard = {
         id: ++this.discardPromptId,
@@ -2495,11 +2640,12 @@ export class GameEngine {
         allowedUids: eligible.map(card => card.uid),
         shouldLog
       };
-      this.pendingDiscardResolver = onComplete;
+      this.pendingDiscardResolver = complete;
       return { ok: true, pending: true };
     }
     const removed = this.discardRandom(playerId, required, shouldLog, eligible.map(card => card.uid));
-    if (onComplete) onComplete(removed);
+    this.emitOnePieceEvent({ type: "cardsDiscarded", sourceId: cardContext?.sourceId || this.currentPlayerId, targetId: playerId, amount: removed.length });
+    complete(removed);
     return { ok: true, pending: false, removed };
   }
 
@@ -2512,6 +2658,7 @@ export class GameEngine {
     const player = this.player(playerId);
     if (!player || unique.some(uid => !allowed.has(uid) || !player.hand.some(card => card.uid === uid))) return { ok: false, reason: "选择中包含无效手牌" };
     const removed = unique.map(uid => this.removeCard(playerId, uid)).filter(Boolean);
+    this.emitOnePieceEvent({ type: "cardsDiscarded", sourceId: this.activeCardContext?.sourceId || this.currentPlayerId, targetId: playerId, amount: removed.length });
     if (pending.shouldLog && removed.length) this.log("system", `${this.nameOf(player)}弃置了${removed.length}张手牌`);
     const resolver = this.pendingDiscardResolver;
     this.pendingDiscard = null;
@@ -2527,10 +2674,11 @@ export class GameEngine {
     for (let i = 0; i < count; i += 1) {
       const candidates = player.hand.map((card, index) => ({ card, index })).filter(item => !allowed || allowed.has(item.card.uid));
       if (!candidates.length) break;
-      const index = candidates[Math.floor(this.random() * candidates.length)].index;
+      const index = player.human ? candidates[Math.floor(this.random() * candidates.length)].index : candidates.sort((a,b) => this.aiCardValue(player,a.card) - this.aiCardValue(player,b.card))[0].index;
       const [card] = player.hand.splice(index, 1); this.discard.push(card); removed.push(card);
     }
     if (shouldLog && removed.length) this.log("system", `${this.nameOf(player)}弃置了${removed.length}张手牌`);
+    this.telemetry.cardsDiscarded += removed.length;
     return removed;
   }
 
@@ -2539,7 +2687,7 @@ export class GameEngine {
     const enemies = candidates.filter(id => !this.aiIsAlly(playerId, id));
     if (this.mode.id === "classic8" && actor?.roleId === "lone") {
       const lord = enemies.find(id => this.player(id)?.roleId === "lord");
-      const rebelsAlive = this.players.some(player => player.alive && player.roleId === "rebel");
+      const rebelsAlive = this.players.some(player => player.alive && player.revealed && player.roleId === "rebel");
       if (lord && rebelsAlive) return enemies.filter(id => id !== lord);
     }
     return enemies.sort((a, b) => this.player(a).hp - this.player(b).hp);
@@ -2548,9 +2696,55 @@ export class GameEngine {
   aiIsAlly(aId, bId) {
     if (this.mode.id !== "classic8") return this.isAlly(aId, bId);
     const a = this.player(aId), b = this.player(bId);
-    return Boolean(a?.revealed && b?.revealed && this.isAlly(aId, bId));
+    return aId === bId || Boolean(a && b?.revealed && this.isAlly(aId, bId));
   }
 
+  aiTargetScore(playerId, targetId, purpose = "generic") {
+    const actor = this.player(playerId), target = this.player(targetId);
+    if (!actor || !target || !target.alive) return -Infinity;
+    const ally = this.aiIsAlly(playerId, targetId);
+    const danger = (target.maxHp - target.hp) * 18 + (target.hp <= 2 ? 30 : 0) + (target.poison >= 2 ? 24 : 0) + (target.energyLocked ? 18 : 0) + (target.signatureLocked > 0 ? 12 : 0) - target.shield * 8;
+    if (purpose === "support" || purpose === "shield") return ally ? danger + (purpose === "shield" && target.shield < 1 ? 15 : 0) + (purpose === "shield" && actor.characterId === "jinbe" && !actor.dreamState.awakened && targetId !== playerId ? 22 : 0) : -Infinity;
+    if (purpose === "attack") return ally ? -Infinity : 100 - target.hp * 18 - target.hand.length * 2 - (target.equipment.armor ? 10 : 0) + (actor.turnFlags.shadowNeckTarget === targetId || actor.swapMarkedId === targetId || target.sandMarkedBy === playerId ? 35 : 0);
+    return ally ? danger : 100 - target.hp * 10 - target.hand.length;
+  }
+
+  aiChooseTarget(playerId, candidates, purpose = "generic") {
+    return [...candidates].sort((a, b) => this.aiTargetScore(playerId, b, purpose) - this.aiTargetScore(playerId, a, purpose))[0];
+  }
+
+  aiEquipmentValue(card) {
+    if (!card) return 0;
+    return ({ weapon: 5, piercer: 10, repeater: 9, impact_hammer: 13, armor: 10, reflector: 6, adaptive_armor: 8, limit_shield: 9, charm: 13, battery: 8, memory_core: 7, life_pendant: 12 })[card.id] || 5;
+  }
+  aiEquipmentGain(player, card) { return this.aiEquipmentValue(card) - this.aiEquipmentValue(player.equipment[card.slot]); }
+  aiCardValue(player, card) {
+    if (!card) return 0;
+    if (card.type === "equipment") return Math.max(2, this.aiEquipmentGain(player, card));
+    return ({ heal: player.hp < player.maxHp ? 16 : 9, guard: player.hp <= 2 ? 13 : 8, adapt: 13, attack: 9, focus: player.energy < 3 ? 10 : 3, counter: 10, overdrive: 5 })[card.id] || 6;
+  }
+  aiImmortalityValue(player, card) {
+    if (card.type === "basic") return (player.maxHp - player.hp) * 12 + Math.max(0, 2 - player.shield) * 5;
+    if (card.type === "equipment") return Math.max(0, this.aiEquipmentGain(player,card)) + Math.max(0, 2 - player.shield) * 5;
+    return player.poison * 10 + player.frozenDraw * 6 + (player.energyLocked ? 10 : 0) + player.signatureLocked * 6 + this.plotsTargeting(player.id).length * 5;
+  }
+  aiActiveUseful(player, skill, targetId) {
+    if (skill.effect === "oceanGuard") return this.player(targetId).shield < 3;
+    if (skill.effect === "curseExperiment") return player.hand.some(card => !card._curseSpoil) && !this.player(targetId).curseSeal;
+    if (skill.effect === "threeSwordStyle") return player.hand.some(card => card.id === "attack" || card.id === "adapt") && player.hand.filter(card => !card.responseOnly).length > 1;
+    if (skill.effect === "amenotejikara") return ["weapon","armor","charm"].some(slot => this.aiEquipmentValue(this.player(targetId).equipment[slot]) > this.aiEquipmentValue(player.equipment[slot]));
+    if (skill.effect === "workshop") return this.discard.some(card => card.type === "equipment" && this.aiEquipmentGain(player,card) > 0 && !player.hand.some(held => held.slot === card.slot && this.aiEquipmentValue(held) >= this.aiEquipmentValue(card)));
+    if (skill.effect === "copyNinjutsu") return !player.hand.some(card => card._copiedBy === player.id);
+    return true;
+  }
+
+  aiShouldEquip(player, card, frankyDuel = false) {
+    if (!player || !card) return false;
+    const current = player.equipment[card.slot];
+    if (!current) return true;
+    if (frankyDuel) return false;
+    return this.aiEquipmentValue(card) > this.aiEquipmentValue(current) + 2;
+  }
   aiStep(playerId = this.currentPlayerId) {
     const player = this.player(playerId);
     if (player && !player.alive && playerId === this.currentPlayerId) {
@@ -2561,27 +2755,35 @@ export class GameEngine {
     if (!player.revealed && this.mode.id === "classic8" && this.round >= 2 && this.random() < .35) { this.revealRole(playerId); return { acted: true }; }
     if (player.characterId === "jiraiya" && player.energy >= 4 && player.sageResonance) {
       const targets = this.getAITargets(playerId, this.getSignatureTargets(playerId));
-      if (targets.length) { const result = this.useSignature(playerId, targets[0]); if (result.ok !== false) return { acted: true }; }
+      if (targets.length) { const result = this.useSignature(playerId, this.aiChooseTarget(playerId, targets, "attack")); if (result.ok !== false) return { acted: true }; }
     }
-    const activeTargets = this.getActiveSkillTargets(playerId);
-    if (activeTargets.length && !player.turnFlags.activeUsed && this.random() < .55) {
-      const skill = activeSkills[player.characterId];
+    const frankyDuel = player.characterId === "franky" && this.players.filter(item => item.alive).length === 2;
+    const activeTargets = this.getActiveSkillTargets(playerId).filter(id => this.aiActiveUseful(player, activeSkills[player.characterId], id));
+    const activeSkill = activeSkills[player.characterId];
+    const chopperPriority = player.characterId === "chopper" && activeSkill?.effect === "medicine" && activeTargets.some(id => { const target = this.player(id); return target && (target.hp <= 2 || target.poison >= 2 || target.energyLocked); });
+    if (activeTargets.length && !player.turnFlags.activeUsed && (chopperPriority || ["medicine","allBlueKitchen","oceanGuard","copyNinjutsu"].includes(activeSkill?.effect) || this.random() < .55)) {
+      const skill = activeSkill;
       let choices = skill.target === "enemy" ? this.getAITargets(playerId, activeTargets) : skill.target === "ally" ? activeTargets.filter(id => this.aiIsAlly(playerId, id)) : activeTargets;
       if (player.characterId === "jinbe") {
         const allies = activeTargets.filter(id => this.aiIsAlly(playerId, id));
-        if (allies.length) choices = allies;
+        choices = allies;
       }
-      if (choices.length) { this.useActiveSkill(playerId, choices[0]); return { acted: true }; }
+      if (choices.length) { const purpose = player.characterId === "jinbe" ? "shield" : skill.target === "enemy" ? "attack" : (skill.target === "ally" ? "support" : "generic"); const result = this.useActiveSkill(playerId, this.aiChooseTarget(playerId, choices, purpose)); if (result?.ok !== false) return { acted: true }; }
     }
     const sig = this.characterOf(player).signature;
-    if (player.energy >= this.signatureCost(playerId) && player.signatureLocked <= 0) {
+    const usefulSignature = player.characterId !== "orochimaru" || player.hand.some(card => card._curseSpoil === playerId && this.aiImmortalityValue(player,card) > 0);
+    const frankyReady = !frankyDuel || !player.equipment.weapon || !player.equipment.armor || player.shield < 2 || this.discard.some(card => ["weapon", "armor"].includes(card.slot) && this.aiEquipmentGain(player, card) > 0);
+    if (usefulSignature && frankyReady && player.energy >= this.signatureCost(playerId) && player.signatureLocked <= 0) {
       const targets = this.getSignatureTargets(playerId);
       const choices = sig.target === "enemy" ? this.getAITargets(playerId, targets) : sig.target === "ally" ? targets.filter(id => this.aiIsAlly(playerId, id)) : targets;
-      if (choices.length) { const result = this.useSignature(playerId, choices[0]); if (result.ok !== false) return { acted: true }; }
+      if (choices.length) { const purpose = sig.target === "enemy" ? "attack" : (sig.target === "ally" ? "support" : "generic"); const result = this.useSignature(playerId, this.aiChooseTarget(playerId, choices, purpose)); if (result.ok !== false) return { acted: true }; }
     }
     const heal = player.hand.find(card => card.id === "heal");
-    if (heal && player.hp < player.maxHp) { this.playCard(playerId, heal.uid, playerId); return { acted: true }; }
-    const equipment = player.hand.find(card => card.type === "equipment" && (!player.equipment[card.slot] || this.random() < .18));
+    if (heal) {
+      const targets = this.getCardTargets(playerId,heal).filter(id => this.aiIsAlly(playerId,id));
+      if (targets.length) { this.playCard(playerId,heal.uid,this.aiChooseTarget(playerId,targets,"support")); return { acted: true }; }
+    }
+    const equipment = player.hand.find(card => card.type === "equipment" && this.aiShouldEquip(player, card, frankyDuel));
     if (equipment) { this.playCard(playerId, equipment.uid, playerId); return { acted: true }; }
     const focus = player.hand.find(card => card.id === "focus" && player.energy < player.maxEnergy);
     if (focus) { this.playCard(playerId, focus.uid, playerId); return { acted: true }; }
@@ -2597,27 +2799,27 @@ export class GameEngine {
     if (duel && !player.skipOffense) {
       const ownResponses = player.hand.filter(card => card.id === "attack" || card.id === "adapt").length;
       const targets = this.getAITargets(playerId, this.getCardTargets(playerId, duel)).sort((a, b) => this.player(a).hand.length - this.player(b).hand.length || this.player(a).hp - this.player(b).hp);
-      if (targets.length && (ownResponses > 0 || this.player(targets[0]).hand.length === 0)) { this.playCard(playerId, duel.uid, targets[0]); return { acted: true }; }
+      if (targets.length && (ownResponses > 0 || this.player(targets[0]).hand.length === 0)) { this.playCard(playerId, duel.uid, this.aiChooseTarget(playerId, targets, "attack")); return { acted: true }; }
     }
     const mindBurn = player.hand.find(card => card.id === "mind_burn");
     if (mindBurn && !player.skipOffense) {
       const targets = this.getAITargets(playerId, this.getCardTargets(playerId, mindBurn));
-      if (targets.length && player.hand.some(card => card.uid !== mindBurn.uid)) { this.playCard(playerId, mindBurn.uid, targets[0]); return { acted: true }; }
+      if (targets.length && player.hand.some(card => card.uid !== mindBurn.uid)) { this.playCard(playerId, mindBurn.uid, this.aiChooseTarget(playerId, targets, "attack")); return { acted: true }; }
     }
     const collapse = player.hand.find(card => card.id === "energy_collapse");
     if (collapse && !player.skipOffense) {
       const targets = this.getAITargets(playerId, this.getCardTargets(playerId, collapse)).sort((a, b) => this.player(a).energy - this.player(b).energy || this.player(a).hp - this.player(b).hp);
-      if (targets.length) { this.playCard(playerId, collapse.uid, targets[0]); return { acted: true }; }
+      if (targets.length) { this.playCard(playerId, collapse.uid, this.aiChooseTarget(playerId, targets, "attack")); return { acted: true }; }
     }
     const contract = player.hand.find(card => card.id === "limit_contract");
     if (contract) {
       const allies = this.getCardTargets(playerId, contract).filter(id => this.aiIsAlly(playerId, id));
-      if (allies.length) { this.playCard(playerId, contract.uid, allies[0]); return { acted: true }; }
+      if (allies.length) { this.playCard(playerId, contract.uid, this.aiChooseTarget(playerId, allies, "support")); return { acted: true }; }
     }
     const relay = player.hand.find(card => card.id === "tactical_relay" && player.hand.some(item => item.type === "basic"));
     if (relay) {
       const allies = this.getCardTargets(playerId, relay).filter(id => this.aiIsAlly(playerId, id));
-      if (allies.length) { this.playCard(playerId, relay.uid, allies[0]); return { acted: true }; }
+      if (allies.length) { this.playCard(playerId, relay.uid, this.aiChooseTarget(playerId, allies, "support")); return { acted: true }; }
     }
     const selfStrategy = player.hand.find(card => ["energy_auction", "delayed_cast", "echo_script"].includes(card.id) && !player.plots.some(plot => plot.effect === card.effect) && this.getCardTargets(playerId, card).length);
     if (selfStrategy && this.random() < .65) { this.playCard(playerId, selfStrategy.uid, playerId); return { acted: true }; }
@@ -2644,12 +2846,12 @@ export class GameEngine {
       const attack = player.hand.find(card => card.id === "attack");
       if (attack && player.attacksUsed < player.attackLimit) {
         const targets = this.getAITargets(playerId, this.getCardTargets(playerId, attack));
-        if (targets.length) { this.playCard(playerId, attack.uid, targets[0]); return { acted: true }; }
+        if (targets.length) { this.playCard(playerId, attack.uid, this.aiChooseTarget(playerId, targets, "attack")); return { acted: true }; }
       }
       const adapt = player.hand.find(card => card.id === "adapt");
       if (adapt && player.attacksUsed < player.attackLimit) {
         const targets = this.getAITargets(playerId, this.getCardTargets(playerId, adapt).filter(id => id !== playerId));
-        if (targets.length) { this.playCard(playerId, adapt.uid, targets[0]); return { acted: true }; }
+        if (targets.length) { this.playCard(playerId, adapt.uid, this.aiChooseTarget(playerId, targets, "attack")); return { acted: true }; }
       }
     }
     return { acted: false };

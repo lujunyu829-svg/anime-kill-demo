@@ -1,0 +1,6198 @@
+{
+  "version": "0.2.1",
+  "pool": "mixed",
+  "mode": "ranked2v2",
+  "scenario": "balance",
+  "seedBase": 20260917,
+  "seedStep": 7919,
+  "generatedAt": "2026-09-29T12:50:50.711Z",
+  "games": 28000,
+  "unfinished": 0,
+  "camps": {
+    "crimson": 13900,
+    "azure": 14100
+  },
+  "residual": {},
+  "avgRounds": 7.332535714285714,
+  "p95Rounds": 18,
+  "p99Rounds": 42,
+  "maxRounds": 48,
+  "over80": 0,
+  "maxSteps": 640,
+  "roles": [
+    {
+      "character": "naruto",
+      "pack": "naruto_genesis",
+      "anchor": 0,
+      "games": 250,
+      "wins": 117,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 734,
+        "activeEffective": 734,
+        "activeTargets": {
+          "self": 734
+        },
+        "signatureDeclared": 499,
+        "signatureEffective": 498,
+        "signatureCosts": {
+          "4": 499
+        },
+        "damage": 1190,
+        "healing": 115,
+        "shield": 0,
+        "drawn": 3447,
+        "discarded": 371,
+        "cancelled": 73,
+        "equipmentChanges": 519,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 117,
+      "awakeRounds": 0,
+      "winRate": 46.800000000000004,
+      "avgRounds": 7.2,
+      "p95Rounds": 18,
+      "p99Rounds": 36,
+      "maxRounds": 41,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 46.800000000000004
+    },
+    {
+      "character": "naruto",
+      "pack": "naruto_genesis",
+      "anchor": 1,
+      "games": 250,
+      "wins": 101,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 532,
+        "activeEffective": 532,
+        "activeTargets": {
+          "self": 532
+        },
+        "signatureDeclared": 387,
+        "signatureEffective": 387,
+        "signatureCosts": {
+          "4": 387
+        },
+        "damage": 1011,
+        "healing": 124,
+        "shield": 0,
+        "drawn": 2837,
+        "discarded": 343,
+        "cancelled": 62,
+        "equipmentChanges": 442,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 101,
+      "awakeRounds": 0,
+      "winRate": 40.400000000000006,
+      "avgRounds": 6.888,
+      "p95Rounds": 17,
+      "p99Rounds": 34,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 40.400000000000006
+    },
+    {
+      "character": "naruto",
+      "pack": "naruto_genesis",
+      "anchor": 2,
+      "games": 250,
+      "wins": 115,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 695,
+        "activeEffective": 695,
+        "activeTargets": {
+          "self": 695
+        },
+        "signatureDeclared": 482,
+        "signatureEffective": 482,
+        "signatureCosts": {
+          "4": 482
+        },
+        "damage": 1217,
+        "healing": 131,
+        "shield": 0,
+        "drawn": 3649,
+        "discarded": 416,
+        "cancelled": 71,
+        "equipmentChanges": 562,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 115,
+      "awakeRounds": 0,
+      "winRate": 46,
+      "avgRounds": 7.792,
+      "p95Rounds": 19,
+      "p99Rounds": 41,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 46
+    },
+    {
+      "character": "naruto",
+      "pack": "naruto_genesis",
+      "anchor": 3,
+      "games": 250,
+      "wins": 109,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 668,
+        "activeEffective": 668,
+        "activeTargets": {
+          "self": 668
+        },
+        "signatureDeclared": 454,
+        "signatureEffective": 454,
+        "signatureCosts": {
+          "4": 454
+        },
+        "damage": 1143,
+        "healing": 140,
+        "shield": 0,
+        "drawn": 3628,
+        "discarded": 395,
+        "cancelled": 72,
+        "equipmentChanges": 496,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 109,
+      "awakeRounds": 0,
+      "winRate": 43.6,
+      "avgRounds": 7.324,
+      "p95Rounds": 16,
+      "p99Rounds": 36,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 43.6
+    },
+    {
+      "character": "gaara",
+      "pack": "naruto_genesis",
+      "anchor": 0,
+      "games": 250,
+      "wins": 153,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 909,
+        "activeEffective": 909,
+        "activeTargets": {
+          "other": 909
+        },
+        "signatureDeclared": 208,
+        "signatureEffective": 207,
+        "signatureCosts": {
+          "4": 208
+        },
+        "damage": 918,
+        "healing": 117,
+        "shield": 0,
+        "drawn": 2178,
+        "discarded": 750,
+        "cancelled": 45,
+        "equipmentChanges": 382,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 153,
+      "awakeRounds": 0,
+      "winRate": 61.199999999999996,
+      "avgRounds": 6.64,
+      "p95Rounds": 15,
+      "p99Rounds": 26,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 61.199999999999996
+    },
+    {
+      "character": "gaara",
+      "pack": "naruto_genesis",
+      "anchor": 1,
+      "games": 250,
+      "wins": 129,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 637,
+        "activeEffective": 637,
+        "activeTargets": {
+          "other": 637
+        },
+        "signatureDeclared": 143,
+        "signatureEffective": 143,
+        "signatureCosts": {
+          "4": 143
+        },
+        "damage": 655,
+        "healing": 123,
+        "shield": 0,
+        "drawn": 1906,
+        "discarded": 784,
+        "cancelled": 37,
+        "equipmentChanges": 282,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 129,
+      "awakeRounds": 0,
+      "winRate": 51.6,
+      "avgRounds": 6.876,
+      "p95Rounds": 16,
+      "p99Rounds": 39,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 51.6
+    },
+    {
+      "character": "gaara",
+      "pack": "naruto_genesis",
+      "anchor": 2,
+      "games": 250,
+      "wins": 162,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 884,
+        "activeEffective": 883,
+        "activeTargets": {
+          "other": 884
+        },
+        "signatureDeclared": 214,
+        "signatureEffective": 214,
+        "signatureCosts": {
+          "4": 214
+        },
+        "damage": 917,
+        "healing": 150,
+        "shield": 0,
+        "drawn": 2581,
+        "discarded": 844,
+        "cancelled": 49,
+        "equipmentChanges": 426,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 162,
+      "awakeRounds": 0,
+      "winRate": 64.8,
+      "avgRounds": 6.9,
+      "p95Rounds": 15,
+      "p99Rounds": 26,
+      "maxRounds": 41,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 64.8
+    },
+    {
+      "character": "gaara",
+      "pack": "naruto_genesis",
+      "anchor": 3,
+      "games": 250,
+      "wins": 139,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 832,
+        "activeEffective": 830,
+        "activeTargets": {
+          "other": 832
+        },
+        "signatureDeclared": 203,
+        "signatureEffective": 203,
+        "signatureCosts": {
+          "4": 203
+        },
+        "damage": 847,
+        "healing": 122,
+        "shield": 0,
+        "drawn": 2517,
+        "discarded": 846,
+        "cancelled": 35,
+        "equipmentChanges": 366,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 139,
+      "awakeRounds": 0,
+      "winRate": 55.60000000000001,
+      "avgRounds": 6.776,
+      "p95Rounds": 14,
+      "p99Rounds": 22,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 55.60000000000001
+    },
+    {
+      "character": "sakura",
+      "pack": "naruto_genesis",
+      "anchor": 0,
+      "games": 250,
+      "wins": 100,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1704,
+        "activeEffective": 1704,
+        "activeTargets": {
+          "self": 1704
+        },
+        "signatureDeclared": 1120,
+        "signatureEffective": 1106,
+        "signatureCosts": {
+          "3": 1120
+        },
+        "damage": 729,
+        "healing": 177,
+        "shield": 82,
+        "drawn": 4204,
+        "discarded": 402,
+        "cancelled": 69,
+        "equipmentChanges": 537,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 100,
+      "awakeRounds": 0,
+      "winRate": 40,
+      "avgRounds": 9.168,
+      "p95Rounds": 31,
+      "p99Rounds": 43,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 40
+    },
+    {
+      "character": "sakura",
+      "pack": "naruto_genesis",
+      "anchor": 1,
+      "games": 250,
+      "wins": 92,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1392,
+        "activeEffective": 1392,
+        "activeTargets": {
+          "self": 1392
+        },
+        "signatureDeclared": 956,
+        "signatureEffective": 950,
+        "signatureCosts": {
+          "3": 956
+        },
+        "damage": 708,
+        "healing": 141,
+        "shield": 72,
+        "drawn": 3869,
+        "discarded": 393,
+        "cancelled": 52,
+        "equipmentChanges": 483,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 92,
+      "awakeRounds": 0,
+      "winRate": 36.8,
+      "avgRounds": 7.86,
+      "p95Rounds": 20,
+      "p99Rounds": 43,
+      "maxRounds": 48,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 36.8
+    },
+    {
+      "character": "sakura",
+      "pack": "naruto_genesis",
+      "anchor": 2,
+      "games": 250,
+      "wins": 120,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1604,
+        "activeEffective": 1604,
+        "activeTargets": {
+          "self": 1604
+        },
+        "signatureDeclared": 1142,
+        "signatureEffective": 1129,
+        "signatureCosts": {
+          "3": 1142
+        },
+        "damage": 840,
+        "healing": 164,
+        "shield": 64,
+        "drawn": 4575,
+        "discarded": 476,
+        "cancelled": 60,
+        "equipmentChanges": 566,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 120,
+      "awakeRounds": 0,
+      "winRate": 48,
+      "avgRounds": 8.588,
+      "p95Rounds": 20,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 48
+    },
+    {
+      "character": "sakura",
+      "pack": "naruto_genesis",
+      "anchor": 3,
+      "games": 250,
+      "wins": 86,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1542,
+        "activeEffective": 1542,
+        "activeTargets": {
+          "self": 1542
+        },
+        "signatureDeclared": 1043,
+        "signatureEffective": 1030,
+        "signatureCosts": {
+          "3": 1043
+        },
+        "damage": 740,
+        "healing": 150,
+        "shield": 81,
+        "drawn": 4323,
+        "discarded": 371,
+        "cancelled": 59,
+        "equipmentChanges": 519,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 86,
+      "awakeRounds": 0,
+      "winRate": 34.4,
+      "avgRounds": 7.984,
+      "p95Rounds": 20,
+      "p99Rounds": 40,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 34.4
+    },
+    {
+      "character": "shikamaru",
+      "pack": "naruto_genesis",
+      "anchor": 0,
+      "games": 250,
+      "wins": 119,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1012,
+        "activeEffective": 784,
+        "activeTargets": {
+          "other": 984,
+          "ally": 28
+        },
+        "signatureDeclared": 609,
+        "signatureEffective": 609,
+        "signatureCosts": {
+          "3": 609
+        },
+        "damage": 602,
+        "healing": 158,
+        "shield": 0,
+        "drawn": 2279,
+        "discarded": 338,
+        "cancelled": 108,
+        "equipmentChanges": 440,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 119,
+      "awakeRounds": 0,
+      "winRate": 47.599999999999994,
+      "avgRounds": 7.296,
+      "p95Rounds": 18,
+      "p99Rounds": 26,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 47.599999999999994
+    },
+    {
+      "character": "shikamaru",
+      "pack": "naruto_genesis",
+      "anchor": 1,
+      "games": 250,
+      "wins": 69,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 38,
+        "activeEffective": 38,
+        "activeTargets": {
+          "other": 33,
+          "ally": 5
+        },
+        "signatureDeclared": 33,
+        "signatureEffective": 33,
+        "signatureCosts": {
+          "3": 33
+        },
+        "damage": 330,
+        "healing": 148,
+        "shield": 0,
+        "drawn": 1968,
+        "discarded": 357,
+        "cancelled": 47,
+        "equipmentChanges": 377,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 69,
+      "awakeRounds": 0,
+      "winRate": 27.6,
+      "avgRounds": 7.068,
+      "p95Rounds": 17,
+      "p99Rounds": 30,
+      "maxRounds": 42,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 27.6
+    },
+    {
+      "character": "shikamaru",
+      "pack": "naruto_genesis",
+      "anchor": 2,
+      "games": 250,
+      "wins": 106,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 679,
+        "activeEffective": 530,
+        "activeTargets": {
+          "other": 679
+        },
+        "signatureDeclared": 436,
+        "signatureEffective": 436,
+        "signatureCosts": {
+          "3": 436
+        },
+        "damage": 548,
+        "healing": 181,
+        "shield": 0,
+        "drawn": 2799,
+        "discarded": 386,
+        "cancelled": 102,
+        "equipmentChanges": 458,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 106,
+      "awakeRounds": 0,
+      "winRate": 42.4,
+      "avgRounds": 8.224,
+      "p95Rounds": 21,
+      "p99Rounds": 40,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 42.4
+    },
+    {
+      "character": "shikamaru",
+      "pack": "naruto_genesis",
+      "anchor": 3,
+      "games": 250,
+      "wins": 81,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 894,
+        "activeEffective": 683,
+        "activeTargets": {
+          "other": 655,
+          "ally": 239
+        },
+        "signatureDeclared": 556,
+        "signatureEffective": 556,
+        "signatureCosts": {
+          "3": 556
+        },
+        "damage": 544,
+        "healing": 195,
+        "shield": 0,
+        "drawn": 2979,
+        "discarded": 369,
+        "cancelled": 97,
+        "equipmentChanges": 460,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 81,
+      "awakeRounds": 0,
+      "winRate": 32.4,
+      "avgRounds": 7.892,
+      "p95Rounds": 20,
+      "p99Rounds": 41,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 32.4
+    },
+    {
+      "character": "itachi",
+      "pack": "naruto_genesis",
+      "anchor": 0,
+      "games": 250,
+      "wins": 103,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1062,
+        "activeEffective": 1062,
+        "activeTargets": {
+          "other": 1062
+        },
+        "signatureDeclared": 316,
+        "signatureEffective": 316,
+        "signatureCosts": {
+          "4": 316
+        },
+        "damage": 749,
+        "healing": 154,
+        "shield": 0,
+        "drawn": 3025,
+        "discarded": 316,
+        "cancelled": 47,
+        "equipmentChanges": 466,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 103,
+      "awakeRounds": 0,
+      "winRate": 41.199999999999996,
+      "avgRounds": 7.476,
+      "p95Rounds": 20,
+      "p99Rounds": 42,
+      "maxRounds": 42,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 41.199999999999996
+    },
+    {
+      "character": "itachi",
+      "pack": "naruto_genesis",
+      "anchor": 1,
+      "games": 250,
+      "wins": 89,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 679,
+        "activeEffective": 679,
+        "activeTargets": {
+          "other": 679
+        },
+        "signatureDeclared": 213,
+        "signatureEffective": 213,
+        "signatureCosts": {
+          "4": 213
+        },
+        "damage": 515,
+        "healing": 138,
+        "shield": 0,
+        "drawn": 2223,
+        "discarded": 347,
+        "cancelled": 44,
+        "equipmentChanges": 334,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 89,
+      "awakeRounds": 0,
+      "winRate": 35.6,
+      "avgRounds": 6.852,
+      "p95Rounds": 17,
+      "p99Rounds": 28,
+      "maxRounds": 41,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 35.6
+    },
+    {
+      "character": "itachi",
+      "pack": "naruto_genesis",
+      "anchor": 2,
+      "games": 250,
+      "wins": 109,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 993,
+        "activeEffective": 993,
+        "activeTargets": {
+          "other": 993
+        },
+        "signatureDeclared": 320,
+        "signatureEffective": 320,
+        "signatureCosts": {
+          "4": 320
+        },
+        "damage": 758,
+        "healing": 151,
+        "shield": 0,
+        "drawn": 3283,
+        "discarded": 348,
+        "cancelled": 60,
+        "equipmentChanges": 448,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 109,
+      "awakeRounds": 0,
+      "winRate": 43.6,
+      "avgRounds": 7.452,
+      "p95Rounds": 17,
+      "p99Rounds": 35,
+      "maxRounds": 41,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 43.6
+    },
+    {
+      "character": "itachi",
+      "pack": "naruto_genesis",
+      "anchor": 3,
+      "games": 250,
+      "wins": 95,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 893,
+        "activeEffective": 893,
+        "activeTargets": {
+          "other": 893
+        },
+        "signatureDeclared": 271,
+        "signatureEffective": 271,
+        "signatureCosts": {
+          "4": 271
+        },
+        "damage": 709,
+        "healing": 155,
+        "shield": 0,
+        "drawn": 2994,
+        "discarded": 310,
+        "cancelled": 42,
+        "equipmentChanges": 447,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 95,
+      "awakeRounds": 0,
+      "winRate": 38,
+      "avgRounds": 6.504,
+      "p95Rounds": 15,
+      "p99Rounds": 26,
+      "maxRounds": 41,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 38
+    },
+    {
+      "character": "sasuke",
+      "pack": "naruto_genesis",
+      "anchor": 0,
+      "games": 250,
+      "wins": 100,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 503,
+        "activeEffective": 503,
+        "activeTargets": {
+          "other": 503
+        },
+        "signatureDeclared": 178,
+        "signatureEffective": 178,
+        "signatureCosts": {
+          "4": 178
+        },
+        "damage": 797,
+        "healing": 176,
+        "shield": 0,
+        "drawn": 3375,
+        "discarded": 573,
+        "cancelled": 85,
+        "equipmentChanges": 898,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 100,
+      "awakeRounds": 0,
+      "winRate": 40,
+      "avgRounds": 7.756,
+      "p95Rounds": 19,
+      "p99Rounds": 42,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 40
+    },
+    {
+      "character": "sasuke",
+      "pack": "naruto_genesis",
+      "anchor": 1,
+      "games": 250,
+      "wins": 82,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 571,
+        "activeEffective": 571,
+        "activeTargets": {
+          "other": 571
+        },
+        "signatureDeclared": 140,
+        "signatureEffective": 140,
+        "signatureCosts": {
+          "4": 140
+        },
+        "damage": 702,
+        "healing": 190,
+        "shield": 0,
+        "drawn": 3246,
+        "discarded": 651,
+        "cancelled": 65,
+        "equipmentChanges": 866,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 82,
+      "awakeRounds": 0,
+      "winRate": 32.800000000000004,
+      "avgRounds": 7.924,
+      "p95Rounds": 20,
+      "p99Rounds": 41,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 32.800000000000004
+    },
+    {
+      "character": "sasuke",
+      "pack": "naruto_genesis",
+      "anchor": 2,
+      "games": 250,
+      "wins": 98,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 568,
+        "activeEffective": 568,
+        "activeTargets": {
+          "other": 568
+        },
+        "signatureDeclared": 172,
+        "signatureEffective": 172,
+        "signatureCosts": {
+          "4": 172
+        },
+        "damage": 852,
+        "healing": 211,
+        "shield": 0,
+        "drawn": 3742,
+        "discarded": 625,
+        "cancelled": 69,
+        "equipmentChanges": 931,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 98,
+      "awakeRounds": 0,
+      "winRate": 39.2,
+      "avgRounds": 7.692,
+      "p95Rounds": 18,
+      "p99Rounds": 40,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 39.2
+    },
+    {
+      "character": "sasuke",
+      "pack": "naruto_genesis",
+      "anchor": 3,
+      "games": 250,
+      "wins": 84,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 535,
+        "activeEffective": 535,
+        "activeTargets": {
+          "other": 535
+        },
+        "signatureDeclared": 137,
+        "signatureEffective": 137,
+        "signatureCosts": {
+          "4": 137
+        },
+        "damage": 766,
+        "healing": 198,
+        "shield": 0,
+        "drawn": 3423,
+        "discarded": 493,
+        "cancelled": 65,
+        "equipmentChanges": 914,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 84,
+      "awakeRounds": 0,
+      "winRate": 33.6,
+      "avgRounds": 6.912,
+      "p95Rounds": 14,
+      "p99Rounds": 26,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 33.6
+    },
+    {
+      "character": "kakashi",
+      "pack": "naruto_genesis",
+      "anchor": 0,
+      "games": 250,
+      "wins": 193,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 795,
+        "activeEffective": 795,
+        "activeTargets": {
+          "self": 795
+        },
+        "signatureDeclared": 433,
+        "signatureEffective": 433,
+        "signatureCosts": {
+          "2": 433
+        },
+        "damage": 1503,
+        "healing": 100,
+        "shield": 0,
+        "drawn": 1575,
+        "discarded": 191,
+        "cancelled": 43,
+        "equipmentChanges": 394,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 193,
+      "awakeRounds": 0,
+      "winRate": 77.2,
+      "avgRounds": 4.68,
+      "p95Rounds": 10,
+      "p99Rounds": 21,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 77.2
+    },
+    {
+      "character": "kakashi",
+      "pack": "naruto_genesis",
+      "anchor": 1,
+      "games": 250,
+      "wins": 160,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 573,
+        "activeEffective": 573,
+        "activeTargets": {
+          "self": 573
+        },
+        "signatureDeclared": 371,
+        "signatureEffective": 371,
+        "signatureCosts": {
+          "2": 371
+        },
+        "damage": 1224,
+        "healing": 123,
+        "shield": 0,
+        "drawn": 1433,
+        "discarded": 261,
+        "cancelled": 35,
+        "equipmentChanges": 323,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 160,
+      "awakeRounds": 0,
+      "winRate": 64,
+      "avgRounds": 5.096,
+      "p95Rounds": 12,
+      "p99Rounds": 22,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 64
+    },
+    {
+      "character": "kakashi",
+      "pack": "naruto_genesis",
+      "anchor": 2,
+      "games": 250,
+      "wins": 183,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 741,
+        "activeEffective": 741,
+        "activeTargets": {
+          "self": 741
+        },
+        "signatureDeclared": 444,
+        "signatureEffective": 444,
+        "signatureCosts": {
+          "2": 444
+        },
+        "damage": 1458,
+        "healing": 117,
+        "shield": 0,
+        "drawn": 1828,
+        "discarded": 195,
+        "cancelled": 55,
+        "equipmentChanges": 395,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 183,
+      "awakeRounds": 0,
+      "winRate": 73.2,
+      "avgRounds": 5.188,
+      "p95Rounds": 13,
+      "p99Rounds": 23,
+      "maxRounds": 41,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 73.2
+    },
+    {
+      "character": "kakashi",
+      "pack": "naruto_genesis",
+      "anchor": 3,
+      "games": 250,
+      "wins": 160,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 754,
+        "activeEffective": 754,
+        "activeTargets": {
+          "self": 754
+        },
+        "signatureDeclared": 438,
+        "signatureEffective": 438,
+        "signatureCosts": {
+          "2": 438
+        },
+        "damage": 1404,
+        "healing": 120,
+        "shield": 0,
+        "drawn": 1966,
+        "discarded": 220,
+        "cancelled": 42,
+        "equipmentChanges": 405,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 160,
+      "awakeRounds": 0,
+      "winRate": 64,
+      "avgRounds": 5.292,
+      "p95Rounds": 12,
+      "p99Rounds": 29,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 64
+    },
+    {
+      "character": "hinata",
+      "pack": "naruto_genesis",
+      "anchor": 0,
+      "games": 250,
+      "wins": 129,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 962,
+        "activeEffective": 962,
+        "activeTargets": {
+          "other": 962
+        },
+        "signatureDeclared": 371,
+        "signatureEffective": 371,
+        "signatureCosts": {
+          "4": 371
+        },
+        "damage": 787,
+        "healing": 170,
+        "shield": 0,
+        "drawn": 2300,
+        "discarded": 311,
+        "cancelled": 59,
+        "equipmentChanges": 480,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 129,
+      "awakeRounds": 0,
+      "winRate": 51.6,
+      "avgRounds": 7.288,
+      "p95Rounds": 16,
+      "p99Rounds": 33,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 51.6
+    },
+    {
+      "character": "hinata",
+      "pack": "naruto_genesis",
+      "anchor": 1,
+      "games": 250,
+      "wins": 111,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 702,
+        "activeEffective": 702,
+        "activeTargets": {
+          "other": 702
+        },
+        "signatureDeclared": 320,
+        "signatureEffective": 320,
+        "signatureCosts": {
+          "4": 320
+        },
+        "damage": 662,
+        "healing": 140,
+        "shield": 0,
+        "drawn": 2036,
+        "discarded": 340,
+        "cancelled": 50,
+        "equipmentChanges": 390,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 111,
+      "awakeRounds": 0,
+      "winRate": 44.4,
+      "avgRounds": 6.896,
+      "p95Rounds": 17,
+      "p99Rounds": 26,
+      "maxRounds": 42,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 44.4
+    },
+    {
+      "character": "hinata",
+      "pack": "naruto_genesis",
+      "anchor": 2,
+      "games": 250,
+      "wins": 131,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 837,
+        "activeEffective": 837,
+        "activeTargets": {
+          "other": 837
+        },
+        "signatureDeclared": 370,
+        "signatureEffective": 369,
+        "signatureCosts": {
+          "4": 370
+        },
+        "damage": 797,
+        "healing": 150,
+        "shield": 0,
+        "drawn": 2338,
+        "discarded": 289,
+        "cancelled": 63,
+        "equipmentChanges": 431,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 131,
+      "awakeRounds": 0,
+      "winRate": 52.400000000000006,
+      "avgRounds": 7.552,
+      "p95Rounds": 17,
+      "p99Rounds": 41,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 52.400000000000006
+    },
+    {
+      "character": "hinata",
+      "pack": "naruto_genesis",
+      "anchor": 3,
+      "games": 250,
+      "wins": 111,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 880,
+        "activeEffective": 880,
+        "activeTargets": {
+          "other": 880
+        },
+        "signatureDeclared": 383,
+        "signatureEffective": 383,
+        "signatureCosts": {
+          "4": 383
+        },
+        "damage": 763,
+        "healing": 162,
+        "shield": 0,
+        "drawn": 2659,
+        "discarded": 316,
+        "cancelled": 63,
+        "equipmentChanges": 466,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 111,
+      "awakeRounds": 0,
+      "winRate": 44.4,
+      "avgRounds": 7.14,
+      "p95Rounds": 16,
+      "p99Rounds": 41,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 44.4
+    },
+    {
+      "character": "jiraiya",
+      "pack": "naruto_genesis",
+      "anchor": 0,
+      "games": 250,
+      "wins": 126,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 795,
+        "activeEffective": 795,
+        "activeTargets": {
+          "other": 795
+        },
+        "signatureDeclared": 255,
+        "signatureEffective": 255,
+        "signatureCosts": {
+          "4": 255
+        },
+        "damage": 996,
+        "healing": 159,
+        "shield": 0,
+        "drawn": 2728,
+        "discarded": 386,
+        "cancelled": 101,
+        "equipmentChanges": 486,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 126,
+      "awakeRounds": 0,
+      "winRate": 50.4,
+      "avgRounds": 6.436,
+      "p95Rounds": 15,
+      "p99Rounds": 28,
+      "maxRounds": 42,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 50.4
+    },
+    {
+      "character": "jiraiya",
+      "pack": "naruto_genesis",
+      "anchor": 1,
+      "games": 250,
+      "wins": 101,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 675,
+        "activeEffective": 675,
+        "activeTargets": {
+          "other": 675
+        },
+        "signatureDeclared": 208,
+        "signatureEffective": 208,
+        "signatureCosts": {
+          "4": 208
+        },
+        "damage": 818,
+        "healing": 154,
+        "shield": 0,
+        "drawn": 2640,
+        "discarded": 423,
+        "cancelled": 89,
+        "equipmentChanges": 427,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 101,
+      "awakeRounds": 0,
+      "winRate": 40.400000000000006,
+      "avgRounds": 6.708,
+      "p95Rounds": 14,
+      "p99Rounds": 31,
+      "maxRounds": 41,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 40.400000000000006
+    },
+    {
+      "character": "jiraiya",
+      "pack": "naruto_genesis",
+      "anchor": 2,
+      "games": 250,
+      "wins": 132,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 924,
+        "activeEffective": 924,
+        "activeTargets": {
+          "other": 924
+        },
+        "signatureDeclared": 316,
+        "signatureEffective": 316,
+        "signatureCosts": {
+          "4": 316
+        },
+        "damage": 1172,
+        "healing": 173,
+        "shield": 0,
+        "drawn": 3598,
+        "discarded": 478,
+        "cancelled": 115,
+        "equipmentChanges": 523,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 132,
+      "awakeRounds": 0,
+      "winRate": 52.800000000000004,
+      "avgRounds": 7.456,
+      "p95Rounds": 19,
+      "p99Rounds": 36,
+      "maxRounds": 47,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 52.800000000000004
+    },
+    {
+      "character": "jiraiya",
+      "pack": "naruto_genesis",
+      "anchor": 3,
+      "games": 250,
+      "wins": 113,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 792,
+        "activeEffective": 792,
+        "activeTargets": {
+          "other": 792
+        },
+        "signatureDeclared": 231,
+        "signatureEffective": 231,
+        "signatureCosts": {
+          "4": 231
+        },
+        "damage": 982,
+        "healing": 172,
+        "shield": 0,
+        "drawn": 3067,
+        "discarded": 357,
+        "cancelled": 89,
+        "equipmentChanges": 489,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 113,
+      "awakeRounds": 0,
+      "winRate": 45.2,
+      "avgRounds": 6.728,
+      "p95Rounds": 15,
+      "p99Rounds": 33,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 45.2
+    },
+    {
+      "character": "orochimaru",
+      "pack": "naruto_genesis",
+      "anchor": 0,
+      "games": 250,
+      "wins": 94,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1881,
+        "activeEffective": 1881,
+        "activeTargets": {
+          "other": 1881
+        },
+        "signatureDeclared": 560,
+        "signatureEffective": 560,
+        "signatureCosts": {
+          "2": 560
+        },
+        "damage": 608,
+        "healing": 86,
+        "shield": 548,
+        "drawn": 4911,
+        "discarded": 2402,
+        "cancelled": 1140,
+        "equipmentChanges": 593,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 94,
+      "awakeRounds": 0,
+      "winRate": 37.6,
+      "avgRounds": 9.388,
+      "p95Rounds": 29,
+      "p99Rounds": 41,
+      "maxRounds": 47,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 37.6
+    },
+    {
+      "character": "orochimaru",
+      "pack": "naruto_genesis",
+      "anchor": 1,
+      "games": 250,
+      "wins": 81,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1484,
+        "activeEffective": 1484,
+        "activeTargets": {
+          "other": 1484
+        },
+        "signatureDeclared": 408,
+        "signatureEffective": 408,
+        "signatureCosts": {
+          "2": 408
+        },
+        "damage": 502,
+        "healing": 112,
+        "shield": 393,
+        "drawn": 4294,
+        "discarded": 1979,
+        "cancelled": 822,
+        "equipmentChanges": 539,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 81,
+      "awakeRounds": 0,
+      "winRate": 32.4,
+      "avgRounds": 8.828,
+      "p95Rounds": 28,
+      "p99Rounds": 45,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 32.4
+    },
+    {
+      "character": "orochimaru",
+      "pack": "naruto_genesis",
+      "anchor": 2,
+      "games": 250,
+      "wins": 93,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1829,
+        "activeEffective": 1829,
+        "activeTargets": {
+          "other": 1829
+        },
+        "signatureDeclared": 525,
+        "signatureEffective": 525,
+        "signatureCosts": {
+          "2": 525
+        },
+        "damage": 579,
+        "healing": 142,
+        "shield": 506,
+        "drawn": 5233,
+        "discarded": 2325,
+        "cancelled": 1048,
+        "equipmentChanges": 591,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 93,
+      "awakeRounds": 0,
+      "winRate": 37.2,
+      "avgRounds": 10.16,
+      "p95Rounds": 35,
+      "p99Rounds": 44,
+      "maxRounds": 47,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 37.2
+    },
+    {
+      "character": "orochimaru",
+      "pack": "naruto_genesis",
+      "anchor": 3,
+      "games": 250,
+      "wins": 67,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1786,
+        "activeEffective": 1786,
+        "activeTargets": {
+          "other": 1786
+        },
+        "signatureDeclared": 534,
+        "signatureEffective": 534,
+        "signatureCosts": {
+          "2": 534
+        },
+        "damage": 560,
+        "healing": 118,
+        "shield": 520,
+        "drawn": 5264,
+        "discarded": 2317,
+        "cancelled": 1049,
+        "equipmentChanges": 615,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 67,
+      "awakeRounds": 0,
+      "winRate": 26.8,
+      "avgRounds": 9.4,
+      "p95Rounds": 31,
+      "p99Rounds": 44,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 26.8
+    },
+    {
+      "character": "luffy",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 144,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1094,
+        "activeEffective": 1094,
+        "activeTargets": {
+          "self": 1094
+        },
+        "signatureDeclared": 548,
+        "signatureEffective": 548,
+        "signatureCosts": {
+          "4": 548
+        },
+        "damage": 1020,
+        "healing": 450,
+        "shield": 0,
+        "drawn": 5169,
+        "discarded": 717,
+        "cancelled": 79,
+        "equipmentChanges": 677,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "突击命中": 386,
+          "受到他人伤害": 209
+        },
+        "awakeRound": 642
+      },
+      "dreamProgress": 595,
+      "awakened": 132,
+      "awakenedWins": 84,
+      "unawakenedWins": 60,
+      "awakeRounds": 642,
+      "winRate": 57.599999999999994,
+      "avgRounds": 6.624,
+      "p95Rounds": 14,
+      "p99Rounds": 23,
+      "maxRounds": 41,
+      "avgDreamProgress": 2.38,
+      "awakenRate": 52.800000000000004,
+      "avgAwakenRound": 4.863636363636363,
+      "awakenedWinRate": 63.63636363636363,
+      "unawakenedWinRate": 50.847457627118644
+    },
+    {
+      "character": "luffy",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 128,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1005,
+        "activeEffective": 1005,
+        "activeTargets": {
+          "self": 1005
+        },
+        "signatureDeclared": 557,
+        "signatureEffective": 557,
+        "signatureCosts": {
+          "4": 557
+        },
+        "damage": 1024,
+        "healing": 461,
+        "shield": 0,
+        "drawn": 5378,
+        "discarded": 781,
+        "cancelled": 92,
+        "equipmentChanges": 630,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "受到他人伤害": 348,
+          "突击命中": 276
+        },
+        "awakeRound": 769
+      },
+      "dreamProgress": 624,
+      "awakened": 152,
+      "awakenedWins": 83,
+      "unawakenedWins": 45,
+      "awakeRounds": 769,
+      "winRate": 51.2,
+      "avgRounds": 7.332,
+      "p95Rounds": 17,
+      "p99Rounds": 28,
+      "maxRounds": 43,
+      "avgDreamProgress": 2.496,
+      "awakenRate": 60.8,
+      "avgAwakenRound": 5.059210526315789,
+      "awakenedWinRate": 54.60526315789473,
+      "unawakenedWinRate": 45.91836734693878
+    },
+    {
+      "character": "luffy",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 138,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1313,
+        "activeEffective": 1313,
+        "activeTargets": {
+          "self": 1313
+        },
+        "signatureDeclared": 703,
+        "signatureEffective": 703,
+        "signatureCosts": {
+          "4": 703
+        },
+        "damage": 1143,
+        "healing": 601,
+        "shield": 0,
+        "drawn": 6885,
+        "discarded": 988,
+        "cancelled": 112,
+        "equipmentChanges": 737,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "受到他人伤害": 259,
+          "突击命中": 365
+        },
+        "awakeRound": 820
+      },
+      "dreamProgress": 624,
+      "awakened": 158,
+      "awakenedWins": 92,
+      "unawakenedWins": 46,
+      "awakeRounds": 820,
+      "winRate": 55.2,
+      "avgRounds": 8.056,
+      "p95Rounds": 20,
+      "p99Rounds": 40,
+      "maxRounds": 44,
+      "avgDreamProgress": 2.496,
+      "awakenRate": 63.2,
+      "avgAwakenRound": 5.189873417721519,
+      "awakenedWinRate": 58.22784810126582,
+      "unawakenedWinRate": 50
+    },
+    {
+      "character": "luffy",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 123,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1150,
+        "activeEffective": 1150,
+        "activeTargets": {
+          "self": 1150
+        },
+        "signatureDeclared": 591,
+        "signatureEffective": 591,
+        "signatureCosts": {
+          "4": 591
+        },
+        "damage": 1087,
+        "healing": 520,
+        "shield": 0,
+        "drawn": 6094,
+        "discarded": 809,
+        "cancelled": 81,
+        "equipmentChanges": 679,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "受到他人伤害": 315,
+          "突击命中": 326
+        },
+        "awakeRound": 770
+      },
+      "dreamProgress": 641,
+      "awakened": 164,
+      "awakenedWins": 93,
+      "unawakenedWins": 30,
+      "awakeRounds": 770,
+      "winRate": 49.2,
+      "avgRounds": 7.404,
+      "p95Rounds": 19,
+      "p99Rounds": 40,
+      "maxRounds": 45,
+      "avgDreamProgress": 2.564,
+      "awakenRate": 65.60000000000001,
+      "avgAwakenRound": 4.695121951219512,
+      "awakenedWinRate": 56.70731707317073,
+      "unawakenedWinRate": 34.883720930232556
+    },
+    {
+      "character": "chopper",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 141,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 140,
+        "1": 64,
+        "2": 24,
+        "3": 10,
+        "4": 5,
+        "5": 2,
+        "6": 3,
+        "8": 1,
+        "9": 1
+      },
+      "metrics": {
+        "activeDeclared": 207,
+        "activeEffective": 207,
+        "activeTargets": {
+          "ally": 207
+        },
+        "signatureDeclared": 611,
+        "signatureEffective": 611,
+        "signatureCosts": {
+          "4": 611
+        },
+        "damage": 693,
+        "healing": 396,
+        "shield": 918,
+        "drawn": 4507,
+        "discarded": 721,
+        "cancelled": 102,
+        "equipmentChanges": 621,
+        "healingOpportunities": 207,
+        "healingUsed": 207,
+        "healingSkipped": {
+          "无可获益队友": 4287,
+          "无基础牌支付": 849
+        },
+        "dreamReasons": {
+          "医术": 178
+        },
+        "awakeRound": 168
+      },
+      "dreamProgress": 178,
+      "awakened": 22,
+      "awakenedWins": 19,
+      "unawakenedWins": 122,
+      "awakeRounds": 168,
+      "winRate": 56.39999999999999,
+      "avgRounds": 9.148,
+      "p95Rounds": 24,
+      "p99Rounds": 42,
+      "maxRounds": 46,
+      "avgDreamProgress": 0.712,
+      "awakenRate": 8.799999999999999,
+      "avgAwakenRound": 7.636363636363637,
+      "awakenedWinRate": 86.36363636363636,
+      "unawakenedWinRate": 53.50877192982456
+    },
+    {
+      "character": "chopper",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 128,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 142,
+        "1": 73,
+        "2": 20,
+        "3": 9,
+        "4": 1,
+        "5": 2,
+        "6": 1,
+        "7": 1,
+        "11": 1
+      },
+      "metrics": {
+        "activeDeclared": 178,
+        "activeEffective": 178,
+        "activeTargets": {
+          "ally": 178
+        },
+        "signatureDeclared": 527,
+        "signatureEffective": 527,
+        "signatureCosts": {
+          "4": 527
+        },
+        "damage": 605,
+        "healing": 362,
+        "shield": 826,
+        "drawn": 4162,
+        "discarded": 751,
+        "cancelled": 89,
+        "equipmentChanges": 565,
+        "healingOpportunities": 178,
+        "healingUsed": 178,
+        "healingSkipped": {
+          "无可获益队友": 3323,
+          "无基础牌支付": 822
+        },
+        "dreamReasons": {
+          "医术": 158
+        },
+        "awakeRound": 80
+      },
+      "dreamProgress": 158,
+      "awakened": 15,
+      "awakenedWins": 13,
+      "unawakenedWins": 115,
+      "awakeRounds": 80,
+      "winRate": 51.2,
+      "avgRounds": 8.544,
+      "p95Rounds": 20,
+      "p99Rounds": 42,
+      "maxRounds": 43,
+      "avgDreamProgress": 0.632,
+      "awakenRate": 6,
+      "avgAwakenRound": 5.333333333333333,
+      "awakenedWinRate": 86.66666666666667,
+      "unawakenedWinRate": 48.93617021276596
+    },
+    {
+      "character": "chopper",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 144,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 126,
+        "1": 79,
+        "2": 23,
+        "3": 11,
+        "4": 5,
+        "5": 3,
+        "6": 2,
+        "7": 1
+      },
+      "metrics": {
+        "activeDeclared": 212,
+        "activeEffective": 212,
+        "activeTargets": {
+          "ally": 212
+        },
+        "signatureDeclared": 593,
+        "signatureEffective": 593,
+        "signatureCosts": {
+          "4": 593
+        },
+        "damage": 708,
+        "healing": 387,
+        "shield": 902,
+        "drawn": 4706,
+        "discarded": 726,
+        "cancelled": 117,
+        "equipmentChanges": 596,
+        "healingOpportunities": 212,
+        "healingUsed": 212,
+        "healingSkipped": {
+          "无可获益队友": 3865,
+          "无基础牌支付": 793
+        },
+        "dreamReasons": {
+          "医术": 191
+        },
+        "awakeRound": 94
+      },
+      "dreamProgress": 191,
+      "awakened": 22,
+      "awakenedWins": 16,
+      "unawakenedWins": 128,
+      "awakeRounds": 94,
+      "winRate": 57.599999999999994,
+      "avgRounds": 9.14,
+      "p95Rounds": 23,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 0.764,
+      "awakenRate": 8.799999999999999,
+      "avgAwakenRound": 4.2727272727272725,
+      "awakenedWinRate": 72.72727272727273,
+      "unawakenedWinRate": 56.14035087719298
+    },
+    {
+      "character": "chopper",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 132,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 113,
+        "1": 89,
+        "2": 28,
+        "3": 12,
+        "4": 1,
+        "5": 2,
+        "7": 2,
+        "11": 1,
+        "13": 1,
+        "20": 1
+      },
+      "metrics": {
+        "activeDeclared": 253,
+        "activeEffective": 253,
+        "activeTargets": {
+          "ally": 253
+        },
+        "signatureDeclared": 686,
+        "signatureEffective": 686,
+        "signatureCosts": {
+          "4": 686
+        },
+        "damage": 708,
+        "healing": 454,
+        "shield": 948,
+        "drawn": 5674,
+        "discarded": 896,
+        "cancelled": 135,
+        "equipmentChanges": 633,
+        "healingOpportunities": 253,
+        "healingUsed": 253,
+        "healingSkipped": {
+          "无可获益队友": 4557,
+          "无基础牌支付": 871
+        },
+        "dreamReasons": {
+          "医术": 205
+        },
+        "awakeRound": 133
+      },
+      "dreamProgress": 205,
+      "awakened": 20,
+      "awakenedWins": 18,
+      "unawakenedWins": 114,
+      "awakeRounds": 133,
+      "winRate": 52.800000000000004,
+      "avgRounds": 9.368,
+      "p95Rounds": 29,
+      "p99Rounds": 45,
+      "maxRounds": 46,
+      "avgDreamProgress": 0.82,
+      "awakenRate": 8,
+      "avgAwakenRound": 6.65,
+      "awakenedWinRate": 90,
+      "unawakenedWinRate": 49.56521739130435
+    },
+    {
+      "character": "zoro",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 177,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 523,
+        "activeEffective": 523,
+        "activeTargets": {
+          "self": 523
+        },
+        "signatureDeclared": 486,
+        "signatureEffective": 486,
+        "signatureCosts": {
+          "3": 76,
+          "4": 410
+        },
+        "damage": 1507,
+        "healing": 105,
+        "shield": 0,
+        "drawn": 2417,
+        "discarded": 274,
+        "cancelled": 43,
+        "equipmentChanges": 443,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "强化斩击命中": 537
+        },
+        "awakeRound": 528
+      },
+      "dreamProgress": 537,
+      "awakened": 103,
+      "awakenedWins": 90,
+      "unawakenedWins": 87,
+      "awakeRounds": 528,
+      "winRate": 70.8,
+      "avgRounds": 6.048,
+      "p95Rounds": 13,
+      "p99Rounds": 32,
+      "maxRounds": 43,
+      "avgDreamProgress": 2.148,
+      "awakenRate": 41.199999999999996,
+      "avgAwakenRound": 5.12621359223301,
+      "awakenedWinRate": 87.37864077669903,
+      "unawakenedWinRate": 59.183673469387756
+    },
+    {
+      "character": "zoro",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 133,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 449,
+        "activeEffective": 449,
+        "activeTargets": {
+          "self": 449
+        },
+        "signatureDeclared": 421,
+        "signatureEffective": 421,
+        "signatureCosts": {
+          "3": 65,
+          "4": 356
+        },
+        "damage": 1247,
+        "healing": 136,
+        "shield": 0,
+        "drawn": 2431,
+        "discarded": 315,
+        "cancelled": 49,
+        "equipmentChanges": 373,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "强化斩击命中": 447
+        },
+        "awakeRound": 450
+      },
+      "dreamProgress": 447,
+      "awakened": 82,
+      "awakenedWins": 68,
+      "unawakenedWins": 65,
+      "awakeRounds": 450,
+      "winRate": 53.2,
+      "avgRounds": 6.056,
+      "p95Rounds": 12,
+      "p99Rounds": 24,
+      "maxRounds": 42,
+      "avgDreamProgress": 1.788,
+      "awakenRate": 32.800000000000004,
+      "avgAwakenRound": 5.487804878048781,
+      "awakenedWinRate": 82.92682926829268,
+      "unawakenedWinRate": 38.69047619047619
+    },
+    {
+      "character": "zoro",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 179,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 497,
+        "activeEffective": 497,
+        "activeTargets": {
+          "self": 497
+        },
+        "signatureDeclared": 454,
+        "signatureEffective": 454,
+        "signatureCosts": {
+          "3": 70,
+          "4": 384
+        },
+        "damage": 1538,
+        "healing": 101,
+        "shield": 0,
+        "drawn": 2532,
+        "discarded": 227,
+        "cancelled": 48,
+        "equipmentChanges": 413,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "强化斩击命中": 534
+        },
+        "awakeRound": 467
+      },
+      "dreamProgress": 534,
+      "awakened": 102,
+      "awakenedWins": 90,
+      "unawakenedWins": 89,
+      "awakeRounds": 467,
+      "winRate": 71.6,
+      "avgRounds": 5.36,
+      "p95Rounds": 10,
+      "p99Rounds": 23,
+      "maxRounds": 44,
+      "avgDreamProgress": 2.136,
+      "awakenRate": 40.8,
+      "avgAwakenRound": 4.578431372549019,
+      "awakenedWinRate": 88.23529411764706,
+      "unawakenedWinRate": 60.13513513513513
+    },
+    {
+      "character": "zoro",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 160,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 553,
+        "activeEffective": 553,
+        "activeTargets": {
+          "self": 553
+        },
+        "signatureDeclared": 460,
+        "signatureEffective": 460,
+        "signatureCosts": {
+          "3": 83,
+          "4": 377
+        },
+        "damage": 1450,
+        "healing": 151,
+        "shield": 0,
+        "drawn": 2823,
+        "discarded": 293,
+        "cancelled": 49,
+        "equipmentChanges": 411,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "强化斩击命中": 509
+        },
+        "awakeRound": 456
+      },
+      "dreamProgress": 509,
+      "awakened": 94,
+      "awakenedWins": 84,
+      "unawakenedWins": 76,
+      "awakeRounds": 456,
+      "winRate": 64,
+      "avgRounds": 5.724,
+      "p95Rounds": 13,
+      "p99Rounds": 21,
+      "maxRounds": 25,
+      "avgDreamProgress": 2.036,
+      "awakenRate": 37.6,
+      "avgAwakenRound": 4.851063829787234,
+      "awakenedWinRate": 89.36170212765957,
+      "unawakenedWinRate": 48.717948717948715
+    },
+    {
+      "character": "nami",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 176,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 964,
+        "activeEffective": 964,
+        "activeTargets": {
+          "self": 964
+        },
+        "signatureDeclared": 602,
+        "signatureEffective": 601,
+        "signatureCosts": {
+          "4": 602
+        },
+        "damage": 1199,
+        "healing": 224,
+        "shield": 0,
+        "drawn": 2370,
+        "discarded": 535,
+        "cancelled": 83,
+        "equipmentChanges": 589,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "航海记录": 557
+        },
+        "awakeRound": 453
+      },
+      "dreamProgress": 557,
+      "awakened": 116,
+      "awakenedWins": 105,
+      "unawakenedWins": 71,
+      "awakeRounds": 453,
+      "winRate": 70.39999999999999,
+      "avgRounds": 6.616,
+      "p95Rounds": 15,
+      "p99Rounds": 42,
+      "maxRounds": 44,
+      "avgDreamProgress": 2.228,
+      "awakenRate": 46.400000000000006,
+      "avgAwakenRound": 3.9051724137931036,
+      "awakenedWinRate": 90.51724137931035,
+      "unawakenedWinRate": 52.98507462686567
+    },
+    {
+      "character": "nami",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 149,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 688,
+        "activeEffective": 688,
+        "activeTargets": {
+          "self": 688
+        },
+        "signatureDeclared": 453,
+        "signatureEffective": 452,
+        "signatureCosts": {
+          "4": 453
+        },
+        "damage": 999,
+        "healing": 198,
+        "shield": 0,
+        "drawn": 1963,
+        "discarded": 416,
+        "cancelled": 68,
+        "equipmentChanges": 468,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "航海记录": 444
+        },
+        "awakeRound": 304
+      },
+      "dreamProgress": 444,
+      "awakened": 81,
+      "awakenedWins": 72,
+      "unawakenedWins": 77,
+      "awakeRounds": 304,
+      "winRate": 59.599999999999994,
+      "avgRounds": 5.864,
+      "p95Rounds": 12,
+      "p99Rounds": 20,
+      "maxRounds": 41,
+      "avgDreamProgress": 1.776,
+      "awakenRate": 32.4,
+      "avgAwakenRound": 3.753086419753086,
+      "awakenedWinRate": 88.88888888888889,
+      "unawakenedWinRate": 45.562130177514796
+    },
+    {
+      "character": "nami",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 163,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 892,
+        "activeEffective": 892,
+        "activeTargets": {
+          "self": 892
+        },
+        "signatureDeclared": 595,
+        "signatureEffective": 595,
+        "signatureCosts": {
+          "4": 595
+        },
+        "damage": 1125,
+        "healing": 232,
+        "shield": 0,
+        "drawn": 2523,
+        "discarded": 500,
+        "cancelled": 104,
+        "equipmentChanges": 530,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "航海记录": 508
+        },
+        "awakeRound": 364
+      },
+      "dreamProgress": 508,
+      "awakened": 97,
+      "awakenedWins": 79,
+      "unawakenedWins": 84,
+      "awakeRounds": 364,
+      "winRate": 65.2,
+      "avgRounds": 7.028,
+      "p95Rounds": 18,
+      "p99Rounds": 38,
+      "maxRounds": 45,
+      "avgDreamProgress": 2.032,
+      "awakenRate": 38.800000000000004,
+      "avgAwakenRound": 3.752577319587629,
+      "awakenedWinRate": 81.44329896907216,
+      "unawakenedWinRate": 54.90196078431373
+    },
+    {
+      "character": "nami",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 163,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 917,
+        "activeEffective": 917,
+        "activeTargets": {
+          "self": 917
+        },
+        "signatureDeclared": 598,
+        "signatureEffective": 598,
+        "signatureCosts": {
+          "4": 598
+        },
+        "damage": 1217,
+        "healing": 246,
+        "shield": 0,
+        "drawn": 2677,
+        "discarded": 482,
+        "cancelled": 78,
+        "equipmentChanges": 577,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "航海记录": 543
+        },
+        "awakeRound": 422
+      },
+      "dreamProgress": 543,
+      "awakened": 110,
+      "awakenedWins": 94,
+      "unawakenedWins": 69,
+      "awakeRounds": 422,
+      "winRate": 65.2,
+      "avgRounds": 5.872,
+      "p95Rounds": 14,
+      "p99Rounds": 24,
+      "maxRounds": 44,
+      "avgDreamProgress": 2.172,
+      "awakenRate": 44,
+      "avgAwakenRound": 3.8363636363636364,
+      "awakenedWinRate": 85.45454545454545,
+      "unawakenedWinRate": 49.28571428571429
+    },
+    {
+      "character": "usopp",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 128,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 887,
+        "activeEffective": 887,
+        "activeTargets": {
+          "other": 887
+        },
+        "signatureDeclared": 324,
+        "signatureEffective": 324,
+        "signatureCosts": {
+          "3": 324
+        },
+        "damage": 856,
+        "healing": 121,
+        "shield": 0,
+        "drawn": 2561,
+        "discarded": 329,
+        "cancelled": 83,
+        "equipmentChanges": 448,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "谎言弹": 458,
+          "令他人弃牌": 47
+        },
+        "awakeRound": 418
+      },
+      "dreamProgress": 505,
+      "awakened": 100,
+      "awakenedWins": 71,
+      "unawakenedWins": 57,
+      "awakeRounds": 418,
+      "winRate": 51.2,
+      "avgRounds": 6.996,
+      "p95Rounds": 16,
+      "p99Rounds": 41,
+      "maxRounds": 47,
+      "avgDreamProgress": 2.02,
+      "awakenRate": 40,
+      "avgAwakenRound": 4.18,
+      "awakenedWinRate": 71,
+      "unawakenedWinRate": 38
+    },
+    {
+      "character": "usopp",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 105,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 622,
+        "activeEffective": 622,
+        "activeTargets": {
+          "other": 622
+        },
+        "signatureDeclared": 285,
+        "signatureEffective": 285,
+        "signatureCosts": {
+          "3": 285
+        },
+        "damage": 726,
+        "healing": 109,
+        "shield": 0,
+        "drawn": 2229,
+        "discarded": 349,
+        "cancelled": 67,
+        "equipmentChanges": 342,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "谎言弹": 319,
+          "令他人弃牌": 15
+        },
+        "awakeRound": 289
+      },
+      "dreamProgress": 334,
+      "awakened": 58,
+      "awakenedWins": 38,
+      "unawakenedWins": 67,
+      "awakeRounds": 289,
+      "winRate": 42,
+      "avgRounds": 6.908,
+      "p95Rounds": 17,
+      "p99Rounds": 36,
+      "maxRounds": 45,
+      "avgDreamProgress": 1.336,
+      "awakenRate": 23.200000000000003,
+      "avgAwakenRound": 4.982758620689655,
+      "awakenedWinRate": 65.51724137931035,
+      "unawakenedWinRate": 34.89583333333333
+    },
+    {
+      "character": "usopp",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 125,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 852,
+        "activeEffective": 852,
+        "activeTargets": {
+          "other": 852
+        },
+        "signatureDeclared": 336,
+        "signatureEffective": 336,
+        "signatureCosts": {
+          "3": 336
+        },
+        "damage": 864,
+        "healing": 129,
+        "shield": 0,
+        "drawn": 2850,
+        "discarded": 310,
+        "cancelled": 103,
+        "equipmentChanges": 416,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "谎言弹": 389,
+          "令他人弃牌": 24
+        },
+        "awakeRound": 352
+      },
+      "dreamProgress": 413,
+      "awakened": 77,
+      "awakenedWins": 52,
+      "unawakenedWins": 73,
+      "awakeRounds": 352,
+      "winRate": 50,
+      "avgRounds": 7.668,
+      "p95Rounds": 19,
+      "p99Rounds": 41,
+      "maxRounds": 45,
+      "avgDreamProgress": 1.652,
+      "awakenRate": 30.8,
+      "avgAwakenRound": 4.571428571428571,
+      "awakenedWinRate": 67.53246753246754,
+      "unawakenedWinRate": 42.19653179190752
+    },
+    {
+      "character": "usopp",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 102,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 887,
+        "activeEffective": 887,
+        "activeTargets": {
+          "other": 887
+        },
+        "signatureDeclared": 320,
+        "signatureEffective": 320,
+        "signatureCosts": {
+          "3": 320
+        },
+        "damage": 812,
+        "healing": 147,
+        "shield": 0,
+        "drawn": 3123,
+        "discarded": 313,
+        "cancelled": 74,
+        "equipmentChanges": 442,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "谎言弹": 393,
+          "令他人弃牌": 26
+        },
+        "awakeRound": 319
+      },
+      "dreamProgress": 419,
+      "awakened": 71,
+      "awakenedWins": 47,
+      "unawakenedWins": 55,
+      "awakeRounds": 319,
+      "winRate": 40.8,
+      "avgRounds": 6.868,
+      "p95Rounds": 16,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 1.676,
+      "awakenRate": 28.4,
+      "avgAwakenRound": 4.492957746478873,
+      "awakenedWinRate": 66.19718309859155,
+      "unawakenedWinRate": 30.726256983240223
+    },
+    {
+      "character": "sanji",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 151,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 306,
+        "activeEffective": 306,
+        "activeTargets": {
+          "ally": 306
+        },
+        "signatureDeclared": 488,
+        "signatureEffective": 488,
+        "signatureCosts": {
+          "4": 488
+        },
+        "damage": 1084,
+        "healing": 455,
+        "shield": 0,
+        "drawn": 2475,
+        "discarded": 585,
+        "cancelled": 48,
+        "equipmentChanges": 419,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "援护": 254,
+          "交付援助": 107
+        },
+        "awakeRound": 278
+      },
+      "dreamProgress": 361,
+      "awakened": 56,
+      "awakenedWins": 50,
+      "unawakenedWins": 101,
+      "awakeRounds": 278,
+      "winRate": 60.4,
+      "avgRounds": 6.208,
+      "p95Rounds": 14,
+      "p99Rounds": 19,
+      "maxRounds": 43,
+      "avgDreamProgress": 1.444,
+      "awakenRate": 22.400000000000002,
+      "avgAwakenRound": 4.964285714285714,
+      "awakenedWinRate": 89.28571428571429,
+      "unawakenedWinRate": 52.0618556701031
+    },
+    {
+      "character": "sanji",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 131,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 299,
+        "activeEffective": 299,
+        "activeTargets": {
+          "ally": 299
+        },
+        "signatureDeclared": 417,
+        "signatureEffective": 416,
+        "signatureCosts": {
+          "4": 417
+        },
+        "damage": 959,
+        "healing": 441,
+        "shield": 0,
+        "drawn": 2442,
+        "discarded": 647,
+        "cancelled": 40,
+        "equipmentChanges": 367,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "援护": 249,
+          "交付援助": 94
+        },
+        "awakeRound": 222
+      },
+      "dreamProgress": 343,
+      "awakened": 49,
+      "awakenedWins": 39,
+      "unawakenedWins": 92,
+      "awakeRounds": 222,
+      "winRate": 52.400000000000006,
+      "avgRounds": 7.14,
+      "p95Rounds": 15,
+      "p99Rounds": 42,
+      "maxRounds": 42,
+      "avgDreamProgress": 1.372,
+      "awakenRate": 19.6,
+      "avgAwakenRound": 4.530612244897959,
+      "awakenedWinRate": 79.59183673469387,
+      "unawakenedWinRate": 45.77114427860697
+    },
+    {
+      "character": "sanji",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 166,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 356,
+        "activeEffective": 356,
+        "activeTargets": {
+          "ally": 356
+        },
+        "signatureDeclared": 531,
+        "signatureEffective": 531,
+        "signatureCosts": {
+          "4": 531
+        },
+        "damage": 1234,
+        "healing": 505,
+        "shield": 0,
+        "drawn": 3018,
+        "discarded": 674,
+        "cancelled": 52,
+        "equipmentChanges": 458,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "交付援助": 113,
+          "援护": 299
+        },
+        "awakeRound": 266
+      },
+      "dreamProgress": 412,
+      "awakened": 57,
+      "awakenedWins": 45,
+      "unawakenedWins": 121,
+      "awakeRounds": 266,
+      "winRate": 66.4,
+      "avgRounds": 6.6,
+      "p95Rounds": 14,
+      "p99Rounds": 21,
+      "maxRounds": 46,
+      "avgDreamProgress": 1.648,
+      "awakenRate": 22.8,
+      "avgAwakenRound": 4.666666666666667,
+      "awakenedWinRate": 78.94736842105263,
+      "unawakenedWinRate": 62.69430051813472
+    },
+    {
+      "character": "sanji",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 144,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 297,
+        "activeEffective": 297,
+        "activeTargets": {
+          "ally": 297
+        },
+        "signatureDeclared": 455,
+        "signatureEffective": 455,
+        "signatureCosts": {
+          "4": 455
+        },
+        "damage": 1063,
+        "healing": 436,
+        "shield": 0,
+        "drawn": 2758,
+        "discarded": 605,
+        "cancelled": 54,
+        "equipmentChanges": 403,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "交付援助": 120,
+          "援护": 260
+        },
+        "awakeRound": 232
+      },
+      "dreamProgress": 380,
+      "awakened": 53,
+      "awakenedWins": 44,
+      "unawakenedWins": 100,
+      "awakeRounds": 232,
+      "winRate": 57.599999999999994,
+      "avgRounds": 6.784,
+      "p95Rounds": 15,
+      "p99Rounds": 42,
+      "maxRounds": 48,
+      "avgDreamProgress": 1.52,
+      "awakenRate": 21.2,
+      "avgAwakenRound": 4.377358490566038,
+      "awakenedWinRate": 83.01886792452831,
+      "unawakenedWinRate": 50.76142131979695
+    },
+    {
+      "character": "robin",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 120,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 766,
+        "activeEffective": 766,
+        "activeTargets": {
+          "other": 766
+        },
+        "signatureDeclared": 830,
+        "signatureEffective": 824,
+        "signatureCosts": {
+          "3": 830
+        },
+        "damage": 663,
+        "healing": 164,
+        "shield": 0,
+        "drawn": 2921,
+        "discarded": 288,
+        "cancelled": 65,
+        "equipmentChanges": 512,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "历史学者": 568
+        },
+        "awakeRound": 392
+      },
+      "dreamProgress": 568,
+      "awakened": 109,
+      "awakenedWins": 65,
+      "unawakenedWins": 55,
+      "awakeRounds": 392,
+      "winRate": 48,
+      "avgRounds": 6.836,
+      "p95Rounds": 16,
+      "p99Rounds": 34,
+      "maxRounds": 45,
+      "avgDreamProgress": 2.272,
+      "awakenRate": 43.6,
+      "avgAwakenRound": 3.596330275229358,
+      "awakenedWinRate": 59.63302752293578,
+      "unawakenedWinRate": 39.00709219858156
+    },
+    {
+      "character": "robin",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 112,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 514,
+        "activeEffective": 514,
+        "activeTargets": {
+          "other": 514
+        },
+        "signatureDeclared": 634,
+        "signatureEffective": 634,
+        "signatureCosts": {
+          "3": 634
+        },
+        "damage": 570,
+        "healing": 137,
+        "shield": 0,
+        "drawn": 2373,
+        "discarded": 311,
+        "cancelled": 48,
+        "equipmentChanges": 396,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "历史学者": 409
+        },
+        "awakeRound": 257
+      },
+      "dreamProgress": 409,
+      "awakened": 68,
+      "awakenedWins": 43,
+      "unawakenedWins": 69,
+      "awakeRounds": 257,
+      "winRate": 44.800000000000004,
+      "avgRounds": 6.988,
+      "p95Rounds": 19,
+      "p99Rounds": 40,
+      "maxRounds": 45,
+      "avgDreamProgress": 1.636,
+      "awakenRate": 27.200000000000003,
+      "avgAwakenRound": 3.7794117647058822,
+      "awakenedWinRate": 63.23529411764706,
+      "unawakenedWinRate": 37.91208791208791
+    },
+    {
+      "character": "robin",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 126,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 675,
+        "activeEffective": 675,
+        "activeTargets": {
+          "other": 675
+        },
+        "signatureDeclared": 802,
+        "signatureEffective": 799,
+        "signatureCosts": {
+          "3": 802
+        },
+        "damage": 704,
+        "healing": 186,
+        "shield": 0,
+        "drawn": 3087,
+        "discarded": 256,
+        "cancelled": 59,
+        "equipmentChanges": 481,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "历史学者": 502
+        },
+        "awakeRound": 327
+      },
+      "dreamProgress": 502,
+      "awakened": 85,
+      "awakenedWins": 49,
+      "unawakenedWins": 77,
+      "awakeRounds": 327,
+      "winRate": 50.4,
+      "avgRounds": 7.396,
+      "p95Rounds": 18,
+      "p99Rounds": 35,
+      "maxRounds": 44,
+      "avgDreamProgress": 2.008,
+      "awakenRate": 34,
+      "avgAwakenRound": 3.847058823529412,
+      "awakenedWinRate": 57.647058823529406,
+      "unawakenedWinRate": 46.666666666666664
+    },
+    {
+      "character": "robin",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 114,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 678,
+        "activeEffective": 678,
+        "activeTargets": {
+          "other": 678
+        },
+        "signatureDeclared": 775,
+        "signatureEffective": 775,
+        "signatureCosts": {
+          "3": 775
+        },
+        "damage": 629,
+        "healing": 166,
+        "shield": 0,
+        "drawn": 3094,
+        "discarded": 305,
+        "cancelled": 56,
+        "equipmentChanges": 492,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "历史学者": 513
+        },
+        "awakeRound": 346
+      },
+      "dreamProgress": 513,
+      "awakened": 96,
+      "awakenedWins": 58,
+      "unawakenedWins": 56,
+      "awakeRounds": 346,
+      "winRate": 45.6,
+      "avgRounds": 6.656,
+      "p95Rounds": 15,
+      "p99Rounds": 33,
+      "maxRounds": 44,
+      "avgDreamProgress": 2.052,
+      "awakenRate": 38.4,
+      "avgAwakenRound": 3.6041666666666665,
+      "awakenedWinRate": 60.416666666666664,
+      "unawakenedWinRate": 36.36363636363637
+    },
+    {
+      "character": "franky",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 118,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 604,
+        "activeEffective": 604,
+        "activeTargets": {
+          "self": 604
+        },
+        "signatureDeclared": 1127,
+        "signatureEffective": 1122,
+        "signatureCosts": {
+          "4": 1127
+        },
+        "damage": 906,
+        "healing": 350,
+        "shield": 1082,
+        "drawn": 7497,
+        "discarded": 1542,
+        "cancelled": 156,
+        "equipmentChanges": 1342,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "装备改造": 659
+        },
+        "awakeRound": 897
+      },
+      "dreamProgress": 659,
+      "awakened": 184,
+      "awakenedWins": 83,
+      "unawakenedWins": 35,
+      "awakeRounds": 897,
+      "winRate": 47.199999999999996,
+      "avgRounds": 11.588,
+      "p95Rounds": 40,
+      "p99Rounds": 44,
+      "maxRounds": 45,
+      "avgDreamProgress": 2.636,
+      "awakenRate": 73.6,
+      "avgAwakenRound": 4.875,
+      "awakenedWinRate": 45.108695652173914,
+      "unawakenedWinRate": 53.03030303030303
+    },
+    {
+      "character": "franky",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 103,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 621,
+        "activeEffective": 621,
+        "activeTargets": {
+          "self": 621
+        },
+        "signatureDeclared": 1077,
+        "signatureEffective": 1065,
+        "signatureCosts": {
+          "4": 1077
+        },
+        "damage": 823,
+        "healing": 363,
+        "shield": 1029,
+        "drawn": 7435,
+        "discarded": 1593,
+        "cancelled": 141,
+        "equipmentChanges": 1300,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "装备改造": 621
+        },
+        "awakeRound": 789
+      },
+      "dreamProgress": 621,
+      "awakened": 168,
+      "awakenedWins": 78,
+      "unawakenedWins": 25,
+      "awakeRounds": 789,
+      "winRate": 41.199999999999996,
+      "avgRounds": 11.728,
+      "p95Rounds": 42,
+      "p99Rounds": 45,
+      "maxRounds": 46,
+      "avgDreamProgress": 2.484,
+      "awakenRate": 67.2,
+      "avgAwakenRound": 4.696428571428571,
+      "awakenedWinRate": 46.42857142857143,
+      "unawakenedWinRate": 30.48780487804878
+    },
+    {
+      "character": "franky",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 114,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 575,
+        "activeEffective": 575,
+        "activeTargets": {
+          "self": 575
+        },
+        "signatureDeclared": 1105,
+        "signatureEffective": 1102,
+        "signatureCosts": {
+          "4": 1105
+        },
+        "damage": 909,
+        "healing": 352,
+        "shield": 1071,
+        "drawn": 7616,
+        "discarded": 1516,
+        "cancelled": 164,
+        "equipmentChanges": 1303,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "装备改造": 643
+        },
+        "awakeRound": 782
+      },
+      "dreamProgress": 643,
+      "awakened": 167,
+      "awakenedWins": 77,
+      "unawakenedWins": 37,
+      "awakeRounds": 782,
+      "winRate": 45.6,
+      "avgRounds": 11.572,
+      "p95Rounds": 41,
+      "p99Rounds": 44,
+      "maxRounds": 46,
+      "avgDreamProgress": 2.572,
+      "awakenRate": 66.8,
+      "avgAwakenRound": 4.682634730538922,
+      "awakenedWinRate": 46.10778443113773,
+      "unawakenedWinRate": 44.57831325301205
+    },
+    {
+      "character": "franky",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 90,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 654,
+        "activeEffective": 654,
+        "activeTargets": {
+          "self": 654
+        },
+        "signatureDeclared": 1063,
+        "signatureEffective": 1060,
+        "signatureCosts": {
+          "4": 1063
+        },
+        "damage": 905,
+        "healing": 336,
+        "shield": 1037,
+        "drawn": 7634,
+        "discarded": 1471,
+        "cancelled": 151,
+        "equipmentChanges": 1398,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "装备改造": 643
+        },
+        "awakeRound": 834
+      },
+      "dreamProgress": 643,
+      "awakened": 171,
+      "awakenedWins": 66,
+      "unawakenedWins": 24,
+      "awakeRounds": 834,
+      "winRate": 36,
+      "avgRounds": 11.272,
+      "p95Rounds": 36,
+      "p99Rounds": 43,
+      "maxRounds": 46,
+      "avgDreamProgress": 2.572,
+      "awakenRate": 68.4,
+      "avgAwakenRound": 4.87719298245614,
+      "awakenedWinRate": 38.59649122807017,
+      "unawakenedWinRate": 30.37974683544304
+    },
+    {
+      "character": "brook",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 129,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1090,
+        "activeEffective": 1090,
+        "activeTargets": {
+          "other": 1090
+        },
+        "signatureDeclared": 238,
+        "signatureEffective": 238,
+        "signatureCosts": {
+          "4": 238
+        },
+        "damage": 863,
+        "healing": 214,
+        "shield": 0,
+        "drawn": 3745,
+        "discarded": 587,
+        "cancelled": 72,
+        "equipmentChanges": 567,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "令他人摸后弃牌": 581,
+          "黄泉寒气": 19,
+          "少摸牌状态": 36
+        },
+        "awakeRound": 516
+      },
+      "dreamProgress": 636,
+      "awakened": 162,
+      "awakenedWins": 109,
+      "unawakenedWins": 20,
+      "awakeRounds": 516,
+      "winRate": 51.6,
+      "avgRounds": 7.944,
+      "p95Rounds": 21,
+      "p99Rounds": 42,
+      "maxRounds": 44,
+      "avgDreamProgress": 2.544,
+      "awakenRate": 64.8,
+      "avgAwakenRound": 3.185185185185185,
+      "awakenedWinRate": 67.28395061728395,
+      "unawakenedWinRate": 22.727272727272727
+    },
+    {
+      "character": "brook",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 118,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 720,
+        "activeEffective": 720,
+        "activeTargets": {
+          "other": 720
+        },
+        "signatureDeclared": 192,
+        "signatureEffective": 192,
+        "signatureCosts": {
+          "4": 192
+        },
+        "damage": 684,
+        "healing": 199,
+        "shield": 0,
+        "drawn": 2893,
+        "discarded": 487,
+        "cancelled": 51,
+        "equipmentChanges": 437,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "令他人摸后弃牌": 400,
+          "黄泉寒气": 25,
+          "少摸牌状态": 50
+        },
+        "awakeRound": 330
+      },
+      "dreamProgress": 475,
+      "awakened": 102,
+      "awakenedWins": 77,
+      "unawakenedWins": 41,
+      "awakeRounds": 330,
+      "winRate": 47.199999999999996,
+      "avgRounds": 6.86,
+      "p95Rounds": 16,
+      "p99Rounds": 31,
+      "maxRounds": 45,
+      "avgDreamProgress": 1.9,
+      "awakenRate": 40.8,
+      "avgAwakenRound": 3.235294117647059,
+      "awakenedWinRate": 75.49019607843137,
+      "unawakenedWinRate": 27.7027027027027
+    },
+    {
+      "character": "brook",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 128,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1112,
+        "activeEffective": 1112,
+        "activeTargets": {
+          "other": 1112
+        },
+        "signatureDeclared": 245,
+        "signatureEffective": 245,
+        "signatureCosts": {
+          "4": 245
+        },
+        "damage": 827,
+        "healing": 226,
+        "shield": 0,
+        "drawn": 4424,
+        "discarded": 638,
+        "cancelled": 93,
+        "equipmentChanges": 588,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "令他人摸后弃牌": 544,
+          "少摸牌状态": 45,
+          "黄泉寒气": 28
+        },
+        "awakeRound": 509
+      },
+      "dreamProgress": 617,
+      "awakened": 161,
+      "awakenedWins": 102,
+      "unawakenedWins": 26,
+      "awakeRounds": 509,
+      "winRate": 51.2,
+      "avgRounds": 7.428,
+      "p95Rounds": 16,
+      "p99Rounds": 26,
+      "maxRounds": 46,
+      "avgDreamProgress": 2.468,
+      "awakenRate": 64.4,
+      "avgAwakenRound": 3.1614906832298137,
+      "awakenedWinRate": 63.35403726708074,
+      "unawakenedWinRate": 29.213483146067414
+    },
+    {
+      "character": "brook",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 113,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1031,
+        "activeEffective": 1031,
+        "activeTargets": {
+          "other": 1031
+        },
+        "signatureDeclared": 249,
+        "signatureEffective": 249,
+        "signatureCosts": {
+          "4": 249
+        },
+        "damage": 822,
+        "healing": 218,
+        "shield": 0,
+        "drawn": 4141,
+        "discarded": 612,
+        "cancelled": 64,
+        "equipmentChanges": 552,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "令他人摸后弃牌": 522,
+          "黄泉寒气": 25,
+          "少摸牌状态": 45
+        },
+        "awakeRound": 485
+      },
+      "dreamProgress": 592,
+      "awakened": 150,
+      "awakenedWins": 97,
+      "unawakenedWins": 16,
+      "awakeRounds": 485,
+      "winRate": 45.2,
+      "avgRounds": 7.252,
+      "p95Rounds": 15,
+      "p99Rounds": 29,
+      "maxRounds": 45,
+      "avgDreamProgress": 2.368,
+      "awakenRate": 60,
+      "avgAwakenRound": 3.2333333333333334,
+      "awakenedWinRate": 64.66666666666666,
+      "unawakenedWinRate": 16
+    },
+    {
+      "character": "jinbe",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 170,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1487,
+        "activeEffective": 1487,
+        "activeTargets": {
+          "ally": 779,
+          "self": 708
+        },
+        "signatureDeclared": 570,
+        "signatureEffective": 570,
+        "signatureCosts": {
+          "4": 570
+        },
+        "damage": 1136,
+        "healing": 145,
+        "shield": 1771,
+        "drawn": 3342,
+        "discarded": 1567,
+        "cancelled": 66,
+        "equipmentChanges": 437,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "海流护航": 566
+        },
+        "awakeRound": 519
+      },
+      "dreamProgress": 566,
+      "awakened": 133,
+      "awakenedWins": 118,
+      "unawakenedWins": 52,
+      "awakeRounds": 519,
+      "winRate": 68,
+      "avgRounds": 7.872,
+      "p95Rounds": 17,
+      "p99Rounds": 43,
+      "maxRounds": 44,
+      "avgDreamProgress": 2.264,
+      "awakenRate": 53.2,
+      "avgAwakenRound": 3.9022556390977443,
+      "awakenedWinRate": 88.7218045112782,
+      "unawakenedWinRate": 44.44444444444444
+    },
+    {
+      "character": "jinbe",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 154,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1373,
+        "activeEffective": 1373,
+        "activeTargets": {
+          "self": 790,
+          "ally": 583
+        },
+        "signatureDeclared": 549,
+        "signatureEffective": 549,
+        "signatureCosts": {
+          "4": 549
+        },
+        "damage": 1044,
+        "healing": 158,
+        "shield": 1625,
+        "drawn": 3475,
+        "discarded": 1565,
+        "cancelled": 57,
+        "equipmentChanges": 397,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "海流护航": 402,
+          "侠义": 15
+        },
+        "awakeRound": 366
+      },
+      "dreamProgress": 417,
+      "awakened": 100,
+      "awakenedWins": 92,
+      "unawakenedWins": 62,
+      "awakeRounds": 366,
+      "winRate": 61.6,
+      "avgRounds": 7.888,
+      "p95Rounds": 18,
+      "p99Rounds": 31,
+      "maxRounds": 44,
+      "avgDreamProgress": 1.668,
+      "awakenRate": 40,
+      "avgAwakenRound": 3.66,
+      "awakenedWinRate": 92,
+      "unawakenedWinRate": 41.333333333333336
+    },
+    {
+      "character": "jinbe",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 188,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1542,
+        "activeEffective": 1542,
+        "activeTargets": {
+          "ally": 765,
+          "self": 777
+        },
+        "signatureDeclared": 638,
+        "signatureEffective": 637,
+        "signatureCosts": {
+          "4": 638
+        },
+        "damage": 1242,
+        "healing": 159,
+        "shield": 1826,
+        "drawn": 4106,
+        "discarded": 1642,
+        "cancelled": 81,
+        "equipmentChanges": 472,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "海流护航": 523,
+          "侠义": 11
+        },
+        "awakeRound": 488
+      },
+      "dreamProgress": 534,
+      "awakened": 131,
+      "awakenedWins": 121,
+      "unawakenedWins": 67,
+      "awakeRounds": 488,
+      "winRate": 75.2,
+      "avgRounds": 8.188,
+      "p95Rounds": 19,
+      "p99Rounds": 41,
+      "maxRounds": 43,
+      "avgDreamProgress": 2.136,
+      "awakenRate": 52.400000000000006,
+      "avgAwakenRound": 3.7251908396946565,
+      "awakenedWinRate": 92.36641221374046,
+      "unawakenedWinRate": 56.30252100840336
+    },
+    {
+      "character": "jinbe",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 149,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1520,
+        "activeEffective": 1520,
+        "activeTargets": {
+          "ally": 679,
+          "self": 841
+        },
+        "signatureDeclared": 634,
+        "signatureEffective": 634,
+        "signatureCosts": {
+          "4": 634
+        },
+        "damage": 1117,
+        "healing": 198,
+        "shield": 1793,
+        "drawn": 4049,
+        "discarded": 1708,
+        "cancelled": 59,
+        "equipmentChanges": 445,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "海流护航": 483,
+          "侠义": 8
+        },
+        "awakeRound": 377
+      },
+      "dreamProgress": 491,
+      "awakened": 105,
+      "awakenedWins": 93,
+      "unawakenedWins": 56,
+      "awakeRounds": 377,
+      "winRate": 59.599999999999994,
+      "avgRounds": 8.648,
+      "p95Rounds": 24,
+      "p99Rounds": 43,
+      "maxRounds": 46,
+      "avgDreamProgress": 1.964,
+      "awakenRate": 42,
+      "avgAwakenRound": 3.5904761904761906,
+      "awakenedWinRate": 88.57142857142857,
+      "unawakenedWinRate": 38.62068965517241
+    },
+    {
+      "character": "ichigo",
+      "anchor": 0,
+      "games": 250,
+      "wins": 178,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 984,
+        "activeEffective": 916,
+        "activeTargets": {
+          "other": 984
+        },
+        "signatureDeclared": 278,
+        "signatureEffective": 278,
+        "signatureCosts": {
+          "4": 278
+        },
+        "damage": 1212,
+        "healing": 135,
+        "shield": 0,
+        "drawn": 2945,
+        "discarded": 404,
+        "cancelled": 52,
+        "equipmentChanges": 548,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 178,
+      "awakeRounds": 0,
+      "winRate": 71.2,
+      "avgRounds": 5.776,
+      "p95Rounds": 12,
+      "p99Rounds": 20,
+      "maxRounds": 40,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 71.2
+    },
+    {
+      "character": "ichigo",
+      "anchor": 1,
+      "games": 250,
+      "wins": 132,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 839,
+        "activeEffective": 772,
+        "activeTargets": {
+          "other": 839
+        },
+        "signatureDeclared": 276,
+        "signatureEffective": 276,
+        "signatureCosts": {
+          "4": 276
+        },
+        "damage": 1034,
+        "healing": 166,
+        "shield": 0,
+        "drawn": 3005,
+        "discarded": 489,
+        "cancelled": 47,
+        "equipmentChanges": 484,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 132,
+      "awakeRounds": 0,
+      "winRate": 52.800000000000004,
+      "avgRounds": 6.816,
+      "p95Rounds": 17,
+      "p99Rounds": 34,
+      "maxRounds": 42,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 52.800000000000004
+    },
+    {
+      "character": "ichigo",
+      "anchor": 2,
+      "games": 250,
+      "wins": 161,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1006,
+        "activeEffective": 886,
+        "activeTargets": {
+          "other": 1006
+        },
+        "signatureDeclared": 303,
+        "signatureEffective": 303,
+        "signatureCosts": {
+          "4": 303
+        },
+        "damage": 1242,
+        "healing": 198,
+        "shield": 0,
+        "drawn": 3535,
+        "discarded": 494,
+        "cancelled": 63,
+        "equipmentChanges": 527,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 161,
+      "awakeRounds": 0,
+      "winRate": 64.4,
+      "avgRounds": 6.092,
+      "p95Rounds": 13,
+      "p99Rounds": 41,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 64.4
+    },
+    {
+      "character": "ichigo",
+      "anchor": 3,
+      "games": 250,
+      "wins": 141,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1018,
+        "activeEffective": 900,
+        "activeTargets": {
+          "other": 1018
+        },
+        "signatureDeclared": 297,
+        "signatureEffective": 297,
+        "signatureCosts": {
+          "4": 297
+        },
+        "damage": 1171,
+        "healing": 202,
+        "shield": 0,
+        "drawn": 3576,
+        "discarded": 480,
+        "cancelled": 74,
+        "equipmentChanges": 514,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 141,
+      "awakeRounds": 0,
+      "winRate": 56.39999999999999,
+      "avgRounds": 6.828,
+      "p95Rounds": 17,
+      "p99Rounds": 41,
+      "maxRounds": 42,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 56.39999999999999
+    },
+    {
+      "character": "rukia",
+      "anchor": 0,
+      "games": 250,
+      "wins": 108,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 916,
+        "activeEffective": 880,
+        "activeTargets": {
+          "other": 916
+        },
+        "signatureDeclared": 188,
+        "signatureEffective": 0,
+        "signatureCosts": {
+          "4": 188
+        },
+        "damage": 494,
+        "healing": 165,
+        "shield": 0,
+        "drawn": 2268,
+        "discarded": 350,
+        "cancelled": 47,
+        "equipmentChanges": 491,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 108,
+      "awakeRounds": 0,
+      "winRate": 43.2,
+      "avgRounds": 7.708,
+      "p95Rounds": 19,
+      "p99Rounds": 43,
+      "maxRounds": 47,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 43.2
+    },
+    {
+      "character": "rukia",
+      "anchor": 1,
+      "games": 250,
+      "wins": 91,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 726,
+        "activeEffective": 677,
+        "activeTargets": {
+          "other": 726
+        },
+        "signatureDeclared": 187,
+        "signatureEffective": 0,
+        "signatureCosts": {
+          "4": 187
+        },
+        "damage": 378,
+        "healing": 136,
+        "shield": 0,
+        "drawn": 2297,
+        "discarded": 413,
+        "cancelled": 46,
+        "equipmentChanges": 405,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 91,
+      "awakeRounds": 0,
+      "winRate": 36.4,
+      "avgRounds": 8.504,
+      "p95Rounds": 23,
+      "p99Rounds": 41,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 36.4
+    },
+    {
+      "character": "rukia",
+      "anchor": 2,
+      "games": 250,
+      "wins": 107,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 920,
+        "activeEffective": 869,
+        "activeTargets": {
+          "other": 920
+        },
+        "signatureDeclared": 221,
+        "signatureEffective": 0,
+        "signatureCosts": {
+          "4": 221
+        },
+        "damage": 502,
+        "healing": 186,
+        "shield": 0,
+        "drawn": 2846,
+        "discarded": 420,
+        "cancelled": 73,
+        "equipmentChanges": 459,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 107,
+      "awakeRounds": 0,
+      "winRate": 42.8,
+      "avgRounds": 8.28,
+      "p95Rounds": 23,
+      "p99Rounds": 44,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 42.8
+    },
+    {
+      "character": "rukia",
+      "anchor": 3,
+      "games": 250,
+      "wins": 74,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 845,
+        "activeEffective": 800,
+        "activeTargets": {
+          "other": 845
+        },
+        "signatureDeclared": 203,
+        "signatureEffective": 0,
+        "signatureCosts": {
+          "4": 203
+        },
+        "damage": 436,
+        "healing": 158,
+        "shield": 0,
+        "drawn": 2644,
+        "discarded": 368,
+        "cancelled": 53,
+        "equipmentChanges": 458,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 74,
+      "awakeRounds": 0,
+      "winRate": 29.599999999999998,
+      "avgRounds": 7.688,
+      "p95Rounds": 20,
+      "p99Rounds": 42,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 29.599999999999998
+    },
+    {
+      "character": "tanjiro",
+      "anchor": 0,
+      "games": 250,
+      "wins": 181,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1262,
+        "activeEffective": 1262,
+        "activeTargets": {
+          "self": 1262
+        },
+        "signatureDeclared": 629,
+        "signatureEffective": 628,
+        "signatureCosts": {
+          "4": 629
+        },
+        "damage": 1402,
+        "healing": 227,
+        "shield": 0,
+        "drawn": 6293,
+        "discarded": 2739,
+        "cancelled": 65,
+        "equipmentChanges": 714,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 181,
+      "awakeRounds": 0,
+      "winRate": 72.39999999999999,
+      "avgRounds": 6.38,
+      "p95Rounds": 14,
+      "p99Rounds": 25,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 72.39999999999999
+    },
+    {
+      "character": "tanjiro",
+      "anchor": 1,
+      "games": 250,
+      "wins": 158,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1195,
+        "activeEffective": 1195,
+        "activeTargets": {
+          "self": 1195
+        },
+        "signatureDeclared": 623,
+        "signatureEffective": 623,
+        "signatureCosts": {
+          "4": 623
+        },
+        "damage": 1197,
+        "healing": 315,
+        "shield": 0,
+        "drawn": 6319,
+        "discarded": 2649,
+        "cancelled": 93,
+        "equipmentChanges": 643,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 158,
+      "awakeRounds": 0,
+      "winRate": 63.2,
+      "avgRounds": 7.068,
+      "p95Rounds": 18,
+      "p99Rounds": 42,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 63.2
+    },
+    {
+      "character": "tanjiro",
+      "anchor": 2,
+      "games": 250,
+      "wins": 177,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1159,
+        "activeEffective": 1159,
+        "activeTargets": {
+          "self": 1159
+        },
+        "signatureDeclared": 611,
+        "signatureEffective": 611,
+        "signatureCosts": {
+          "4": 611
+        },
+        "damage": 1331,
+        "healing": 284,
+        "shield": 0,
+        "drawn": 6258,
+        "discarded": 2538,
+        "cancelled": 86,
+        "equipmentChanges": 693,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 177,
+      "awakeRounds": 0,
+      "winRate": 70.8,
+      "avgRounds": 6.2,
+      "p95Rounds": 13,
+      "p99Rounds": 24,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 70.8
+    },
+    {
+      "character": "tanjiro",
+      "anchor": 3,
+      "games": 250,
+      "wins": 153,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1354,
+        "activeEffective": 1354,
+        "activeTargets": {
+          "self": 1354
+        },
+        "signatureDeclared": 692,
+        "signatureEffective": 692,
+        "signatureCosts": {
+          "4": 692
+        },
+        "damage": 1309,
+        "healing": 363,
+        "shield": 0,
+        "drawn": 7189,
+        "discarded": 2963,
+        "cancelled": 92,
+        "equipmentChanges": 705,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 153,
+      "awakeRounds": 0,
+      "winRate": 61.199999999999996,
+      "avgRounds": 7.004,
+      "p95Rounds": 14,
+      "p99Rounds": 41,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 61.199999999999996
+    },
+    {
+      "character": "shinobu",
+      "anchor": 0,
+      "games": 250,
+      "wins": 123,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 850,
+        "activeEffective": 850,
+        "activeTargets": {
+          "self": 850
+        },
+        "signatureDeclared": 162,
+        "signatureEffective": 161,
+        "signatureCosts": {
+          "4": 162
+        },
+        "damage": 436,
+        "healing": 119,
+        "shield": 0,
+        "drawn": 2065,
+        "discarded": 340,
+        "cancelled": 67,
+        "equipmentChanges": 432,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 123,
+      "awakeRounds": 0,
+      "winRate": 49.2,
+      "avgRounds": 6.02,
+      "p95Rounds": 14,
+      "p99Rounds": 22,
+      "maxRounds": 40,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 49.2
+    },
+    {
+      "character": "shinobu",
+      "anchor": 1,
+      "games": 250,
+      "wins": 112,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 695,
+        "activeEffective": 695,
+        "activeTargets": {
+          "self": 695
+        },
+        "signatureDeclared": 170,
+        "signatureEffective": 169,
+        "signatureCosts": {
+          "4": 170
+        },
+        "damage": 408,
+        "healing": 129,
+        "shield": 0,
+        "drawn": 2143,
+        "discarded": 382,
+        "cancelled": 44,
+        "equipmentChanges": 374,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 112,
+      "awakeRounds": 0,
+      "winRate": 44.800000000000004,
+      "avgRounds": 6.092,
+      "p95Rounds": 12,
+      "p99Rounds": 20,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 44.800000000000004
+    },
+    {
+      "character": "shinobu",
+      "anchor": 2,
+      "games": 250,
+      "wins": 118,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 831,
+        "activeEffective": 831,
+        "activeTargets": {
+          "self": 831
+        },
+        "signatureDeclared": 191,
+        "signatureEffective": 191,
+        "signatureCosts": {
+          "4": 191
+        },
+        "damage": 451,
+        "healing": 147,
+        "shield": 0,
+        "drawn": 2495,
+        "discarded": 375,
+        "cancelled": 56,
+        "equipmentChanges": 442,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 118,
+      "awakeRounds": 0,
+      "winRate": 47.199999999999996,
+      "avgRounds": 6.732,
+      "p95Rounds": 14,
+      "p99Rounds": 40,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 47.199999999999996
+    },
+    {
+      "character": "shinobu",
+      "anchor": 3,
+      "games": 250,
+      "wins": 107,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 852,
+        "activeEffective": 852,
+        "activeTargets": {
+          "self": 852
+        },
+        "signatureDeclared": 161,
+        "signatureEffective": 160,
+        "signatureCosts": {
+          "4": 161
+        },
+        "damage": 420,
+        "healing": 166,
+        "shield": 0,
+        "drawn": 2548,
+        "discarded": 362,
+        "cancelled": 58,
+        "equipmentChanges": 438,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 107,
+      "awakeRounds": 0,
+      "winRate": 42.8,
+      "avgRounds": 6.596,
+      "p95Rounds": 15,
+      "p99Rounds": 40,
+      "maxRounds": 42,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 42.8
+    },
+    {
+      "character": "gojo",
+      "anchor": 0,
+      "games": 250,
+      "wins": 158,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1043,
+        "activeEffective": 1043,
+        "activeTargets": {
+          "self": 1043
+        },
+        "signatureDeclared": 471,
+        "signatureEffective": 471,
+        "signatureCosts": {
+          "4": 471
+        },
+        "damage": 853,
+        "healing": 230,
+        "shield": 0,
+        "drawn": 4510,
+        "discarded": 1553,
+        "cancelled": 82,
+        "equipmentChanges": 566,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 158,
+      "awakeRounds": 0,
+      "winRate": 63.2,
+      "avgRounds": 6.744,
+      "p95Rounds": 15,
+      "p99Rounds": 41,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 63.2
+    },
+    {
+      "character": "gojo",
+      "anchor": 1,
+      "games": 250,
+      "wins": 140,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 762,
+        "activeEffective": 762,
+        "activeTargets": {
+          "self": 762
+        },
+        "signatureDeclared": 373,
+        "signatureEffective": 373,
+        "signatureCosts": {
+          "4": 373
+        },
+        "damage": 654,
+        "healing": 200,
+        "shield": 0,
+        "drawn": 3613,
+        "discarded": 1281,
+        "cancelled": 58,
+        "equipmentChanges": 394,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 140,
+      "awakeRounds": 0,
+      "winRate": 56.00000000000001,
+      "avgRounds": 6.268,
+      "p95Rounds": 12,
+      "p99Rounds": 22,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 56.00000000000001
+    },
+    {
+      "character": "gojo",
+      "anchor": 2,
+      "games": 250,
+      "wins": 147,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 963,
+        "activeEffective": 963,
+        "activeTargets": {
+          "self": 963
+        },
+        "signatureDeclared": 462,
+        "signatureEffective": 462,
+        "signatureCosts": {
+          "4": 462
+        },
+        "damage": 823,
+        "healing": 229,
+        "shield": 0,
+        "drawn": 4620,
+        "discarded": 1493,
+        "cancelled": 78,
+        "equipmentChanges": 545,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 147,
+      "awakeRounds": 0,
+      "winRate": 58.8,
+      "avgRounds": 6.78,
+      "p95Rounds": 13,
+      "p99Rounds": 36,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 58.8
+    },
+    {
+      "character": "gojo",
+      "anchor": 3,
+      "games": 250,
+      "wins": 137,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 916,
+        "activeEffective": 916,
+        "activeTargets": {
+          "self": 916
+        },
+        "signatureDeclared": 410,
+        "signatureEffective": 410,
+        "signatureCosts": {
+          "4": 410
+        },
+        "damage": 730,
+        "healing": 251,
+        "shield": 0,
+        "drawn": 4468,
+        "discarded": 1451,
+        "cancelled": 70,
+        "equipmentChanges": 519,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 137,
+      "awakeRounds": 0,
+      "winRate": 54.800000000000004,
+      "avgRounds": 6.912,
+      "p95Rounds": 17,
+      "p99Rounds": 41,
+      "maxRounds": 42,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 54.800000000000004
+    },
+    {
+      "character": "yuji",
+      "anchor": 0,
+      "games": 250,
+      "wins": 162,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1162,
+        "activeEffective": 904,
+        "activeTargets": {
+          "self": 1162
+        },
+        "signatureDeclared": 534,
+        "signatureEffective": 534,
+        "signatureCosts": {
+          "3": 534
+        },
+        "damage": 1298,
+        "healing": 175,
+        "shield": 0,
+        "drawn": 3436,
+        "discarded": 435,
+        "cancelled": 63,
+        "equipmentChanges": 527,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 162,
+      "awakeRounds": 0,
+      "winRate": 64.8,
+      "avgRounds": 6.384,
+      "p95Rounds": 13,
+      "p99Rounds": 24,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 64.8
+    },
+    {
+      "character": "yuji",
+      "anchor": 1,
+      "games": 250,
+      "wins": 159,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1005,
+        "activeEffective": 796,
+        "activeTargets": {
+          "self": 1005
+        },
+        "signatureDeclared": 567,
+        "signatureEffective": 567,
+        "signatureCosts": {
+          "3": 567
+        },
+        "damage": 1247,
+        "healing": 208,
+        "shield": 0,
+        "drawn": 3558,
+        "discarded": 518,
+        "cancelled": 51,
+        "equipmentChanges": 486,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 159,
+      "awakeRounds": 0,
+      "winRate": 63.6,
+      "avgRounds": 6.108,
+      "p95Rounds": 13,
+      "p99Rounds": 22,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 63.6
+    },
+    {
+      "character": "yuji",
+      "anchor": 2,
+      "games": 250,
+      "wins": 171,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1067,
+        "activeEffective": 852,
+        "activeTargets": {
+          "self": 1067
+        },
+        "signatureDeclared": 602,
+        "signatureEffective": 602,
+        "signatureCosts": {
+          "3": 602
+        },
+        "damage": 1434,
+        "healing": 211,
+        "shield": 0,
+        "drawn": 3642,
+        "discarded": 453,
+        "cancelled": 55,
+        "equipmentChanges": 529,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 171,
+      "awakeRounds": 0,
+      "winRate": 68.4,
+      "avgRounds": 5.704,
+      "p95Rounds": 11,
+      "p99Rounds": 20,
+      "maxRounds": 42,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 68.4
+    },
+    {
+      "character": "yuji",
+      "anchor": 3,
+      "games": 250,
+      "wins": 146,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1118,
+        "activeEffective": 890,
+        "activeTargets": {
+          "self": 1118
+        },
+        "signatureDeclared": 546,
+        "signatureEffective": 545,
+        "signatureCosts": {
+          "3": 546
+        },
+        "damage": 1278,
+        "healing": 192,
+        "shield": 0,
+        "drawn": 3808,
+        "discarded": 434,
+        "cancelled": 60,
+        "equipmentChanges": 530,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 146,
+      "awakeRounds": 0,
+      "winRate": 58.4,
+      "avgRounds": 6.204,
+      "p95Rounds": 12,
+      "p99Rounds": 23,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 58.4
+    },
+    {
+      "character": "mikasa",
+      "anchor": 0,
+      "games": 250,
+      "wins": 79,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 862,
+        "activeEffective": 862,
+        "activeTargets": {
+          "self": 862
+        },
+        "signatureDeclared": 319,
+        "signatureEffective": 319,
+        "signatureCosts": {
+          "4": 319
+        },
+        "damage": 475,
+        "healing": 112,
+        "shield": 0,
+        "drawn": 1924,
+        "discarded": 1008,
+        "cancelled": 36,
+        "equipmentChanges": 362,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 79,
+      "awakeRounds": 0,
+      "winRate": 31.6,
+      "avgRounds": 7.324,
+      "p95Rounds": 19,
+      "p99Rounds": 40,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 31.6
+    },
+    {
+      "character": "mikasa",
+      "anchor": 1,
+      "games": 250,
+      "wins": 83,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 662,
+        "activeEffective": 662,
+        "activeTargets": {
+          "self": 662
+        },
+        "signatureDeclared": 270,
+        "signatureEffective": 270,
+        "signatureCosts": {
+          "4": 270
+        },
+        "damage": 344,
+        "healing": 111,
+        "shield": 0,
+        "drawn": 1940,
+        "discarded": 892,
+        "cancelled": 23,
+        "equipmentChanges": 306,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 83,
+      "awakeRounds": 0,
+      "winRate": 33.2,
+      "avgRounds": 7.98,
+      "p95Rounds": 20,
+      "p99Rounds": 42,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 33.2
+    },
+    {
+      "character": "mikasa",
+      "anchor": 2,
+      "games": 250,
+      "wins": 85,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 870,
+        "activeEffective": 870,
+        "activeTargets": {
+          "self": 870
+        },
+        "signatureDeclared": 342,
+        "signatureEffective": 342,
+        "signatureCosts": {
+          "4": 342
+        },
+        "damage": 468,
+        "healing": 124,
+        "shield": 0,
+        "drawn": 2372,
+        "discarded": 1037,
+        "cancelled": 45,
+        "equipmentChanges": 328,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 85,
+      "awakeRounds": 0,
+      "winRate": 34,
+      "avgRounds": 7.636,
+      "p95Rounds": 19,
+      "p99Rounds": 40,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 34
+    },
+    {
+      "character": "mikasa",
+      "anchor": 3,
+      "games": 250,
+      "wins": 71,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 784,
+        "activeEffective": 784,
+        "activeTargets": {
+          "self": 784
+        },
+        "signatureDeclared": 274,
+        "signatureEffective": 274,
+        "signatureCosts": {
+          "4": 274
+        },
+        "damage": 380,
+        "healing": 108,
+        "shield": 0,
+        "drawn": 2227,
+        "discarded": 962,
+        "cancelled": 37,
+        "equipmentChanges": 313,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 71,
+      "awakeRounds": 0,
+      "winRate": 28.4,
+      "avgRounds": 7.576,
+      "p95Rounds": 21,
+      "p99Rounds": 42,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 28.4
+    },
+    {
+      "character": "armin",
+      "anchor": 0,
+      "games": 250,
+      "wins": 111,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 732,
+        "activeEffective": 732,
+        "activeTargets": {
+          "ally": 732
+        },
+        "signatureDeclared": 179,
+        "signatureEffective": 179,
+        "signatureCosts": {
+          "4": 179
+        },
+        "damage": 310,
+        "healing": 150,
+        "shield": 0,
+        "drawn": 1736,
+        "discarded": 195,
+        "cancelled": 40,
+        "equipmentChanges": 384,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 111,
+      "awakeRounds": 0,
+      "winRate": 44.4,
+      "avgRounds": 7.924,
+      "p95Rounds": 25,
+      "p99Rounds": 42,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 44.4
+    },
+    {
+      "character": "armin",
+      "anchor": 1,
+      "games": 250,
+      "wins": 103,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 597,
+        "activeEffective": 597,
+        "activeTargets": {
+          "ally": 597
+        },
+        "signatureDeclared": 180,
+        "signatureEffective": 180,
+        "signatureCosts": {
+          "4": 180
+        },
+        "damage": 297,
+        "healing": 161,
+        "shield": 0,
+        "drawn": 1850,
+        "discarded": 277,
+        "cancelled": 32,
+        "equipmentChanges": 331,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 103,
+      "awakeRounds": 0,
+      "winRate": 41.199999999999996,
+      "avgRounds": 8.456,
+      "p95Rounds": 22,
+      "p99Rounds": 44,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 41.199999999999996
+    },
+    {
+      "character": "armin",
+      "anchor": 2,
+      "games": 250,
+      "wins": 117,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 651,
+        "activeEffective": 651,
+        "activeTargets": {
+          "ally": 651
+        },
+        "signatureDeclared": 189,
+        "signatureEffective": 189,
+        "signatureCosts": {
+          "4": 189
+        },
+        "damage": 343,
+        "healing": 152,
+        "shield": 0,
+        "drawn": 1923,
+        "discarded": 182,
+        "cancelled": 43,
+        "equipmentChanges": 342,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 117,
+      "awakeRounds": 0,
+      "winRate": 46.800000000000004,
+      "avgRounds": 7.648,
+      "p95Rounds": 22,
+      "p99Rounds": 30,
+      "maxRounds": 41,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 46.800000000000004
+    },
+    {
+      "character": "armin",
+      "anchor": 3,
+      "games": 250,
+      "wins": 91,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 610,
+        "activeEffective": 610,
+        "activeTargets": {
+          "ally": 610
+        },
+        "signatureDeclared": 131,
+        "signatureEffective": 131,
+        "signatureCosts": {
+          "4": 131
+        },
+        "damage": 274,
+        "healing": 126,
+        "shield": 0,
+        "drawn": 1823,
+        "discarded": 215,
+        "cancelled": 31,
+        "equipmentChanges": 361,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 91,
+      "awakeRounds": 0,
+      "winRate": 36.4,
+      "avgRounds": 7.06,
+      "p95Rounds": 18,
+      "p99Rounds": 41,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 36.4
+    }
+  ]
+}

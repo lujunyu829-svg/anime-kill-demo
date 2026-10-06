@@ -1,0 +1,275 @@
+{
+  "version": "0.2.1",
+  "sourceHash": "2561bbf04f398b9c435476bb2febcdfe62d0d870848122c83beeaa1b66b6aa1f",
+  "pool": "mixed",
+  "mode": "ranked2v2",
+  "scenario": "balance",
+  "seedBase": 20260917,
+  "seedStep": 7919,
+  "seeds": [
+    {
+      "anchor": 0,
+      "first": 20260917,
+      "last": 22628698,
+      "gamesPerCharacter": 300
+    },
+    {
+      "anchor": 1,
+      "first": 20360917,
+      "last": 22728698,
+      "gamesPerCharacter": 300
+    },
+    {
+      "anchor": 2,
+      "first": 20460917,
+      "last": 22828698,
+      "gamesPerCharacter": 300
+    },
+    {
+      "anchor": 3,
+      "first": 20560917,
+      "last": 22928698,
+      "gamesPerCharacter": 300
+    }
+  ],
+  "generatedAt": "2026-09-30T03:06:19.748Z",
+  "games": 1200,
+  "unfinished": 0,
+  "camps": {
+    "crimson": 540,
+    "azure": 660
+  },
+  "residual": {},
+  "avgRounds": 7.1466666666666665,
+  "p95Rounds": 17,
+  "p99Rounds": 42,
+  "maxRounds": 45,
+  "over80": 0,
+  "maxSteps": 505,
+  "roles": [
+    {
+      "character": "nami",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 300,
+      "wins": 185,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 300
+      },
+      "supportOpportunityHistogram": {
+        "0": 300
+      },
+      "metrics": {
+        "activeDeclared": 1183,
+        "activeEffective": 1183,
+        "activeTargets": {
+          "self": 1183
+        },
+        "signatureDeclared": 478,
+        "signatureEffective": 478,
+        "signatureCosts": {
+          "4": 478
+        },
+        "damage": 1163,
+        "healing": 298,
+        "shield": 0,
+        "drawn": 3003,
+        "discarded": 650,
+        "cancelled": 111,
+        "equipmentChanges": 740,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "航海记录": 676
+        },
+        "awakeRound": 561
+      },
+      "dreamProgress": 676,
+      "awakened": 141,
+      "awakenedWins": 109,
+      "unawakenedWins": 76,
+      "awakeRounds": 561,
+      "winRate": 61.66666666666667,
+      "avgRounds": 7.326666666666667,
+      "p95Rounds": 17,
+      "p99Rounds": 42,
+      "maxRounds": 44,
+      "avgDreamProgress": 2.2533333333333334,
+      "awakenRate": 47,
+      "avgAwakenRound": 3.978723404255319,
+      "awakenedWinRate": 77.30496453900709,
+      "unawakenedWinRate": 47.79874213836478
+    },
+    {
+      "character": "nami",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 300,
+      "wins": 152,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 300
+      },
+      "supportOpportunityHistogram": {
+        "0": 300
+      },
+      "metrics": {
+        "activeDeclared": 874,
+        "activeEffective": 874,
+        "activeTargets": {
+          "self": 874
+        },
+        "signatureDeclared": 376,
+        "signatureEffective": 376,
+        "signatureCosts": {
+          "4": 376
+        },
+        "damage": 1010,
+        "healing": 272,
+        "shield": 0,
+        "drawn": 2618,
+        "discarded": 596,
+        "cancelled": 84,
+        "equipmentChanges": 545,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "航海记录": 535
+        },
+        "awakeRound": 409
+      },
+      "dreamProgress": 535,
+      "awakened": 105,
+      "awakenedWins": 84,
+      "unawakenedWins": 68,
+      "awakeRounds": 409,
+      "winRate": 50.66666666666667,
+      "avgRounds": 6.693333333333333,
+      "p95Rounds": 15,
+      "p99Rounds": 30,
+      "maxRounds": 42,
+      "avgDreamProgress": 1.7833333333333334,
+      "awakenRate": 35,
+      "avgAwakenRound": 3.895238095238095,
+      "awakenedWinRate": 80,
+      "unawakenedWinRate": 34.87179487179487
+    },
+    {
+      "character": "nami",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 300,
+      "wins": 160,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 300
+      },
+      "supportOpportunityHistogram": {
+        "0": 300
+      },
+      "metrics": {
+        "activeDeclared": 1070,
+        "activeEffective": 1070,
+        "activeTargets": {
+          "self": 1070
+        },
+        "signatureDeclared": 466,
+        "signatureEffective": 466,
+        "signatureCosts": {
+          "4": 466
+        },
+        "damage": 1139,
+        "healing": 291,
+        "shield": 0,
+        "drawn": 3238,
+        "discarded": 596,
+        "cancelled": 124,
+        "equipmentChanges": 664,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "航海记录": 622
+        },
+        "awakeRound": 488
+      },
+      "dreamProgress": 622,
+      "awakened": 125,
+      "awakenedWins": 88,
+      "unawakenedWins": 72,
+      "awakeRounds": 488,
+      "winRate": 53.333333333333336,
+      "avgRounds": 7.2,
+      "p95Rounds": 15,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 2.0733333333333333,
+      "awakenRate": 41.66666666666667,
+      "avgAwakenRound": 3.904,
+      "awakenedWinRate": 70.39999999999999,
+      "unawakenedWinRate": 41.14285714285714
+    },
+    {
+      "character": "nami",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 300,
+      "wins": 163,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 300
+      },
+      "supportOpportunityHistogram": {
+        "0": 300
+      },
+      "metrics": {
+        "activeDeclared": 1208,
+        "activeEffective": 1208,
+        "activeTargets": {
+          "self": 1208
+        },
+        "signatureDeclared": 527,
+        "signatureEffective": 527,
+        "signatureCosts": {
+          "4": 527
+        },
+        "damage": 1254,
+        "healing": 327,
+        "shield": 0,
+        "drawn": 3700,
+        "discarded": 737,
+        "cancelled": 108,
+        "equipmentChanges": 710,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "航海记录": 665
+        },
+        "awakeRound": 570
+      },
+      "dreamProgress": 665,
+      "awakened": 144,
+      "awakenedWins": 96,
+      "unawakenedWins": 67,
+      "awakeRounds": 570,
+      "winRate": 54.333333333333336,
+      "avgRounds": 7.366666666666666,
+      "p95Rounds": 18,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 2.216666666666667,
+      "awakenRate": 48,
+      "avgAwakenRound": 3.9583333333333335,
+      "awakenedWinRate": 66.66666666666666,
+      "unawakenedWinRate": 42.94871794871795
+    }
+  ]
+}

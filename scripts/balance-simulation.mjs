@@ -1,61 +1,28 @@
-import { GameEngine } from "../src/engine.js";
-import { characterPacks } from "../src/data.js";
-
-const gamesPerSeat = Number(process.argv.find(value => value.startsWith("--games="))?.split("=")[1] || 25);
-const maxSteps = 4000;
-const characters = [...new Set(characterPacks.flatMap(pack => pack.characterIds))];
-
-function seededRandom(seed) {
-  let value = seed >>> 0;
-  return () => {
-    value = (value * 1664525 + 1013904223) >>> 0;
-    return value / 4294967296;
-  };
-}
-
-function runCharacter(characterId, anchorSeat) {
-  let wins = 0;
-  let completed = 0;
-  let unfinished = 0;
-  let totalSteps = 0;
-  for (let index = 0; index < gamesPerSeat; index += 1) {
-    const game = new GameEngine({
-      modeId: "ranked2v2",
-      humanCharacterId: characterId,
-      fixedAnchorSeat: anchorSeat,
-      random: seededRandom(20260908 + anchorSeat * 100000 + index * 7919)
-    }).setup();
-    for (const player of game.players) player.human = false;
-    const playerCamp = game.roleOf(game.players[0]).camp;
-    let steps = 0;
-    while (!game.winner && steps < maxSteps) {
-      const result = game.aiStep();
-      if (game.pendingResponse) game.respond(true);
-      else if (!result.acted) game.endTurn();
-      steps += 1;
-    }
-    totalSteps += steps;
-    if (!game.winner) {
-      unfinished += 1;
-      continue;
-    }
-    completed += 1;
-    if (game.winner.camp === playerCamp) wins += 1;
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { dirname } from "node:path";
+import { APP_VERSION } from "../packaging/runtime/persistence.js";
+import { poolIds, runMatch, summarizeMatches } from "./simulation.mjs";
+const option = (key, fallback) => process.argv.find(a => a.startsWith("--" + key + "="))?.slice(key.length + 3) ?? fallback;
+const games = Number(option("games", 25)), pool = option("pool", "mixed"), mode = option("mode", "ranked2v2"), scenario = option("scenario", "balance"), seedBase = Number(option("seed", 20260917));
+const selected = option("characters", poolIds(pool).join(",")).split(","), matches = [];
+if (!Number.isInteger(games) || games < 1) throw new Error("games必须为正整数");
+if (scenario === "balance") {
+  for (const characterId of selected) for (const anchor of [0, 1, 2, 3]) {
+    for (let i = 0; i < games; i++) matches.push(runMatch({ seed: seedBase + anchor * 100000 + i * 7919, pool, mode, characterId, anchor }));
+    console.error(characterId + " anchor=" + anchor + " 完成 " + games + "局");
   }
-  return { wins, completed, unfinished, rate: completed ? wins / completed * 100 : 0, avgSteps: totalSteps / gamesPerSeat };
+} else for (let i = 0; i < games; i++) matches.push(runMatch({ seed: seedBase + i * 7919, pool, mode, anchor: i % 4, scenario }));
+const sourceHash = createHash("sha256");
+for (const path of ["../src/engine.js", "../src/data.js", "../src/packs/one-piece.js", "./simulation.mjs"]) sourceHash.update(readFileSync(new URL(path, import.meta.url)));
+const report = { version: APP_VERSION, sourceHash: sourceHash.digest("hex"), pool, mode, scenario, seedBase, seedStep: 7919, seeds: scenario === "balance" ? [0,1,2,3].map(anchor => ({ anchor, first: seedBase + anchor * 100000, last: seedBase + anchor * 100000 + (games - 1) * 7919, gamesPerCharacter: games })) : { first: seedBase, last: seedBase + (games - 1) * 7919 }, generatedAt: new Date().toISOString(), ...summarizeMatches(matches, scenario === "balance") };
+const output = option("output", "");
+if (output) {
+  mkdirSync(dirname(output), { recursive: true });
+  writeFileSync(output, JSON.stringify(report, null, 2));
+  if (option("matches", "false") === "true") writeFileSync(output.replace(/\.json$/, "") + ".matches.jsonl", matches.map(m => JSON.stringify(m)).join("\n"));
 }
-
-const rows = [];
-for (const characterId of characters) {
-  const seats = [0, 1, 2, 3].map(anchorSeat => runCharacter(characterId, anchorSeat));
-  const completed = seats.reduce((sum, result) => sum + result.completed, 0);
-  const wins = seats.reduce((sum, result) => sum + result.wins, 0);
-  rows.push({ characterId, seats, normalizedRate: completed ? wins / completed * 100 : 0 });
-}
-
-console.log("character\tseat0\tseat1\tseat2\tseat3\tnormalized\tunfinished");
-for (const row of rows) {
-  const rates = row.seats.map(result => result.rate.toFixed(1));
-  const unfinished = row.seats.reduce((sum, result) => sum + result.unfinished, 0);
-  console.log(`${row.characterId}\t${rates.join("\t")}\t${row.normalizedRate.toFixed(1)}\t${unfinished}`);
-}
+console.log(JSON.stringify({ ...report, roles: undefined }));
+console.log("character\tanchor\tgames\twinRate\tawakenRate\tavgAwakenRound\tactiveEffective\tsignatureEffective");
+for (const row of report.roles) console.log([row.character, row.anchor, row.games, row.winRate.toFixed(2), row.awakenRate.toFixed(2), row.avgAwakenRound?.toFixed(2) ?? "-", row.metrics.activeEffective, row.metrics.signatureEffective].join("\t"));
+if (report.unfinished || Object.keys(report.residual).length || report.over80) process.exitCode = 1;
