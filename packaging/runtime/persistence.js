@@ -2,7 +2,7 @@ import { GameEngine } from "../../src/engine.js";
 
 export const SAVE_KEY = "anime-kill.saved-match.v2";
 export const SAVE_SCHEMA_VERSION = 2;
-export const APP_VERSION = "0.2.0";
+export const APP_VERSION = "0.2.1";
 
 export function createSeededRandom(seed) {
   let value = Number(seed) >>> 0;
@@ -158,6 +158,7 @@ export function inspectSavedMatch(storage = defaultSaveStorage()) {
   try {
     const save = JSON.parse(raw);
     if (save.schemaVersion !== SAVE_SCHEMA_VERSION) throw new Error("存档版本与当前应用不兼容");
+    if (save.appVersion !== APP_VERSION) throw new Error("存档版本与当前应用不兼容");
     if (!save.config?.modeId || !save.config?.humanCharacterId || !Number.isFinite(save.seed) || !Array.isArray(save.commands)) throw new Error("存档内容不完整");
     return { exists: true, valid: true, save };
   } catch (error) {

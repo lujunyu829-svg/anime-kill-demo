@@ -41,3 +41,20 @@ test("损坏和旧版本存档不会阻止清理", () => {
   assert.equal(discardSavedMatch(storage), true);
   assert.equal(inspectSavedMatch(storage).exists, false);
 });
+
+test("当前版拒绝旧版和未知版本存档但保留安全删除入口", () => {
+  const storage = new MemoryStorage();
+  const session = new GameSession({ config: { modeId: "ranked2v2", humanCharacterId: "naruto" }, seed: 829, storage });
+  for (const version of ["0.2.0", "0.3.0", undefined]) {
+    const save = session.createSave();
+    save.appVersion = version;
+    storage.setItem(SAVE_KEY, JSON.stringify(save));
+    const inspected = inspectSavedMatch(storage);
+    assert.equal(inspected.exists, true);
+    assert.equal(inspected.valid, false);
+    assert.match(inspected.reason, /不兼容/);
+    assert.equal(storage.getItem(SAVE_KEY), JSON.stringify(save));
+  }
+  assert.equal(discardSavedMatch(storage), true);
+  assert.equal(inspectSavedMatch(storage).exists, false);
+});
