@@ -137,5 +137,6 @@ export function transformIndexHtml(original) {
     </section>
 
     <section id="game"`, "继续对局面板");
+  html = replaceOnce(html, '<script src="./dist/app.bundle.js"></script>', '<script src="./boot.js"></script>', "版本化启动入口");
   return html.replace("<title>动漫杀 · 战术演示版</title>", "<title>动漫杀 Demo</title>");
 }
