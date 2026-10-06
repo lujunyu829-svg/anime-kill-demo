@@ -1,7 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { transformIndexHtml } from "../transform-app.mjs";
 
 const legacyScript = new URL("../legacy/v0.2.0/app.bundle.js", import.meta.url);
@@ -25,4 +29,17 @@ test("旧版脚本直接查询的元素在新版封装页面仍存在", async ()
   const queriedIds = [...source.matchAll(/\$\(["']#([A-Za-z][\w-]*)["']\)/g)].map(match => match[1]);
   assert.ok(queriedIds.length > 20, "应实际扫描到旧版页面选择器");
   for (const id of new Set(queriedIds)) assert.match(html, new RegExp(`id="${id}"`), `缺少旧版元素 #${id}`);
+});
+
+test("Windows Git 重新检出旧版脚本后 SHA-256 仍一致", async () => {
+  const root = fileURLToPath(new URL("../..", import.meta.url));
+  const temp = await mkdtemp(path.join(tmpdir(), "anime-kill-legacy-checkout-"));
+  try {
+    execFileSync("git", ["-c", "core.autocrlf=true", "-c", "core.eol=crlf", "checkout-index", `--prefix=${temp}${path.sep}`, "--", "packaging/legacy/v0.2.0/app.bundle.js"], { cwd: root });
+    const bytes = await readFile(path.join(temp, "packaging", "legacy", "v0.2.0", "app.bundle.js"));
+    const registered = (await readFile(checksumFile, "utf8")).trim();
+    assert.equal(createHash("sha256").update(bytes).digest("hex"), registered);
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+  }
 });
