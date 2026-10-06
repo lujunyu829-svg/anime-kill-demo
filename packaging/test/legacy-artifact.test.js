@@ -7,6 +7,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { transformIndexHtml } from "../transform-app.mjs";
+import { SAVE_KEY, inspectSavedMatch } from "../runtime/persistence.js";
 
 const legacyScript = new URL("../legacy/v0.2.0/app.bundle.js", import.meta.url);
 const checksumFile = new URL("../legacy/v0.2.0/SHA256.txt", import.meta.url);
@@ -41,5 +42,22 @@ test("Windows Git 重新检出旧版脚本后 SHA-256 仍一致", async () => {
     assert.equal(createHash("sha256").update(bytes).digest("hex"), registered);
   } finally {
     await rm(temp, { recursive: true, force: true });
+  }
+});
+
+test("五类 v0.2.0 真实存档保留版本与待处理窗口，当前引擎拒绝误恢复", async () => {
+  for (const [name, pendingKind] of [
+    ["response", "response"], ["discard", "discard"], ["choice", "choice"],
+    ["ai-turn", null], ["nami", "choice"]
+  ]) {
+    const raw = await readFile(new URL(`./fixtures/v020-${name}.json`, import.meta.url), "utf8");
+    const save = JSON.parse(raw);
+    assert.equal(save.schemaVersion, 2, name);
+    assert.equal(save.appVersion, "0.2.0", name);
+    assert.equal(save.stateDigest.pendingKind, pendingKind, name);
+    assert.ok(save.seed > 0 && Array.isArray(save.commands), name);
+    const inspected = inspectSavedMatch({ getItem(key) { assert.equal(key, SAVE_KEY); return raw; } });
+    assert.equal(inspected.exists, true, name);
+    assert.equal(inspected.valid, false, name);
   }
 });

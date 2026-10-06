@@ -129,3 +129,10 @@ test("旧版对局显示规则版本提示且只安装一个捕获监听器", as
   const current = await boot(null);
   assert.equal(current.listeners.length, 0);
 });
+
+test("五类真实旧版存档都路由到冻结规则脚本", async () => {
+  for (const name of ["response", "discard", "choice", "ai-turn", "nami"]) {
+    const raw = await readFile(new URL(`./fixtures/v020-${name}.json`, import.meta.url), "utf8");
+    assert.equal((await boot(raw)).script.src, "./legacy/v0.2.0/app.bundle.js", name);
+  }
+});

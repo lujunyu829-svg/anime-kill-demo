@@ -1,7 +1,9 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("node:path");
+const { pathToFileURL } = require("node:url");
 
 const smokeTest = process.argv.includes("--smoke-test");
+const indexPath = path.join(__dirname, "..", "www", "index.html");
 let mainWindow;
 
 function createWindow() {
@@ -23,14 +25,16 @@ function createWindow() {
   });
 
   mainWindow.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
-  mainWindow.webContents.on("will-navigate", event => event.preventDefault());
+  mainWindow.webContents.on("will-navigate", (event, url) => {
+    if (url !== pathToFileURL(indexPath).href) event.preventDefault();
+  });
   mainWindow.webContents.on("before-input-event", (event, input) => {
     if (input.type === "keyDown" && input.key === "F11") {
       mainWindow.setFullScreen(!mainWindow.isFullScreen());
       event.preventDefault();
     }
   });
-  mainWindow.loadFile(path.join(__dirname, "..", "www", "index.html"));
+  mainWindow.loadFile(indexPath);
   if (smokeTest) mainWindow.webContents.once("did-finish-load", () => setTimeout(() => app.exit(0), 250));
 }
 
