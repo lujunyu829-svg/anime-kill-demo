@@ -706,7 +706,11 @@ export class GameEngine {
     if (skill.effect === "medicine" && !player.hand.some(card => card.type === "basic")) return [];
     if (skill.effect === "secondGear" && player.hp <= 1) return [];
     if (skill.target === "self") return [playerId];
-    if (skill.target === "future") return this.turnQueue.filter(id => this.player(id)?.alive);
+    if (skill.target === "future") {
+      const future = this.turnQueue.filter(id => this.player(id)?.alive && id !== playerId);
+      if (future.length) return future;
+      return this.players.filter(target => target.alive && target.id !== playerId && (this.mode.id === "classic8" || !this.isAlly(playerId, target.id))).map(target => target.id);
+    }
     const candidates = this.players.filter(target => target.alive && target.id !== playerId);
     if (skill.target === "other") return candidates.map(target => target.id);
     if (skill.target === "ally") {
@@ -2759,12 +2763,12 @@ export class GameEngine {
     const chopperPriority = player.characterId === "chopper" && activeSkill?.effect === "medicine" && activeTargets.some(id => { const target = this.player(id); return target && (target.hp <= 2 || target.poison >= 2 || target.energyLocked); });
     if (activeTargets.length && !player.turnFlags.activeUsed && (chopperPriority || ["medicine","allBlueKitchen","oceanGuard","copyNinjutsu"].includes(activeSkill?.effect) || this.random() < .55)) {
       const skill = activeSkill;
-      let choices = skill.target === "enemy" ? this.getAITargets(playerId, activeTargets) : skill.target === "ally" ? activeTargets.filter(id => this.aiIsAlly(playerId, id)) : activeTargets;
+      let choices = skill.target === "enemy" || skill.effect === "chessMove" ? this.getAITargets(playerId, activeTargets) : skill.target === "ally" ? activeTargets.filter(id => this.aiIsAlly(playerId, id)) : activeTargets;
       if (player.characterId === "jinbe") {
         const allies = activeTargets.filter(id => this.aiIsAlly(playerId, id));
         choices = allies;
       }
-      if (choices.length) { const purpose = player.characterId === "jinbe" ? "shield" : skill.target === "enemy" ? "attack" : (skill.target === "ally" ? "support" : "generic"); const result = this.useActiveSkill(playerId, this.aiChooseTarget(playerId, choices, purpose)); if (result?.ok !== false) return { acted: true }; }
+      if (choices.length) { const purpose = player.characterId === "jinbe" ? "shield" : skill.target === "enemy" || skill.effect === "chessMove" ? "attack" : (skill.target === "ally" ? "support" : "generic"); const result = this.useActiveSkill(playerId, this.aiChooseTarget(playerId, choices, purpose)); if (result?.ok !== false) return { acted: true }; }
     }
     const sig = this.characterOf(player).signature;
     const usefulSignature = player.characterId !== "orochimaru" || player.hand.some(card => card._curseSpoil === playerId && this.aiImmortalityValue(player,card) > 0);

@@ -61,7 +61,7 @@ const activeSkills = {
   naruto: { name: "影分身", target: "self", cost: 1, costText: "1能量 · 存1张基础牌", effect: "shadowClone", text: "将1张非响应基础牌正面置为分身。分身区最多1张，每回合限一次。" },
   gaara: { name: "砂缚", target: "enemy", cost: 1, costText: "1能量", effect: "sandBind", text: "令距离2以内一名敌方弃1张牌并在下回合少摸1张；若其没有手牌，则改为受到1点伤害。" },
   sakura: { name: "百豪印", target: "self", costText: "蓄印或解放 · 每回合一次", effect: "byakugoStore", text: "选择蓄入1张不同类别手牌，或主动解放已有百豪牌；具体转化收益由角色技能决定。" },
-  shikamaru: { name: "落子", target: "future", costText: "本轮未行动角色", effect: "chessMove", text: "在本轮尚未行动的一名角色身上放置棋子。场上只能有1枚你的棋子。" },
+  shikamaru: { name: "落子", target: "future", costText: "优先未行动角色", effect: "chessMove", text: "在本轮尚未行动的一名角色身上放置棋子；若已无未行动者，可指定已行动敌人，影缝于其下轮首次合规出牌时生效。场上只能有1枚你的棋子。" },
   itachi: { name: "幻象布置", target: "enemy", costText: "暗置1张非伏笔牌", effect: "illusionPlot", text: "将1张非伏笔手牌伪装成未知伏笔并指定其他角色，占用正常伏笔槽位。" },
   sasuke: { name: "天手力", target: "enemy", cost: 0, costText: "无能量消耗 · 交换装备", effect: "amenotejikara", text: "与距离2以内一名敌方交换一个非空装备槽，并将其标记为追猎目标。" },
   kakashi: { name: "拷贝忍术", target: "self", cost: 1, costText: "1能量 · 复刻弃牌", effect: "copyNinjutsu", text: "从弃牌堆选择一张非响应基础牌或即时策略牌，生成一张仅持续到本回合结束的拷贝。" },
@@ -1337,7 +1337,11 @@ class GameEngine {
     if (skill.effect === "medicine" && !player.hand.some(card => card.type === "basic")) return [];
     if (skill.effect === "secondGear" && player.hp <= 1) return [];
     if (skill.target === "self") return [playerId];
-    if (skill.target === "future") return this.turnQueue.filter(id => this.player(id)?.alive);
+    if (skill.target === "future") {
+      const future = this.turnQueue.filter(id => this.player(id)?.alive && id !== playerId);
+      if (future.length) return future;
+      return this.players.filter(target => target.alive && target.id !== playerId && (this.mode.id === "classic8" || !this.isAlly(playerId, target.id))).map(target => target.id);
+    }
     const candidates = this.players.filter(target => target.alive && target.id !== playerId);
     if (skill.target === "other") return candidates.map(target => target.id);
     if (skill.target === "ally") {
@@ -3390,12 +3394,12 @@ class GameEngine {
     const chopperPriority = player.characterId === "chopper" && activeSkill?.effect === "medicine" && activeTargets.some(id => { const target = this.player(id); return target && (target.hp <= 2 || target.poison >= 2 || target.energyLocked); });
     if (activeTargets.length && !player.turnFlags.activeUsed && (chopperPriority || ["medicine","allBlueKitchen","oceanGuard","copyNinjutsu"].includes(activeSkill?.effect) || this.random() < .55)) {
       const skill = activeSkill;
-      let choices = skill.target === "enemy" ? this.getAITargets(playerId, activeTargets) : skill.target === "ally" ? activeTargets.filter(id => this.aiIsAlly(playerId, id)) : activeTargets;
+      let choices = skill.target === "enemy" || skill.effect === "chessMove" ? this.getAITargets(playerId, activeTargets) : skill.target === "ally" ? activeTargets.filter(id => this.aiIsAlly(playerId, id)) : activeTargets;
       if (player.characterId === "jinbe") {
         const allies = activeTargets.filter(id => this.aiIsAlly(playerId, id));
         choices = allies;
       }
-      if (choices.length) { const purpose = player.characterId === "jinbe" ? "shield" : skill.target === "enemy" ? "attack" : (skill.target === "ally" ? "support" : "generic"); const result = this.useActiveSkill(playerId, this.aiChooseTarget(playerId, choices, purpose)); if (result?.ok !== false) return { acted: true }; }
+      if (choices.length) { const purpose = player.characterId === "jinbe" ? "shield" : skill.target === "enemy" || skill.effect === "chessMove" ? "attack" : (skill.target === "ally" ? "support" : "generic"); const result = this.useActiveSkill(playerId, this.aiChooseTarget(playerId, choices, purpose)); if (result?.ok !== false) return { acted: true }; }
     }
     const sig = this.characterOf(player).signature;
     const usefulSignature = player.characterId !== "orochimaru" || player.hand.some(card => card._curseSpoil === playerId && this.aiImmortalityValue(player,card) > 0);

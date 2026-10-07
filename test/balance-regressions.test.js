@@ -61,6 +61,56 @@ test("佐助AI不把优质自装换给敌人的空槽", () => {
   game.aiStep("p0");
   assert.equal(p.equipment.weapon.id, "impact_hammer");
 });
+test("鹿丸仍先选择本轮未行动角色，末位行动时可以向已行动敌人落子", () => {
+  const game = create("shikamaru"), shikamaru = game.player("p0");
+  game.turnQueue = ["p2", "p3"];
+  assert.deepEqual(game.getActiveSkillTargets("p0"), ["p2", "p3"]);
+  game.turnQueue = [];
+  assert.deepEqual(game.getActiveSkillTargets("p0"), ["p1", "p3"]);
+  assert.equal(game.useActiveSkill("p0", "p1").ok, true);
+  assert.equal(shikamaru.chessTargetId, "p1");
+  assert.deepEqual(game.getActiveSkillTargets("p0"), []);
+});
+test("鹿丸末位落子跨轮保留，目标下一轮首张突击只受一次影缝", () => {
+  const game = create("shikamaru"), target = game.player("p1");
+  game.turnQueue = [];
+  assert.equal(game.useActiveSkill("p0", "p1").ok, true);
+  game.startRound();
+  target.hand = [card("attack", "first-marked-attack")];
+  game.playCard("p1", "first-marked-attack", "p0", { freeUse: true });
+  assert.equal(target.roundFlags.chessPressure, true);
+  assert.equal(game.eventHistory.filter(event => event.type === "cardCancelled" && event.card?.uid === "first-marked-attack").length, 1);
+  assert.equal(game.player("p0").chessTargetId, "p1");
+  target.hand = [card("attack", "second-marked-attack")];
+  assert.equal(game.handleChessPressure("p1", target.hand[0], target.hand[0].uid, "p0", { freeUse: true }), null);
+});
+test("鹿丸AI只向可识别的敌人落子，不为低血量队友施加影缝", () => {
+  const game = create("shikamaru"), shikamaru = game.player("p0");
+  shikamaru.human = false;
+  game.turnQueue = ["p2", "p3"];
+  game.player("p2").hp = 1;
+  game.player("p3").hp = 4;
+  game.aiStep("p0");
+  assert.equal(shikamaru.chessTargetId, "p3");
+});
+test("军八鹿丸AI不能依真实隐藏身份筛选末位落子目标", () => {
+  const makeGame = () => {
+    const game = new GameEngine({ modeId: "classic8", humanCharacterId: "shikamaru", random: () => .314159 }).setup();
+    const shikamaru = game.player("p0");
+    shikamaru.human = false;
+    shikamaru.energy = 0;
+    shikamaru.hand = [];
+    game.currentPlayerId = "p0";
+    game.turnQueue = [];
+    for (const target of game.players.slice(1)) { target.revealed = false; target.hand = []; target.hp = target.maxHp = 4; }
+    return game;
+  };
+  const first = makeGame(), second = makeGame();
+  [second.player("p1").roleId, second.player("p2").roleId] = [second.player("p2").roleId, second.player("p1").roleId];
+  first.aiStep("p0"); second.aiStep("p0");
+  assert.ok(first.player("p0").chessTargetId);
+  assert.equal(first.player("p0").chessTargetId, second.player("p0").chessTargetId);
+});
 test("卡卡西AI预留雷切核心与费用，优先复刻基础牌", () => {
   const game = create("kakashi"), p = game.player("p0");
   p.human = false; p.energy = 3; p.hand = [];

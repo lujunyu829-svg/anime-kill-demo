@@ -83,6 +83,18 @@ test("罗宾百花缭乱声明后的私有查看在 schema 2 重放后保持同�
   assert.deepEqual(s.engine.getVisibleCardPeeks("p0"), before);
   assert.equal(s.engine.player("p0").dreamState.progress, progress);
 });
+test("鹿丸末位落子在 schema 2 重放及下一轮仍标记同一目标", () => {
+  let s = new GameSession({ config: { modeId: "ranked2v2", humanCharacterId: "shikamaru", fixedAnchorSeat: 1 }, seed: 114, storage: new Storage() });
+  for (let step = 0; step < 3; step++) s.execute("startNextTurn");
+  assert.equal(s.engine.currentPlayerId, "p0");
+  assert.deepEqual(s.engine.turnQueue, []);
+  assert.equal(s.execute("useActiveSkill", "p0", "p1").ok, true);
+  s = checkpoint(s);
+  assert.equal(s.engine.player("p0").chessTargetId, "p1");
+  s.execute("startRound");
+  s = checkpoint(s);
+  assert.equal(s.engine.player("p0").chessTargetId, "p1");
+});
 test("乔巴觉醒医术弃牌后净化窗口恢复只清一层毒", () => {
   let s = create("chopper");
   for (let round = 1; round <= 3; round++) {
