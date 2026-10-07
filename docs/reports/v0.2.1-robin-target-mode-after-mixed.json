@@ -1,0 +1,275 @@
+{
+  "version": "0.2.1",
+  "sourceHash": "f23d24c302819ac1d977a9ee024b39826789c37e265ed6c70366b4feb1306610",
+  "pool": "mixed",
+  "mode": "ranked2v2",
+  "scenario": "balance",
+  "seedBase": 20260917,
+  "seedStep": 7919,
+  "seeds": [
+    {
+      "anchor": 0,
+      "first": 20260917,
+      "last": 22232748,
+      "gamesPerCharacter": 250
+    },
+    {
+      "anchor": 1,
+      "first": 20360917,
+      "last": 22332748,
+      "gamesPerCharacter": 250
+    },
+    {
+      "anchor": 2,
+      "first": 20460917,
+      "last": 22432748,
+      "gamesPerCharacter": 250
+    },
+    {
+      "anchor": 3,
+      "first": 20560917,
+      "last": 22532748,
+      "gamesPerCharacter": 250
+    }
+  ],
+  "generatedAt": "2026-10-07T09:31:14.177Z",
+  "games": 1000,
+  "unfinished": 0,
+  "camps": {
+    "crimson": 532,
+    "azure": 468
+  },
+  "residual": {},
+  "avgRounds": 7.041,
+  "p95Rounds": 17,
+  "p99Rounds": 42,
+  "maxRounds": 45,
+  "over80": 0,
+  "maxSteps": 366,
+  "roles": [
+    {
+      "character": "robin",
+      "pack": "one_piece_grand_line",
+      "anchor": 0,
+      "games": 250,
+      "wins": 119,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 783,
+        "activeEffective": 766,
+        "activeTargets": {
+          "other": 783
+        },
+        "signatureDeclared": 824,
+        "signatureEffective": 822,
+        "signatureCosts": {
+          "3": 824
+        },
+        "damage": 683,
+        "healing": 163,
+        "shield": 0,
+        "drawn": 2925,
+        "discarded": 301,
+        "cancelled": 68,
+        "equipmentChanges": 522,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "历史学者": 594
+        },
+        "awakeRound": 438
+      },
+      "dreamProgress": 594,
+      "awakened": 129,
+      "awakenedWins": 77,
+      "unawakenedWins": 42,
+      "awakeRounds": 438,
+      "winRate": 47.599999999999994,
+      "avgRounds": 7.028,
+      "p95Rounds": 16,
+      "p99Rounds": 42,
+      "maxRounds": 45,
+      "avgDreamProgress": 2.376,
+      "awakenRate": 51.6,
+      "avgAwakenRound": 3.395348837209302,
+      "awakenedWinRate": 59.68992248062015,
+      "unawakenedWinRate": 34.710743801652896
+    },
+    {
+      "character": "robin",
+      "pack": "one_piece_grand_line",
+      "anchor": 1,
+      "games": 250,
+      "wins": 117,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 546,
+        "activeEffective": 541,
+        "activeTargets": {
+          "other": 546
+        },
+        "signatureDeclared": 675,
+        "signatureEffective": 675,
+        "signatureCosts": {
+          "3": 675
+        },
+        "damage": 608,
+        "healing": 165,
+        "shield": 0,
+        "drawn": 2568,
+        "discarded": 296,
+        "cancelled": 55,
+        "equipmentChanges": 421,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "历史学者": 434
+        },
+        "awakeRound": 285
+      },
+      "dreamProgress": 434,
+      "awakened": 80,
+      "awakenedWins": 55,
+      "unawakenedWins": 62,
+      "awakeRounds": 285,
+      "winRate": 46.800000000000004,
+      "avgRounds": 6.828,
+      "p95Rounds": 14,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 1.736,
+      "awakenRate": 32,
+      "avgAwakenRound": 3.5625,
+      "awakenedWinRate": 68.75,
+      "unawakenedWinRate": 36.470588235294116
+    },
+    {
+      "character": "robin",
+      "pack": "one_piece_grand_line",
+      "anchor": 2,
+      "games": 250,
+      "wins": 124,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 704,
+        "activeEffective": 691,
+        "activeTargets": {
+          "other": 704
+        },
+        "signatureDeclared": 820,
+        "signatureEffective": 817,
+        "signatureCosts": {
+          "3": 820
+        },
+        "damage": 714,
+        "healing": 168,
+        "shield": 0,
+        "drawn": 3181,
+        "discarded": 292,
+        "cancelled": 62,
+        "equipmentChanges": 470,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "历史学者": 520
+        },
+        "awakeRound": 348
+      },
+      "dreamProgress": 520,
+      "awakened": 101,
+      "awakenedWins": 63,
+      "unawakenedWins": 61,
+      "awakeRounds": 348,
+      "winRate": 49.6,
+      "avgRounds": 7.62,
+      "p95Rounds": 18,
+      "p99Rounds": 40,
+      "maxRounds": 44,
+      "avgDreamProgress": 2.08,
+      "awakenRate": 40.400000000000006,
+      "avgAwakenRound": 3.4455445544554455,
+      "awakenedWinRate": 62.37623762376238,
+      "unawakenedWinRate": 40.939597315436245
+    },
+    {
+      "character": "robin",
+      "pack": "one_piece_grand_line",
+      "anchor": 3,
+      "games": 250,
+      "wins": 108,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 704,
+        "activeEffective": 689,
+        "activeTargets": {
+          "other": 704
+        },
+        "signatureDeclared": 807,
+        "signatureEffective": 805,
+        "signatureCosts": {
+          "3": 807
+        },
+        "damage": 686,
+        "healing": 186,
+        "shield": 0,
+        "drawn": 3208,
+        "discarded": 301,
+        "cancelled": 54,
+        "equipmentChanges": 494,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {
+          "历史学者": 521
+        },
+        "awakeRound": 344
+      },
+      "dreamProgress": 521,
+      "awakened": 101,
+      "awakenedWins": 58,
+      "unawakenedWins": 50,
+      "awakeRounds": 344,
+      "winRate": 43.2,
+      "avgRounds": 6.688,
+      "p95Rounds": 15,
+      "p99Rounds": 38,
+      "maxRounds": 42,
+      "avgDreamProgress": 2.084,
+      "awakenRate": 40.400000000000006,
+      "avgAwakenRound": 3.405940594059406,
+      "awakenedWinRate": 57.42574257425742,
+      "unawakenedWinRate": 33.557046979865774
+    }
+  ]
+}
