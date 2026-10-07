@@ -1245,12 +1245,6 @@ class GameEngine {
   getCardTargets(playerId, card) {
     const player = this.player(playerId);
     if (!player?.alive || !card || card.responseOnly) return [];
-    if (player.navigationWind && card.type === "strategy" && card.targetMode !== "self" && card.targetMode !== "allOther") {
-      return this.players.filter(target => target.alive && target.id !== playerId).map(target => target.id);
-    }
-    if (card.type === "strategy" && card.targetMode === "other" && player.characterId === "usopp") {
-      return this.players.filter(target => target.alive && target.id !== playerId && player.specialCards.some(item => item.kind === "lie" && item.targetId === target.id)).map(target => target.id);
-    }
     if (card.type === "equipment" || ["focus", "overdrive", "energy_auction", "delayed_cast", "echo_script", "dimensional_barrage", "rift_invasion"].includes(card.id)) return [playerId];
     if (card.id === "adapt") return this.players.filter(target => target.alive && (target.id === playerId || this.distance(playerId, target.id) <= this.attackRange(playerId))).map(target => target.id);
     if (card.id === "heal") {

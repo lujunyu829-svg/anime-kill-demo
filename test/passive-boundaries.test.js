@@ -363,6 +363,29 @@ test("罗宾百花缭乱不能越过记忆交换的有手牌及战术接力的�
   p.hand = [card("tactical_relay", "relay")];
   assert.deepEqual(g.getCardTargets("p0", p.hand[0]), []);
 });
+test("娜美顺风与乌索普谎言目标不能绕过策略牌自身的目标条件", () => {
+  const ordinary = create("luffy"), nami = create("nami"), usopp = create("usopp");
+  for (const g of [ordinary, nami, usopp]) {
+    g.player("p0").hand = [card("focus", "payment"), card("memory_exchange", "memory"), card("tactical_relay", "relay")];
+    g.player("p1").hand = [card("attack", "held")];
+  }
+  nami.player("p0").navigationWind = true;
+  usopp.player("p0").specialCards = [{ uid: "lie", kind: "lie", card: card("focus", "lie-source"), targetId: "p1", setTurn: usopp.turnNumber }];
+  for (const definition of Object.values(cards).filter(item => item.type === "strategy" && item.targetMode !== "self" && item.targetMode !== "allOther" && !item.responseOnly)) {
+    const instance = { ...definition, uid: `target-${definition.id}` };
+    const expected = ordinary.getCardTargets("p0", instance);
+    assert.deepEqual(nami.getCardTargets("p0", instance), expected, `娜美：${definition.id}`);
+    assert.deepEqual(usopp.getCardTargets("p0", instance), expected, `乌索普：${definition.id}`);
+  }
+  for (const g of [ordinary, nami, usopp]) {
+    g.player("p0").hand = [card("tactical_relay", "no-payment")];
+    assert.deepEqual(g.getCardTargets("p0", g.player("p0").hand[0]), []);
+    g.player("p0").hand = [card("memory_exchange", "no-exchange")];
+    assert.deepEqual(g.getCardTargets("p0", g.player("p0").hand[0]), []);
+  }
+  usopp.player("p0").specialCards = [];
+  assert.deepEqual(usopp.getCardTargets("p0", card("energy_collapse")), ["p1", "p2", "p3"]);
+});
 test("弗兰奇可乐能源只由本轮首次真实装备变更产生", () => {
   const g = create("franky"), p = g.player("p0");
   p.energy = 0;

@@ -7,6 +7,7 @@ const option = (key, fallback) => process.argv.find(a => a.startsWith("--" + key
 const games = Number(option("games", 25)), pool = option("pool", "mixed"), mode = option("mode", "ranked2v2"), scenario = option("scenario", "balance"), seedBase = Number(option("seed", 20260917));
 const selected = option("characters", poolIds(pool).join(",")).split(","), matches = [];
 if (!Number.isInteger(games) || games < 1) throw new Error("games必须为正整数");
+if (!["balance", "pressure", "franky-chopper"].includes(scenario)) throw new Error(`未知scenario：${scenario}`);
 if (scenario === "balance") {
   for (const characterId of selected) for (const anchor of [0, 1, 2, 3]) {
     for (let i = 0; i < games; i++) matches.push(runMatch({ seed: seedBase + anchor * 100000 + i * 7919, pool, mode, characterId, anchor }));

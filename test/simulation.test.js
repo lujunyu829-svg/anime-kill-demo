@@ -1,5 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
 import { runMatch, summarizeMatches, poolIds } from "../scripts/simulation.mjs";
 
 test("模拟汇总的P99使用轮数而非动作步数", () => {
@@ -30,6 +32,13 @@ test("弗兰奇对乔巴专项使用二人完整角色状态", () => {
   assert.ok(row.completed);
   assert.ok(row.rounds <= 80);
   assert.deepEqual(row.residual, {});
+});
+
+test("模拟命令拒绝拼错的专项名称，避免静默运行普通对局", () => {
+  const script = fileURLToPath(new URL("../scripts/balance-simulation.mjs", import.meta.url));
+  const result = spawnSync(process.execPath, [script, "--scenario=franky_chopper", "--games=1"], { encoding: "utf8" });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /scenario/);
 });
 
 test("招牌技统计记录声明费用，不把命中回能或防御返还扣除", () => {

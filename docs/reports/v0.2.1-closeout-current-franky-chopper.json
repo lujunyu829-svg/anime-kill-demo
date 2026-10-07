@@ -1,6 +1,6 @@
 {
   "version": "0.2.1",
-  "sourceHash": "227f1ac1dd469fb6afbce7cb32892dfeaec3c22c55b5be7d766f2d660b8bf0a5",
+  "sourceHash": "6dcecd75489a46c0d9bc0de0e68473d4dbe7ad68b2f62bb53229935c4b9a2bc2",
   "pool": "one_piece_grand_line",
   "mode": "ranked2v2",
   "scenario": "franky-chopper",
@@ -10,7 +10,7 @@
     "first": 20260917,
     "last": 28171998
   },
-  "generatedAt": "2026-10-07T03:34:43.632Z",
+  "generatedAt": "2026-10-07T04:00:29.276Z",
   "games": 1000,
   "unfinished": 0,
   "camps": {
