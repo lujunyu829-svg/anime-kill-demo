@@ -13,3 +13,6 @@ www/
 
 # 大样本模拟的逐局原始日志仅保留在本机；汇总报告可入库。
 docs/reports/*.matches.jsonl
+
+# 执行计划的本地进度账本和临时对照输出。
+.superpowers/
