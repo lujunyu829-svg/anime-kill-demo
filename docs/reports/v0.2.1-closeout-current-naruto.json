@@ -1,6 +1,6 @@
 {
   "version": "0.2.1",
-  "sourceHash": "9fe885edf8cf6a0e706140dfd0b73b8d394dec77226f257af8d7a0f3c5c12c19",
+  "sourceHash": "227f1ac1dd469fb6afbce7cb32892dfeaec3c22c55b5be7d766f2d660b8bf0a5",
   "pool": "naruto_genesis",
   "mode": "ranked2v2",
   "scenario": "balance",
@@ -32,7 +32,7 @@
       "gamesPerCharacter": 500
     }
   ],
-  "generatedAt": "2026-10-07T03:18:01.696Z",
+  "generatedAt": "2026-10-07T03:33:55.911Z",
   "games": 20000,
   "unfinished": 0,
   "camps": {

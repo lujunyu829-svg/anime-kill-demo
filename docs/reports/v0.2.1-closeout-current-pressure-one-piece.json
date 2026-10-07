@@ -1,6 +1,6 @@
 {
   "version": "0.2.1",
-  "sourceHash": "9fe885edf8cf6a0e706140dfd0b73b8d394dec77226f257af8d7a0f3c5c12c19",
+  "sourceHash": "227f1ac1dd469fb6afbce7cb32892dfeaec3c22c55b5be7d766f2d660b8bf0a5",
   "pool": "one_piece_grand_line",
   "mode": "ranked2v2",
   "scenario": "pressure",
@@ -10,7 +10,7 @@
     "first": 20260917,
     "last": 99442998
   },
-  "generatedAt": "2026-10-07T03:20:41.598Z",
+  "generatedAt": "2026-10-07T03:34:53.165Z",
   "games": 10000,
   "unfinished": 0,
   "camps": {

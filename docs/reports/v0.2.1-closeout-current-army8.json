@@ -1,6 +1,6 @@
 {
   "version": "0.2.1",
-  "sourceHash": "9fe885edf8cf6a0e706140dfd0b73b8d394dec77226f257af8d7a0f3c5c12c19",
+  "sourceHash": "227f1ac1dd469fb6afbce7cb32892dfeaec3c22c55b5be7d766f2d660b8bf0a5",
   "pool": "mixed",
   "mode": "classic8",
   "scenario": "pressure",
@@ -10,7 +10,7 @@
     "first": 20260917,
     "last": 51928998
   },
-  "generatedAt": "2026-10-07T03:21:34.692Z",
+  "generatedAt": "2026-10-07T03:34:51.152Z",
   "games": 4000,
   "unfinished": 0,
   "camps": {
@@ -3190,7 +3190,7 @@
           "other": 696
         },
         "signatureDeclared": 181,
-        "signatureEffective": 0,
+        "signatureEffective": 181,
         "signatureCosts": {
           "4": 181
         },
@@ -3245,7 +3245,7 @@
           "other": 796
         },
         "signatureDeclared": 196,
-        "signatureEffective": 0,
+        "signatureEffective": 196,
         "signatureCosts": {
           "4": 196
         },
@@ -5489,7 +5489,7 @@
           "other": 768
         },
         "signatureDeclared": 179,
-        "signatureEffective": 0,
+        "signatureEffective": 179,
         "signatureCosts": {
           "4": 179
         },
@@ -6461,7 +6461,7 @@
           "other": 761
         },
         "signatureDeclared": 202,
-        "signatureEffective": 0,
+        "signatureEffective": 202,
         "signatureCosts": {
           "4": 202
         },

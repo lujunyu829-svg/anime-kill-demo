@@ -43,3 +43,10 @@ test("招牌技统计记录声明费用，不把命中回能或防御返还扣�
     assert.ok(uses > 0, id + "至少实际发动一次");
   }
 });
+
+test("露琪亚白霞罚施加禁用出牌状态应计为有效招牌技", () => {
+  const match = runMatch({ seed: 20268836, pool: "mixed", characterId: "rukia", anchor: 1 });
+  const rukia = match.players.find(player => player.id === "p0");
+  assert.ok(rukia.metrics.signatureDeclared >= 1);
+  assert.ok(rukia.metrics.signatureEffective >= 1);
+});
