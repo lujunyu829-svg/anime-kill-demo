@@ -548,10 +548,12 @@ export class GameEngine {
 
   notifyCardCancelled(playerId, reason = "出牌被取消", card = null, targetIds = [], cancelledById = null) {
     if (card?.uid && this.cardTerminalUids.has(card.uid)) return;
+    const owner = this.player(playerId);
+    if (owner?.turnFlags.duelPressureAttackUid === card?.uid) owner.turnFlags.duelPressureAttackUid = null;
     if (card?.uid) { this.cardTerminalUids.add(card.uid); if (this.activeCardContext?.card?.uid === card.uid) this.activeCardContext = null; }
     this.emitOnePieceEvent({ type: "cardCancelled", sourceId: playerId, targetIds: Array.isArray(targetIds) ? targetIds : [targetIds].filter(Boolean), targetId: Array.isArray(targetIds) ? targetIds[0] : targetIds, card, reason, cancelledById });
-    const owner = this.findChessOwner(playerId);
-    if (owner) this.triggerTacticalForesight(owner.id, playerId, reason);
+    const chessOwner = this.findChessOwner(playerId);
+    if (chessOwner) this.triggerTacticalForesight(chessOwner.id, playerId, reason);
   }
 
   afterOwnedPlotRemoved(ownerId) {
@@ -1060,6 +1062,10 @@ export class GameEngine {
     if (card.id === "attack" && !options.freeUse && (player.skipOffense || player.attacksUsed >= player.attackLimit)) return { ok: false, reason: player.skipOffense ? "你本回合无法攻击" : "本回合攻击次数已用完" };
     if (card.type === "strategy" && player.skipOffense) return { ok: false, reason: "你本回合无法使用策略牌" };
     if (this.activeCardContext?.card?.uid !== card.uid) this.emitCardDeclared(playerId, [targetId], card);
+    if (card.id === "attack" && !options.freeUse && !player.turnFlags.duelPressureUsed && this.round >= 25 && this.players.filter(item => item.alive).length === 2) {
+      player.turnFlags.duelPressureUsed = true;
+      player.turnFlags.duelPressureAttackUid = card.uid;
+    }
     if (player.curseSeal?.type === card.type) {
       const curse = player.curseSeal;
       const experimenter = this.player(curse.sourceId);
@@ -1112,7 +1118,9 @@ export class GameEngine {
     }
     if (card.id === "attack") {
       if (!options.freeUse) player.attacksUsed += 1;
-      const result = this.beginAttack({ sourceId: playerId, targetId, damage: 1, requiredGuards: 1, origin: "attack", freeUse: options.freeUse, onComplete: () => this.finalizeCardResolved(playerId, [targetId], card) });
+      const duelPressure = player.turnFlags.duelPressureAttackUid === card.uid;
+      if (duelPressure) player.turnFlags.duelPressureAttackUid = null;
+      const result = this.beginAttack({ sourceId: playerId, targetId, damage: 1, requiredGuards: 1, origin: "attack", freeUse: options.freeUse, duelPressure, onComplete: () => this.finalizeCardResolved(playerId, [targetId], card) });
       return this.finishBasicUse(playerId, card, result, targetId);
     }
     if (card.id === "heal") return this.finishBasicUse(playerId, card, this.resolveHeal(playerId, targetId), targetId);
@@ -1717,7 +1725,7 @@ export class GameEngine {
     });
   }
 
-  beginAttack({ sourceId, targetId, damage = 1, requiredGuards = 1, origin = "attack", alwaysPoison = false, onComplete = null, skipIntervene = false, skipRaven = false, freeUse = false, jinbePiercing = false }) {
+  beginAttack({ sourceId, targetId, damage = 1, requiredGuards = 1, origin = "attack", alwaysPoison = false, onComplete = null, skipIntervene = false, skipRaven = false, freeUse = false, jinbePiercing = false, duelPressure = false }) {
     if (this.winner) return { ok: false, reason: "对局已经结束" };
     const source = this.player(sourceId), target = this.player(targetId);
     if (!source?.alive || !target?.alive) return { ok: false, reason: "目标已经退场" };
@@ -1747,11 +1755,11 @@ export class GameEngine {
       this.log("event", this.nameOf(source) + "以护盾施展“鱼人空手道”，本次突击无视防具");
     }
     if (!skipRaven) {
-      const raven = this.offerRavenSubstitution({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipIntervene, freeUse, jinbePiercing });
+      const raven = this.offerRavenSubstitution({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipIntervene, freeUse, jinbePiercing, duelPressure });
       if (raven) return raven;
     }
     if (!skipIntervene) {
-      const intervention = this.offerAttackIntervention({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, freeUse, jinbePiercing });
+      const intervention = this.offerAttackIntervention({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, freeUse, jinbePiercing, duelPressure });
       if (intervention) return intervention;
     }
     if (source.characterId === "itachi" && origin === "attack" && source.plots.some(plot => plot.isFalse && plot.targetId === targetId)) {
@@ -1818,7 +1826,7 @@ export class GameEngine {
           reason: "突破无下限：请选择1张手牌额外弃置",
           onComplete: () => {
             this.log("event", `${this.nameOf(source)}额外弃1张牌突破“无下限”`);
-            this.continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete });
+            this.continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, duelPressure });
           }
         });
       } else {
@@ -1826,7 +1834,7 @@ export class GameEngine {
         return this.afterDefended(sourceId, targetId, origin, alwaysPoison, onComplete);
       }
     }
-    return this.continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete });
+    return this.continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, duelPressure });
   }
 
   offerRavenSubstitution(payload) {
@@ -1865,7 +1873,7 @@ export class GameEngine {
     return { ok: true, pending: Boolean(this.pendingChoice || this.pendingResponse || this.pendingDiscard) };
   }
 
-  continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete = null, skipAbsoluteDefense = false }) {
+  continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete = null, skipAbsoluteDefense = false, duelPressure = false }) {
     const source = this.player(sourceId), target = this.player(targetId);
     if (!source?.alive || !target?.alive) return { ok: false, reason: "目标已经退场" };
     if (target.characterId === "gaara" && origin === "attack" && !skipAbsoluteDefense && !target.roundFlags.sandShield && target.hand.length) {
@@ -1883,7 +1891,7 @@ export class GameEngine {
           text: `是否弃置1张手牌取消${this.nameOf(source)}的此次攻击？`,
           options: [{ value: "use", label: "发动绝对防御" }, { value: "pass", label: "保留手牌，正常响应" }],
           aiChoice: "use",
-          onResolve: value => value === "use" ? useShield() : this.continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipAbsoluteDefense: true })
+          onResolve: value => value === "use" ? useShield() : this.continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipAbsoluteDefense: true, duelPressure })
         });
       }
       return useShield();
@@ -1891,14 +1899,14 @@ export class GameEngine {
     const resources = this.guardResources(targetId);
     if (requiredGuards > 0 && resources >= requiredGuards) {
       if (target.human) {
-        this.pendingResponse = { type: "guard", sourceId, targetId, damage, required: requiredGuards, origin, alwaysPoison, onComplete };
+        this.pendingResponse = { type: "guard", sourceId, targetId, damage, required: requiredGuards, origin, alwaysPoison, onComplete, duelPressure };
         return { ok: true, pending: true };
       }
       this.spendGuards(targetId, requiredGuards);
       this.log("event", `${this.nameOf(target)}打出${requiredGuards}张【防御】`);
       return this.afterDefended(sourceId, targetId, origin, alwaysPoison, onComplete);
     }
-    this.resolveAttackHit(sourceId, targetId, damage, origin, alwaysPoison, onComplete);
+    this.resolveAttackHit(sourceId, targetId, damage, origin, alwaysPoison, onComplete, duelPressure);
     return { ok: true };
   }
 
@@ -2002,7 +2010,7 @@ export class GameEngine {
         this.spendGuards(response.targetId, response.required);
         this.log("event", `${this.nameOf(response.targetId)}成功防御`);
         this.afterDefended(response.sourceId, response.targetId, response.origin, response.alwaysPoison, response.onComplete);
-      } else this.resolveAttackHit(response.sourceId, response.targetId, response.damage, response.origin, response.alwaysPoison, response.onComplete);
+      } else this.resolveAttackHit(response.sourceId, response.targetId, response.damage, response.origin, response.alwaysPoison, response.onComplete, response.duelPressure);
     } else if (response.type === "counter") {
       if (useCard) {
         const card = this.player(response.targetId).hand.find(item => item.id === "counter");
@@ -2054,7 +2062,7 @@ export class GameEngine {
     return { ok: true, defended: true };
   }
 
-  resolveAttackHit(sourceId, targetId, damage, origin, alwaysPoison = false, onComplete = null) {
+  resolveAttackHit(sourceId, targetId, damage, origin, alwaysPoison = false, onComplete = null, duelPressure = false) {
     const target = this.player(targetId);
     const source = this.player(sourceId);
     if (source?.turnFlags.pursuitTarget === targetId) source.turnFlags.pursuitTarget = null;
@@ -2065,10 +2073,10 @@ export class GameEngine {
     const ignoresArmor = (source?.equipment.weapon?.id === "piercer" && origin === "attack") || markedPierce || goemonPierce || (source?.characterId === "hinata" && source.scoutedTargetId === targetId) || origin === "asura" || (source?.characterId === "sanji" && origin === "attack" && !source.equipment.weapon) || (source?.characterId === "jinbe" && origin === "attack" && source.shield > 0);
     if (!ignoresArmor && target.equipment.armor?.id === "armor" && target.armorReady) {
       target.armorReady = false;
-      damage = Math.max(0, damage - 1);
+      damage = Math.max(duelPressure ? 1 : 0, damage - 1);
       this.log("event", `${this.nameOf(target)}的防护装甲令伤害-1`);
     }
-    const damageResult = this.dealDamage(sourceId, targetId, damage, origin, onComplete);
+    const damageResult = this.dealDamage(sourceId, targetId, damage, origin, onComplete, { shieldBypassOne: duelPressure });
     if (damageResult?.pending) return damageResult;
     if (alwaysPoison && target.alive) this.applyPoison(targetId, origin === "venomStrike" ? 1 : 1);
   }
@@ -2117,7 +2125,7 @@ export class GameEngine {
               this.log("event", `${this.nameOf(protector)}发动“侠义”保护${this.nameOf(target)}`);
             }
           }
-          this.dealDamage(sourceId, targetId, amount, origin, onComplete, { skipOptionalDefense: true, modifiersApplied: true });
+          this.dealDamage(sourceId, targetId, amount, origin, onComplete, { skipOptionalDefense: true, modifiersApplied: true, shieldBypassOne: options.shieldBypassOne });
         }
       });
     }
@@ -2132,7 +2140,7 @@ export class GameEngine {
     const oaths = this.plotsTargeting(targetId, "guardianOath");
     for (const oath of oaths) { this.removePlot(oath); amount = Math.max(0, amount - 1); }
     if (target.shield > 0) {
-      const absorbed = Math.min(target.shield, amount);
+      const absorbed = Math.min(target.shield, Math.max(0, amount - (options.shieldBypassOne ? 1 : 0)));
       target.shield -= absorbed;
       amount -= absorbed;
       this.log("event", `${this.nameOf(target)}的护盾抵消了${absorbed}点伤害`);
