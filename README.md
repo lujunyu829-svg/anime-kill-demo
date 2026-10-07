@@ -2,7 +2,7 @@
 
 一个面向二次元玩家的原创战术卡牌游戏原型。游戏保留身份推理、座次距离、手牌攻防与角色技能的核心乐趣，同时加入伏笔、能量和作品扩展包。
 
-当前开发版本：**v0.2.1（验收中）**。已有公开安装包见 [GitHub Releases](https://github.com/lujunyu829-svg/anime-kill-demo/releases)，不代表当前本地修订已发布。
+当前开发版本：**v0.2.1（自动化功能收尾完成，平衡例外仍有记录）**。本地收尾证据见[验收记录](docs/v0.2.1-2026-10-07-acceptance-record.md)。已有公开安装包见 [GitHub Releases](https://github.com/lujunyu829-svg/anime-kill-demo/releases)，不代表当前本地修订已发布。
 
 ## 当前内容
 
