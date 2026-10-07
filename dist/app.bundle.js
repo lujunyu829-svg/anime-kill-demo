@@ -1248,9 +1248,6 @@ class GameEngine {
     if (player.navigationWind && card.type === "strategy" && card.targetMode !== "self" && card.targetMode !== "allOther") {
       return this.players.filter(target => target.alive && target.id !== playerId).map(target => target.id);
     }
-    if (card.type === "strategy" && card.targetMode === "other" && player.characterId === "robin") {
-      return this.players.filter(target => target.alive && target.id !== playerId).map(target => target.id);
-    }
     if (card.type === "strategy" && card.targetMode === "other" && player.characterId === "usopp") {
       return this.players.filter(target => target.alive && target.id !== playerId && player.specialCards.some(item => item.kind === "lie" && item.targetId === target.id)).map(target => target.id);
     }
