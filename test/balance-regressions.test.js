@@ -139,6 +139,33 @@ test("大蛇丸AI满状态不消耗纯净化实验牌", () => {
   assert.equal(p.hand.length, 1);
   assert.equal(p.energy, 2);
 });
+test("大蛇丸AI不为零手牌目标弃牌布置咒印", () => {
+  const game = create("orochimaru"), orochimaru = game.player("p0");
+  orochimaru.human = false;
+  orochimaru.hand = [card("guard", "sample")];
+  game.aiStep("p0");
+  assert.equal(orochimaru.hand.length, 1);
+  assert.equal(game.player("p1").curseSeal, null);
+  assert.equal(game.player("p3").curseSeal, null);
+});
+test("大蛇丸AI在零手牌与有手牌敌人之间选择后者", () => {
+  const game = create("orochimaru"), orochimaru = game.player("p0");
+  orochimaru.human = false;
+  orochimaru.hand = [card("guard", "sample")];
+  game.player("p3").hand = [card("attack", "held")];
+  game.aiStep("p0");
+  assert.equal(game.player("p1").curseSeal, null);
+  assert.equal(game.player("p3").curseSeal?.sourceId, "p0");
+  assert.equal(orochimaru.hand.length, 0);
+});
+test("大蛇丸玩家仍能自行向零手牌合法目标布置咒印", () => {
+  const game = create("orochimaru"), orochimaru = game.player("p0");
+  orochimaru.hand = [card("guard", "human-sample")];
+  assert.ok(game.getActiveSkillTargets("p0").includes("p1"));
+  assert.equal(game.useActiveSkill("p0", "p1").pending, true);
+  game.confirmDiscard("p0", ["human-sample"]);
+  assert.equal(game.player("p1").curseSeal?.sourceId, "p0");
+});
 test("隐藏身份AI目标不因敌方真实身份变化而改变", () => {
   const game = new GameEngine({ modeId: "classic8", humanCharacterId: "sasuke", random: () => .314159 }).setup();
   const actor = game.player("p0"); actor.roleId = "lone";

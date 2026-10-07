@@ -1,0 +1,267 @@
+{
+  "version": "0.2.1",
+  "sourceHash": "bba103fd6aae315a00c199853580efc0e39ba92b3e6a09a6eb1224cef0b3a1fe",
+  "pool": "naruto_genesis",
+  "mode": "ranked2v2",
+  "scenario": "balance",
+  "seedBase": 20260917,
+  "seedStep": 7919,
+  "seeds": [
+    {
+      "anchor": 0,
+      "first": 20260917,
+      "last": 22232748,
+      "gamesPerCharacter": 250
+    },
+    {
+      "anchor": 1,
+      "first": 20360917,
+      "last": 22332748,
+      "gamesPerCharacter": 250
+    },
+    {
+      "anchor": 2,
+      "first": 20460917,
+      "last": 22432748,
+      "gamesPerCharacter": 250
+    },
+    {
+      "anchor": 3,
+      "first": 20560917,
+      "last": 22532748,
+      "gamesPerCharacter": 250
+    }
+  ],
+  "generatedAt": "2026-10-07T07:27:30.609Z",
+  "games": 1000,
+  "unfinished": 0,
+  "camps": {
+    "azure": 365,
+    "crimson": 635
+  },
+  "residual": {},
+  "avgRounds": 9.236,
+  "p95Rounds": 27,
+  "p99Rounds": 43,
+  "maxRounds": 48,
+  "over80": 0,
+  "maxSteps": 449,
+  "roles": [
+    {
+      "character": "orochimaru",
+      "pack": "naruto_genesis",
+      "anchor": 0,
+      "games": 250,
+      "wins": 105,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1620,
+        "activeEffective": 1620,
+        "activeTargets": {
+          "other": 1620
+        },
+        "signatureDeclared": 451,
+        "signatureEffective": 451,
+        "signatureCosts": {
+          "2": 451
+        },
+        "damage": 575,
+        "healing": 105,
+        "shield": 432,
+        "drawn": 4404,
+        "discarded": 1986,
+        "cancelled": 926,
+        "equipmentChanges": 681,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 105,
+      "awakeRounds": 0,
+      "winRate": 42,
+      "avgRounds": 8.92,
+      "p95Rounds": 27,
+      "p99Rounds": 43,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 42
+    },
+    {
+      "character": "orochimaru",
+      "pack": "naruto_genesis",
+      "anchor": 1,
+      "games": 250,
+      "wins": 83,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1551,
+        "activeEffective": 1551,
+        "activeTargets": {
+          "other": 1551
+        },
+        "signatureDeclared": 435,
+        "signatureEffective": 435,
+        "signatureCosts": {
+          "2": 435
+        },
+        "damage": 550,
+        "healing": 136,
+        "shield": 428,
+        "drawn": 4489,
+        "discarded": 2085,
+        "cancelled": 866,
+        "equipmentChanges": 638,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 83,
+      "awakeRounds": 0,
+      "winRate": 33.2,
+      "avgRounds": 9.604,
+      "p95Rounds": 32,
+      "p99Rounds": 43,
+      "maxRounds": 48,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 33.2
+    },
+    {
+      "character": "orochimaru",
+      "pack": "naruto_genesis",
+      "anchor": 2,
+      "games": 250,
+      "wins": 107,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1577,
+        "activeEffective": 1577,
+        "activeTargets": {
+          "other": 1577
+        },
+        "signatureDeclared": 463,
+        "signatureEffective": 463,
+        "signatureCosts": {
+          "2": 463
+        },
+        "damage": 603,
+        "healing": 148,
+        "shield": 449,
+        "drawn": 4644,
+        "discarded": 2118,
+        "cancelled": 881,
+        "equipmentChanges": 619,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 107,
+      "awakeRounds": 0,
+      "winRate": 42.8,
+      "avgRounds": 9.572,
+      "p95Rounds": 29,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 42.8
+    },
+    {
+      "character": "orochimaru",
+      "pack": "naruto_genesis",
+      "anchor": 3,
+      "games": 250,
+      "wins": 70,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1578,
+        "activeEffective": 1578,
+        "activeTargets": {
+          "other": 1578
+        },
+        "signatureDeclared": 483,
+        "signatureEffective": 483,
+        "signatureCosts": {
+          "2": 483
+        },
+        "damage": 553,
+        "healing": 116,
+        "shield": 469,
+        "drawn": 4667,
+        "discarded": 2010,
+        "cancelled": 893,
+        "equipmentChanges": 655,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 70,
+      "awakeRounds": 0,
+      "winRate": 28.000000000000004,
+      "avgRounds": 8.848,
+      "p95Rounds": 23,
+      "p99Rounds": 40,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 28.000000000000004
+    }
+  ]
+}

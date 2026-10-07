@@ -3361,7 +3361,7 @@ class GameEngine {
   }
   aiActiveUseful(player, skill, targetId) {
     if (skill.effect === "oceanGuard") return this.player(targetId).shield < 3;
-    if (skill.effect === "curseExperiment") return player.hand.some(card => !card._curseSpoil) && !this.player(targetId).curseSeal;
+    if (skill.effect === "curseExperiment") return player.hand.some(card => !card._curseSpoil) && this.player(targetId).hand.length > 0 && !this.player(targetId).curseSeal;
     if (skill.effect === "threeSwordStyle") return player.hand.some(card => card.id === "attack" || card.id === "adapt") && player.hand.filter(card => !card.responseOnly).length > 1;
     if (skill.effect === "amenotejikara") return ["weapon","armor","charm"].some(slot => this.aiEquipmentValue(this.player(targetId).equipment[slot]) > this.aiEquipmentValue(player.equipment[slot]));
     if (skill.effect === "workshop") return this.discard.some(card => card.type === "equipment" && this.aiEquipmentGain(player,card) > 0 && !player.hand.some(held => held.slot === card.slot && this.aiEquipmentValue(held) >= this.aiEquipmentValue(card)));

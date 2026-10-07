@@ -19,7 +19,7 @@ const active = {
   kakashi: { target: "p0", cost: 1, setup: g => g.discard.push(card("attack", "discard-attack")), check: g => assert.equal(g.player("p0").hand.filter(c => c._copiedBy === "p0").length, 1) },
   hinata: { target: "p1", cost: 0, check: g => assert.ok(["p1","p3"].includes(g.player("p0").scoutedTargetId)) },
   jiraiya: { target: "p1", cost: 2, check: g => assert.ok(["p1","p3"].includes(g.player("p0").toadBindTargetId)) },
-  orochimaru: { target: "p1", cost: 0, check: g => assert.equal(g.players.filter(p => p.curseSeal?.sourceId === "p0").length, 1) },
+  orochimaru: { target: "p1", cost: 0, setup: g => { g.player("p1").hand = [card("attack", "curse-target")]; }, check: g => assert.equal(g.players.filter(p => p.curseSeal?.sourceId === "p0").length, 1) },
   luffy: { target: "p0", cost: 0, check: g => { assert.equal(g.player("p0").hp, 3); assert.equal(g.player("p0").attackLimit, 2); } },
   zoro: { target: "p0", cost: 0, check: g => assert.equal(g.player("p0").turnFlags.nextAttackBonus, true) },
   nami: { target: "p0", cost: 1, check: g => assert.equal(g.player("p0").navigationWind, true) },
