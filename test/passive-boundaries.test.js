@@ -341,7 +341,7 @@ test("罗宾历史学者只在本轮首次确实查看隐藏牌后摸牌", () =>
   assert.equal(p.hand.length, 2);
   assert.equal(p.roundFlags.historian, true);
 });
-test("罗宾百花缭乱当前没有额外合法目标：单目标策略本已全场可选", () => {
+test("罗宾百花缭乱不改变单目标策略的原有合法目标", () => {
   const robin = create("robin"), ordinary = create("luffy");
   for (const g of [robin, ordinary]) {
     g.player("p0").hand = [card("focus", "relay-cost")];

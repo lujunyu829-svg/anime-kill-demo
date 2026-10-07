@@ -328,6 +328,13 @@ export function useOnePieceSignature(game, playerId, targetId, signature) {
 export function handleOnePieceEvent(game, event) {
   const source = getPlayer(game, event.sourceId), target = getPlayer(game, event.targetId);
   switch (event.type) {
+    case "cardDeclared":
+      if (source?.characterId === "robin" && event.card?.type === "strategy" && !event.card.responseOnly && event.targetIds?.length === 1 && target?.id !== source.id && target?.hand.length && !source.roundFlags.robinBloom) {
+        source.roundFlags.robinBloom = true;
+        const seen = target.hand[Math.floor(game.random() * target.hand.length)];
+        game.emitOnePieceEvent({ type: "hiddenCardViewed", sourceId: source.id, viewerId: source.id, ownerId: target.id, targetId: target.id, card: seen, reason: "robinBloom", round: game.round });
+      }
+      break;
     case "turnStart":
       if (source) resetLie(game, source);
       break;

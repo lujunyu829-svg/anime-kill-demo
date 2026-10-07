@@ -68,6 +68,21 @@ test("罗宾查看和同类别封存窗口恢复后不重复摸牌或封存", ()
   s.execute("completeTurnStart", "p1"); s = checkpoint(s);
   assert.equal(s.engine.player("p1").sealedCards.length, 0);
 });
+test("罗宾百花缭乱声明后的私有查看在 schema 2 重放后保持同一张牌", () => {
+  let s = create("robin");
+  s.execute("draw", "p0", 20);
+  const strategy = s.engine.player("p0").hand.find(card => card.type === "strategy" && !card.responseOnly && s.engine.getCardTargets("p0", card).includes("p1"));
+  assert.ok(strategy);
+  assert.ok(s.engine.player("p1").hand.length > 0);
+  s.execute("playCard", "p0", strategy.uid, "p1");
+  const before = s.engine.getVisibleCardPeeks("p0");
+  assert.equal(before.length, 1);
+  assert.deepEqual(s.engine.getVisibleCardPeeks("p1"), []);
+  const progress = s.engine.player("p0").dreamState.progress;
+  s = checkpoint(s);
+  assert.deepEqual(s.engine.getVisibleCardPeeks("p0"), before);
+  assert.equal(s.engine.player("p0").dreamState.progress, progress);
+});
 test("乔巴觉醒医术弃牌后净化窗口恢复只清一层毒", () => {
   let s = create("chopper");
   for (let round = 1; round <= 3; round++) {

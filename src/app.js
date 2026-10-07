@@ -557,7 +557,8 @@ function renderIntel(human) {
   const role = engine.roleOf(human), character = engine.characterOf(human), active = activeSkills[human.characterId];
   $("#identityCard").style.setProperty("--role-color", `var(--${role.color})`);
   $("#identityCard").innerHTML = `<small>你的身份 · ${human.revealed ? "已公开" : "未公开"}</small><h3>${role.name}</h3><p>${role.goal}</p>`;
-  $("#skillPanel").innerHTML = characterSkillEntries(character).map(skill => `<article class="skill-item ${skill.active ? "clickable" : ""}"><b>${skill.name}</b><span>${skill.kind} · ${skill.meta}</span><p>${skill.text}</p></article>`).join("");
+  const privatePeeks = engine.getVisibleCardPeeks(human.id).map(peek => `<article class="skill-item"><b>本轮百花缭乱</b><p>当时看到${engine.nameOf(peek.ownerId)}的【${peek.cardName}】</p></article>`).join("");
+  $("#skillPanel").innerHTML = privatePeeks + characterSkillEntries(character).map(skill => `<article class="skill-item ${skill.active ? "clickable" : ""}"><b>${skill.name}</b><span>${skill.kind} · ${skill.meta}</span><p>${skill.text}</p></article>`).join("");
   const canAct = engine.canAct(human.id);
   $("#activeSkillButton").disabled = !canAct || !engine.getActiveSkillTargets(human.id).length;
   $("#activeSkillButton").classList.toggle("armed", selectingActive);

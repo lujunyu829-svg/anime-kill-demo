@@ -375,6 +375,11 @@ export class GameEngine {
     return handleOnePieceEvent(this, event) || event;
   }
 
+  getVisibleCardPeeks(viewerId) {
+    return this.eventHistory.filter(event => event.type === "hiddenCardViewed" && event.reason === "robinBloom" && event.viewerId === viewerId && event.round === this.round)
+      .map(event => ({ ownerId: event.ownerId, cardName: event.card.name, round: event.round }));
+  }
+
   refreshEnergyCap(playerOrId) {
     const player = typeof playerOrId === "string" ? this.player(playerOrId) : playerOrId;
     if (!player) return;
