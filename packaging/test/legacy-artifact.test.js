@@ -11,6 +11,17 @@ import { SAVE_KEY, inspectSavedMatch } from "../runtime/persistence.js";
 
 const legacyScript = new URL("../legacy/v0.2.0/app.bundle.js", import.meta.url);
 const checksumFile = new URL("../legacy/v0.2.0/SHA256.txt", import.meta.url);
+const v021Script = new URL("../legacy/v0.2.1/app.bundle.js", import.meta.url);
+const v021Checksum = new URL("../legacy/v0.2.1/SHA256.txt", import.meta.url);
+
+test("冻结的 v0.2.1 封装脚本与登记的 SHA-256 一致", async () => {
+  const [bytes, registered] = await Promise.all([readFile(v021Script), readFile(v021Checksum, "utf8")]);
+  assert.match(registered.trim(), /^[a-f0-9]{64}$/);
+  assert.equal(createHash("sha256").update(bytes).digest("hex"), registered.trim());
+  const source = bytes.toString("utf8");
+  assert.match(source, /anime-kill\.saved-match\.v2/);
+  assert.match(source, /0\.2\.1/);
+});
 
 test("冻结的 v0.2.0 封装脚本与登记的 SHA-256 一致", async () => {
   const [bytes, registered] = await Promise.all([readFile(legacyScript), readFile(checksumFile, "utf8")]);
@@ -39,6 +50,19 @@ test("Windows Git 重新检出旧版脚本后 SHA-256 仍一致", async () => {
     execFileSync("git", ["-c", "core.autocrlf=true", "-c", "core.eol=crlf", "checkout-index", `--prefix=${temp}${path.sep}`, "--", "packaging/legacy/v0.2.0/app.bundle.js"], { cwd: root });
     const bytes = await readFile(path.join(temp, "packaging", "legacy", "v0.2.0", "app.bundle.js"));
     const registered = (await readFile(checksumFile, "utf8")).trim();
+    assert.equal(createHash("sha256").update(bytes).digest("hex"), registered);
+  } finally {
+    await rm(temp, { recursive: true, force: true });
+  }
+});
+
+test("Windows Git 重新检出 v0.2.1 脚本后 SHA-256 仍一致", async () => {
+  const root = fileURLToPath(new URL("../..", import.meta.url));
+  const temp = await mkdtemp(path.join(tmpdir(), "anime-kill-v021-checkout-"));
+  try {
+    execFileSync("git", ["-c", "core.autocrlf=true", "-c", "core.eol=crlf", "checkout-index", `--prefix=${temp}${path.sep}`, "--", "packaging/legacy/v0.2.1/app.bundle.js"], { cwd: root });
+    const bytes = await readFile(path.join(temp, "packaging", "legacy", "v0.2.1", "app.bundle.js"));
+    const registered = (await readFile(v021Checksum, "utf8")).trim();
     assert.equal(createHash("sha256").update(bytes).digest("hex"), registered);
   } finally {
     await rm(temp, { recursive: true, force: true });
