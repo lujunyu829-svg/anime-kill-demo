@@ -8,7 +8,7 @@ import { initializeOnePieceState, handleOnePieceEvent } from "../src/packs/one-p
 const fixedRandom = () => 0.314159;
 const create = (modeId = "ranked2v2", character = "naruto") => new GameEngine({ modeId, humanCharacterId: character, random: fixedRandom, fixedAnchorSeat: modeId === "ranked2v2" ? 0 : null }).setup();
 
-test("两种模式创建正确人数、身份与28名候选角色", () => {
+test("两种模式创建正确人数、身份与36名候选角色", () => {
   const classic = create("classic8");
   assert.equal(classic.players.length, 8);
   assert.deepEqual([...classic.players.map(p => p.roleId)].sort(), ["lord", "loyal", "loyal", "lone", "rebel", "rebel", "rebel", "rebel"].sort());
@@ -17,7 +17,7 @@ test("两种模式创建正确人数、身份与28名候选角色", () => {
   assert.equal(ranked.players.length, 4);
   assert.deepEqual(ranked.players.map(p => p.roleId), ["azure", "crimson", "azure", "crimson"]);
   assert.ok(ranked.players.every(p => p.revealed));
-  assert.equal(characters.length, 28);
+  assert.equal(characters.length, 36);
   assert.deepEqual(characters.filter(character => character.packId === "naruto_genesis").map(character => character.id).sort(), ["gaara", "hinata", "itachi", "jiraiya", "kakashi", "naruto", "orochimaru", "sakura", "sasuke", "shikamaru"]);
   assert.deepEqual(characterPacks[0].characterIds, ["naruto", "gaara", "sakura", "shikamaru", "itachi", "sasuke", "kakashi", "hinata", "jiraiya", "orochimaru"]);
   assert.deepEqual(characterPacks[1].characterIds, ["luffy", "zoro", "nami", "usopp", "sanji", "chopper", "robin", "franky", "brook", "jinbe"]);
@@ -395,8 +395,10 @@ test("当前行动者意外退场后自动推进到下一名角色", () => {
   assert.equal(game.player(game.currentPlayerId).alive, true);
 });
 
-test("28名角色均有项目内立绘", () => {
-  for (const character of characters) {
+test("原有28名角色仍有项目内立绘", () => {
+  const existing = characters.filter(character => character.packId !== "demon_slayer_sun_moon" || ["tanjiro", "shinobu"].includes(character.id));
+  assert.equal(existing.length, 28);
+  for (const character of existing) {
     const relative = portraitPath(character.id).replace(/^\.\//, "");
     assert.equal(existsSync(new URL(`../${relative}`, import.meta.url)), true, `${character.name}缺少立绘`);
   }

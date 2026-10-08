@@ -18,7 +18,8 @@ const modes = [
 
 const characterHandLimits = {
   shikamaru: 5, itachi: 5, hinata: 5, orochimaru: 5, chopper: 5, rukia: 5, armin: 5,
-  gaara: 3, sakura: 5, kakashi: 5, nami: 5, usopp: 5, robin: 5
+  gaara: 3, sakura: 5, kakashi: 5, nami: 5, usopp: 5, robin: 5,
+  zenitsu: 4, inosuke: 3, shinobu: 5, mitsuri: 5, nezuko: 3, muzan: 5
 };
 
 const characters = [
@@ -44,8 +45,16 @@ const characters = [
   { id: "jinbe", name: "甚平", series: "海贼王", packId: "one_piece_grand_line", pack: "伟大航路", role: "防御", hp: 4, glyph: "海", color: "#4f8fc5", dream: { name: "促成人鱼与人类共融", conditionText: "每轮首次给予他人护盾或以侠义减少他人伤害", awakenText: "海流护航以他人为目标时无需弃牌；以自己为目标仍需弃牌。" }, skills: [{ name: "侠义", text: "每轮一次，距离1内其他角色将受到伤害时，可弃1张基础牌令伤害-1。" }, { name: "鱼人空手道", text: "拥有护盾时，发动普通突击消耗1点护盾并忽略防具；介入或替身续接不会重复消耗。" }], signature: { name: "武赖贯", cost: 4, target: "enemy", text: "对距离2以内敌方造成2点伤害、需要2张防御；命中后自己获得1点护盾。", effect: "vagabondDrill" } },
   { id: "ichigo", name: "黑崎一护", series: "死神", role: "输出", hp: 4, glyph: "斩", color: "#e78b39", skills: [{ name: "斩月", text: "你的攻击距离+1。" }, { name: "战意", text: "每回合首次攻击被防御后摸1张牌。" }], signature: { name: "卍解", cost: 4, target: "self", text: "本回合攻击距离无限、攻击次数+1，并摸1张攻击牌。", effect: "bankai" } },
   { id: "rukia", name: "朽木露琪亚", series: "死神", role: "控制", hp: 3, glyph: "雪", color: "#9fb9e9", skills: [{ name: "初舞·月白", text: "攻击造成伤害后，目标下回合少摸1张牌。" }, { name: "袖白雪", text: "你使用单目标策略牌时无视距离。" }], signature: { name: "白霞罚", cost: 4, target: "enemy", text: "令目标下个出牌阶段无法使用攻击和策略牌。", effect: "freeze" } },
-  { id: "tanjiro", name: "灶门炭治郎", series: "鬼灭之刃", role: "输出", hp: 4, glyph: "炭", color: "#55aa8a", skills: [{ name: "嗅觉", text: "回合开始额外观看牌堆顶牌；若为基础牌则获得。" }, { name: "水之呼吸", text: "每回合首次攻击被防御后，可弃1张牌再摸1张。" }], signature: { name: "火之神神乐", cost: 4, target: "enemy", text: "发动一次伤害+1的攻击。", effect: "powerAttack" } },
-  { id: "shinobu", name: "胡蝶忍", series: "鬼灭之刃", role: "控制", hp: 3, glyph: "蝶", color: "#a678d3", skills: [{ name: "毒刃", text: "攻击造成伤害后附加毒；目标回合结束失去1点体力。" }, { name: "轻身", text: "没有防具时，其他角色计算与你的距离+1。" }], signature: { name: "蜈蚣之舞", cost: 4, target: "enemy", text: "无论是否被防御，目标都会获得剧毒。", effect: "venomStrike" } },
+  { id: "tanjiro", name: "灶门炭治郎", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "输出", hp: 4, glyph: "炭", color: "#55aa8a", skills: [{ name: "水之呼吸", text: "每轮首次普通突击被完全防御后，可弃另一张手牌，从弃牌堆取回本次突击；不返还突击次数。" }, { name: "呼吸衔接", text: "声明普通突击时可消耗呼吸态，选择伤害+1或额外需要1张防御。" }], signature: { name: "火之神神乐·圆舞", cost: 4, target: "enemy", text: "对距离2内目标发动2伤害、需要2张防御的强袭；可消耗呼吸态忽略防具。", effect: "hinokamiDance" } },
+  { id: "zenitsu", name: "我妻善逸", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "爆发", hp: 3, glyph: "雷", color: "#e8bd4d", skills: [{ name: "一之型", text: "普通突击可消耗呼吸态，无视距离且额外需要1张防御。" }, { name: "危机听觉", text: "体力不高于2时，每轮一次可将1张非响应手牌当作防御打出。" }], signature: { name: "霹雳一闪·六连", cost: 3, target: "enemy", text: "对任意其他角色发动2伤害、需要2张防御的强袭；消耗呼吸态可额外要求1张防御且不可介入。", effect: "thunderSixfold" } },
+  { id: "inosuke", name: "嘴平伊之助", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "爆发", hp: 4, glyph: "兽", color: "#6e9fc1", skills: [{ name: "兽之触觉", text: "普通突击攻击距离+1。" }, { name: "狂乱反扑", text: "每轮首次实际受他人伤害后标记来源；下次对其普通突击额外需要1张防御。" }], signature: { name: "兽之呼吸·乱裂", cost: 4, target: "enemy", text: "对距离2内目标依次发动两次各1伤害、需要1张防御的攻击；可消耗呼吸态令第二次额外需要1张防御。", effect: "beastRend" } },
+  { id: "shinobu", name: "胡蝶忍", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "控制", hp: 3, glyph: "蝶", color: "#a678d3", skills: [{ name: "毒刃", text: "每回合首次普通突击实际造成体力伤害后，给最终目标施加1层毒。" }, { name: "轻身", text: "没有防具时，其他角色计算与你的距离+1。" }], signature: { name: "蜈蚣之舞", cost: 3, target: "enemy", text: "对距离2内目标发动1伤害、需要2张防御的攻击；无论命中或防住，结算后施加1层毒，消耗呼吸态改为2层。", effect: "centipedeDance" } },
+  { id: "giyu", name: "富冈义勇", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "防御", hp: 4, glyph: "水", color: "#5f8db1", skills: [{ name: "静心", text: "每轮首次实际打出足额防御牌完全防住普通突击后，额外获得1能量。" }, { name: "水面斩", text: "普通突击可消耗呼吸态，距离+1且忽略防具。" }], signature: { name: "拾壹之型·凪", cost: 3, target: "ally", text: "取消目标下次成为目标的普通突击；消耗呼吸态可改为取消普通突击或一次策略伤害。", effect: "deadCalm" } },
+  { id: "rengoku", name: "炼狱杏寿郎", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "防御/爆发", hp: 4, glyph: "炎", color: "#e5874c", skills: [{ name: "燃心", text: "每轮首次成功承接炎柱守护的攻击并在结算后存活，获得1能量。" }, { name: "炎之呼吸", text: "普通突击可消耗呼吸态令伤害+1。" }], signature: { name: "玖之型·炼狱", cost: 4, target: "enemy", text: "对距离2内目标发动2伤害、需要2张防御的强袭；消耗呼吸态伤害+1，结算后自己失去1体力。", effect: "flamePillar" } },
+  { id: "mitsuri", name: "甘露寺蜜璃", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "协同", hp: 4, glyph: "恋", color: "#dc8eae", skills: [{ name: "恋之柔剑", text: "普通突击攻击距离+1。" }, { name: "心意相通", text: "每轮首次受赠基础牌实际造成体力伤害或完全防住普通突击时，获得呼吸态。" }], signature: { name: "恋之呼吸·摇曳花影", cost: 3, target: "enemy", text: "邀请协作者对共同合法目标打出突击，随后自己发动1伤害攻击；消耗呼吸态额外需要1张防御。单人残局仍可发动后半段。", effect: "loveBloom" } },
+  { id: "nezuko", name: "灶门祢豆子", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "辅助", hp: 4, glyph: "血", color: "#d989a4", skills: [{ name: "爆血印", text: "护人本能令普通突击完全被防住，或每轮首次实际受伤时，获得1枚爆血印。" }, { name: "再生", text: "自己回合开始且已受伤时，可消耗爆血印回复1体力。" }], signature: { name: "血鬼术·爆血", cost: 3, target: "enemy", text: "对距离2内目标造成1策略伤害并施毒；可消耗爆血印为自己或距离2内角色净化一项异常并授予1护盾。", effect: "explodingBlood" } },
+  { id: "akaza", name: "猗窝座", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "爆发", hp: 4, glyph: "罗", color: "#ac7ac1", skills: [{ name: "斗气感应", text: "每回合首次对罗针目标普通突击额外需要1张防御。" }, { name: "鬼躯再生", text: "每轮首次实际受到罗针目标伤害并存活后，获得1护盾。" }], signature: { name: "破坏杀·灭式", cost: 4, target: "enemy", text: "仅对罗针目标发动2伤害、需要2张防御的强袭；若罗针设立后曾完全防住其普通突击，伤害+1。", effect: "annihilationStyle" } },
+  { id: "muzan", name: "鬼舞辻无惨", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "控制", hp: 4, glyph: "鬼", color: "#9b4d66", skills: [{ name: "血肉再生", text: "每轮首次实际受伤并存活后，获得1护盾。" }, { name: "鬼王威压", text: "对自己的血印目标使用普通突击时无视距离。" }], signature: { name: "肉鞭乱舞", cost: 4, target: "enemy", text: "最多选择两名距离2内目标，依座次各需防御否则受到1策略伤害；血印目标额外需要1张防御。", effect: "fleshWhips" } },
   { id: "gojo", name: "五条悟", series: "咒术回战", role: "防御", hp: 3, glyph: "∞", color: "#75bff2", skills: [{ name: "无下限", text: "每轮首次成为攻击目标时，攻击者须额外弃1张牌，否则攻击无效。" }], signature: { name: "虚式·茈", cost: 4, target: "enemy", text: "目标弃2张牌，否则受到1点伤害并失去装备。", effect: "hollowPurple" } },
   { id: "yuji", name: "虎杖悠仁", series: "咒术回战", role: "资源", hp: 4, glyph: "拳", color: "#e66b7c", skills: [{ name: "径庭拳", text: "每回合首次攻击命中后，目标弃1张牌。" }, { name: "不屈容器", text: "每轮首次体力降至2或以下时摸2张牌。" }], signature: { name: "黑闪", cost: 3, target: "enemy", text: "发动一次攻击；命中时伤害+1，被防御则返还2点能量。", effect: "blackFlash" } },
   { id: "mikasa", name: "三笠·阿克曼", series: "进击的巨人", role: "爆发", hp: 3, glyph: "翼", color: "#b8bac8", skills: [{ name: "阿克曼本能", text: "每轮首次需要防御时，可弃1张牌代替。" }, { name: "立体机动", text: "装备武器时攻击距离+1。" }], signature: { name: "雷枪", cost: 4, target: "enemy", text: "目标弃置所有装备，否则受到2点伤害。", effect: "thunderSpear" } },
@@ -54,7 +63,8 @@ const characters = [
 
 const characterPacks = [
   { id: "naruto_genesis", name: "忍界初阵", series: "火影忍者", description: "围绕特殊牌区、真假伏笔、装备换位、侦察锁定与行动时序展开的首个作品扩展包。", characterIds: ["naruto", "gaara", "sakura", "shikamaru", "itachi", "sasuke", "kakashi", "hinata", "jiraiya", "orochimaru"] },
-  { id: "one_piece_grand_line", name: "伟大航路", series: "海贼王", description: "以梦想航迹、伙伴协作、谎言与装备改造为核心的第二个作品扩展包。", characterIds: ["luffy", "zoro", "nami", "usopp", "sanji", "chopper", "robin", "franky", "brook", "jinbe"] }
+  { id: "one_piece_grand_line", name: "伟大航路", series: "海贼王", description: "以梦想航迹、伙伴协作、谎言与装备改造为核心的第二个作品扩展包。", characterIds: ["luffy", "zoro", "nami", "usopp", "sanji", "chopper", "robin", "franky", "brook", "jinbe"] },
+  { id: "demon_slayer_sun_moon", name: "日轮与血月", series: "鬼灭之刃", description: "七名剑士以呼吸态衔接攻防，三名鬼以各自的血鬼术状态博弈。", characterIds: ["tanjiro", "zenitsu", "inosuke", "shinobu", "giyu", "rengoku", "mitsuri", "nezuko", "akaza", "muzan"] }
 ];
 
 const activeSkills = {
@@ -80,8 +90,16 @@ const activeSkills = {
   jinbe: { name: "海流护航", target: "other", costText: "弃1张牌", effect: "oceanGuard", text: "弃1张牌，令任意存活角色获得1点护盾。" },
   ichigo: { name: "月牙天冲", target: "enemy", cost: 1, costText: "1能量", effect: "getsuga", text: "对距离2以内一名敌方发动一次虚拟攻击。" },
   rukia: { name: "初舞·月白", target: "enemy", cost: 1, costText: "1能量", effect: "firstDance", text: "令一名敌方下回合少摸1张牌。" },
-  tanjiro: { name: "全集中呼吸", target: "self", costText: "弃1张牌", effect: "totalConcentration", text: "弃1张牌并摸2张，本回合攻击距离+1。" },
-  shinobu: { name: "毒刃涂布", target: "self", cost: 1, costText: "1能量", effect: "poisonCoat", text: "本回合下一次攻击无论是否命中，都附加1层毒。" },
+  tanjiro: { name: "嗅觉追迹", target: "enemy", cost: 1, costText: "1能量 · 距离2内", effect: "scentPursuit", text: "私下查看目标1张随机手牌，并公开放置破绽；下一次对其普通突击额外需要1张防御。" },
+  zenitsu: { name: "蓄雷", target: "self", costText: "弃1手牌 · 结束出牌阶段", effect: "chargeThunder", text: "本回合未使用普通突击时，弃1张手牌并结束出牌阶段，获得呼吸态和1护盾。" },
+  inosuke: { name: "猪突猛进", target: "enemy", cost: 1, costText: "1能量 · 距离1内", effect: "boarRush", text: "对距离1内目标发动不计次数的虚拟攻击，造成1伤害、需要1张防御。" },
+  shinobu: { name: "藤花调剂", target: "other", cost: 1, costText: "1能量 · 距离2内", effect: "wisteriaMix", text: "移除目标1层毒，选择使其获得1护盾，或令其立即失去1体力。" },
+  giyu: { name: "静水护形", target: "ally", cost: 1, costText: "1能量 · 距离1内", effect: "stillWaterGuard", text: "目标下一次未完全防住的普通突击伤害-1，持续到你的下回合开始。" },
+  rengoku: { name: "炎柱守护", target: "ally", cost: 1, costText: "1能量 · 距离1内", effect: "flameGuard", text: "目标首次成为别人单目标普通突击目标时，可将最终目标改为你。" },
+  mitsuri: { name: "柔韧连携", target: "ally", cost: 1, costText: "1能量 · 距离2内 · 交1基础牌", effect: "flexibleBond", text: "交出1基础牌；受赠者使用为突击时距离+1，使用为防御时获得1护盾。" },
+  nezuko: { name: "护人本能", target: "ally", cost: 1, costText: "1能量 · 距离1内", effect: "protectiveInstinct", text: "目标首次响应普通突击时，可弃1张基础手牌为其提供1张防御。" },
+  akaza: { name: "术式展开·罗针", target: "enemy", cost: 1, costText: "1能量 · 距离2内", effect: "compassNeedle", text: "公开标记目标；双方互相发动攻击时距离视为1，直至你的下回合开始。" },
+  muzan: { name: "血液烙印", target: "enemy", cost: 1, costText: "1能量 · 距离2内", effect: "bloodBrand", text: "目标可弃1手牌拒绝，否则接受血印；其下一张实际结算的非响应牌后获得1层毒。" },
   gojo: { name: "六眼", target: "self", costText: "无消耗", effect: "sixEyes", text: "摸2张牌，然后弃1张牌。每回合限一次。" },
   yuji: { name: "径庭拳", target: "self", cost: 1, costText: "1能量", effect: "divergentPrep", text: "本回合下一次攻击命中时伤害+1。" },
   mikasa: { name: "立体机动", target: "self", costText: "弃1张牌", effect: "odmGear", text: "弃1张牌，本回合攻击次数与攻击距离各+1。" },
@@ -631,6 +649,75 @@ function handleOnePieceEvent(game, event) {
 // engine.js imports this export under an alias; keep the same name in the concatenated bundle.
 const onePieceSignatureCost = signatureCost;
 
+const DEMON_PACK = "demon_slayer_sun_moon";
+const SLAYER_IDS = new Set(["tanjiro", "zenitsu", "inosuke", "shinobu", "giyu", "rengoku", "mitsuri"]);
+const DEMON_IDS = new Set([...SLAYER_IDS, "nezuko", "akaza", "muzan"]);
+
+function isDemonSlayerCharacter(value) {
+  const id = typeof value === "string" ? value : value?.characterId || value?.id;
+  return DEMON_IDS.has(id);
+}
+
+function initializeDemonSlayerState(player, character) {
+  if (character?.packId !== DEMON_PACK) return player;
+  if (SLAYER_IDS.has(character.id)) {
+    player.breathReady = 0;
+    player.breathSetTurn = 0;
+  }
+  if (character.id === "nezuko") {
+    player.bloodFlame = 0;
+    player.bloodFlameSetTurn = 0;
+  }
+  if (character.id === "akaza") {
+    player.compassTargetId = null;
+    player.compassDefended = false;
+  }
+  if (character.id === "muzan") player.bloodMarkTargetId = null;
+  return player;
+}
+
+function gainBreathReady(game, playerId) {
+  const player = game.player(playerId);
+  if (!player?.alive || !SLAYER_IDS.has(player.characterId) || player.roundFlags.breathGained) return false;
+  player.roundFlags.breathGained = true;
+  if (player.breathReady) return false;
+  player.breathReady = 1;
+  player.breathSetTurn = game.turnNumber;
+  game.log("event", `${game.nameOf(player)}进入呼吸态`);
+  return true;
+}
+
+function consumeBreathReady(game, playerId) {
+  const player = game.player(playerId);
+  if (!player?.alive || !player.breathReady) return false;
+  player.breathReady = 0;
+  player.breathSetTurn = 0;
+  return true;
+}
+
+function getDemonSlayerActiveTargets() { return []; }
+function useDemonSlayerActive() { return { ok: false, reason: "技能尚未开放" }; }
+function getDemonSlayerSignatureTargets() { return []; }
+function useDemonSlayerSignature() { return { ok: false, reason: "技能尚未开放" }; }
+
+function handleDemonSlayerEvent(game, event) {
+  if (event.type === "damageApplied" && event.ordinaryAttack && event.actualHpLoss > 0) gainBreathReady(game, event.sourceId);
+  if (event.type === "attackFullyDefended" && event.ordinaryAttack && event.paidGuards >= event.requiredGuards && event.requiredGuards > 0) gainBreathReady(game, event.targetId);
+  if (event.type === "turnEnd") {
+    const player = game.player(event.playerId || event.sourceId);
+    if (player?.breathReady && player.breathSetTurn < game.turnNumber) consumeBreathReady(game, player.id);
+  }
+  if (event.type === "playerEliminated") {
+    const player = game.player(event.playerId || event.targetId);
+    if (!player) return;
+    if (SLAYER_IDS.has(player.characterId)) { player.breathReady = 0; player.breathSetTurn = 0; }
+    if (player.characterId === "nezuko") { player.bloodFlame = 0; player.bloodFlameSetTurn = 0; }
+    if (player.characterId === "akaza") { player.compassTargetId = null; player.compassDefended = false; }
+    if (player.characterId === "muzan") player.bloodMarkTargetId = null;
+  }
+}
+
+
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
@@ -735,6 +822,7 @@ class GameEngine {
     });
 
     for (const player of this.players) initializeOnePieceState(player, this.characterOf(player));
+    for (const player of this.players) initializeDemonSlayerState(player, this.characterOf(player));
     for (const player of this.players) this.draw(player.id, player.baseHandLimit + player.handLimitModifier, false);
     const lord = this.players.find(player => player.roleId === "lord");
     this.anchorSeat = this.mode.id === "ranked2v2"
@@ -840,7 +928,7 @@ class GameEngine {
       shadowNeckTarget: carry.shadowNeckTarget || null
     };
     player.nextAttackState = { bonus: false, ignoreArmor: false, requiredGuards: 0, shadowNeckTarget: null };
-    this.emitOnePieceEvent({ type: "turnStart", sourceId: playerId });
+    this.emitOnePieceEvent({ type: "turnStart", sourceId: playerId, playerId });
     player.attacksUsed = 0;
     player.attackLimit = 1 + (player.equipment.weapon?.id === "repeater" ? 1 : 0);
     player.rangeInfinite = false;
@@ -924,7 +1012,7 @@ class GameEngine {
         target.sandMarkSetTurn = 0;
       }
     }
-    this.emitOnePieceEvent({ type: "turnEnd", sourceId: playerId });
+    this.emitOnePieceEvent({ type: "turnEnd", sourceId: playerId, playerId });
     this.phase = "between";
     this.startNextTurn();
     return true;
@@ -1003,7 +1091,9 @@ class GameEngine {
       this.eventHistory.push({ ...event });
       if (Object.prototype.hasOwnProperty.call(this.telemetry, event.type)) this.telemetry[event.type] += 1;
     }
-    return handleOnePieceEvent(this, event) || event;
+    const result = handleOnePieceEvent(this, event) || event;
+    handleDemonSlayerEvent(this, event);
+    return result;
   }
 
   getVisibleCardPeeks(viewerId) {
@@ -1287,6 +1377,7 @@ class GameEngine {
     const player = this.player(playerId), signature = this.characterOf(player)?.signature;
     if (!player?.alive || !signature) return [];
     if (isOnePieceCharacter(player)) return getOnePieceSignatureTargets(this, playerId, signature);
+    if (isDemonSlayerCharacter(player)) return getDemonSlayerSignatureTargets(this, playerId, signature);
     if (signature.effect === "colossal" && player.hp <= 1) return [];
     if (signature.effect === "checkmate") {
       const targetId = player.chessTargetId;
@@ -1315,6 +1406,7 @@ class GameEngine {
     const player = this.player(playerId), skill = activeSkills[player?.characterId];
     if (!player?.alive || !skill || player.turnFlags.activeUsed) return [];
     if (isOnePieceCharacter(player)) return getOnePieceActiveTargets(this, playerId, skill);
+    if (isDemonSlayerCharacter(player)) return getDemonSlayerActiveTargets(this, playerId, skill);
     if (skill.cost && player.energy < skill.cost) return [];
     if (["totalConcentration", "odmGear", "tacticalGift"].includes(skill.effect) && !player.hand.length) return [];
     if (skill.effect === "shadowClone" && (this.getSpecialCards(playerId, "clone").length || !player.hand.some(card => card.type === "basic" && !card.responseOnly))) return [];
@@ -1357,6 +1449,7 @@ class GameEngine {
     if (!this.getActiveSkillTargets(playerId).includes(targetId)) return { ok: false, reason: "消耗不足或目标不合法" };
     this.telemetry.activeSkillUses += 1;
     if (isOnePieceCharacter(player)) return useOnePieceActive(this, playerId, targetId, skill);
+    if (isDemonSlayerCharacter(player)) return useDemonSlayerActive(this, playerId, targetId, skill);
     if (skill.cost) player.energy -= skill.cost;
     player.turnFlags.activeUsed = true;
     this.log("signature", `${this.nameOf(player)}发动主动技「${skill.name}」`);
@@ -2525,8 +2618,9 @@ class GameEngine {
         this.pendingResponse = { type: "guard", sourceId, targetId, damage, required: requiredGuards, origin, alwaysPoison, onComplete };
         return { ok: true, pending: true };
       }
-      this.spendGuards(targetId, requiredGuards);
+      const paidGuards = this.spendGuards(targetId, requiredGuards);
       this.log("event", `${this.nameOf(target)}打出${requiredGuards}张【防御】`);
+      this.emitOnePieceEvent({ type: "attackFullyDefended", sourceId, targetId, origin, cardUid: this.activeCardContext?.card?.uid || null, ordinaryAttack: origin === "attack" && this.activeCardContext?.sourceId === sourceId && this.activeCardContext?.card?.id === "attack", requiredGuards, paidGuards });
       return this.afterDefended(sourceId, targetId, origin, alwaysPoison, onComplete);
     }
     this.resolveAttackHit(sourceId, targetId, damage, origin, alwaysPoison, onComplete);
@@ -2587,12 +2681,12 @@ class GameEngine {
 
   spendGuards(playerId, count) {
     const player = this.player(playerId);
-    let left = count;
+    let left = count, paidGuards = 0;
     while (left > 0) {
       const guard = player.hand.find(card => card.id === "guard");
-      if (guard) { this.removeCard(playerId, guard.uid); left -= 1; continue; }
+      if (guard) { this.removeCard(playerId, guard.uid); left -= 1; paidGuards += 1; continue; }
       const adapt = player.hand.find(card => card.id === "adapt");
-      if (adapt) { this.removeCard(playerId, adapt.uid); left -= 1; continue; }
+      if (adapt) { this.removeCard(playerId, adapt.uid); left -= 1; paidGuards += 1; continue; }
       if (player.equipment.armor?.id === "adaptive_armor" && !player.roundFlags.adaptiveGuard) {
         const substitute = player.hand.find(card => card.type === "basic" && !["guard", "adapt"].includes(card.id));
         if (substitute) { this.removeCard(playerId, substitute.uid); player.roundFlags.adaptiveGuard = true; left -= 1; continue; }
@@ -2622,6 +2716,7 @@ class GameEngine {
       }
       break;
     }
+    return paidGuards;
   }
 
   respond(useCard) {
@@ -2630,8 +2725,9 @@ class GameEngine {
     this.pendingResponse = null;
     if (response.type === "guard") {
       if (useCard && this.guardResources(response.targetId) >= response.required) {
-        this.spendGuards(response.targetId, response.required);
+        const paidGuards = this.spendGuards(response.targetId, response.required);
         this.log("event", `${this.nameOf(response.targetId)}成功防御`);
+        this.emitOnePieceEvent({ type: "attackFullyDefended", sourceId: response.sourceId, targetId: response.targetId, origin: response.origin, cardUid: this.activeCardContext?.card?.uid || null, ordinaryAttack: response.origin === "attack" && this.activeCardContext?.sourceId === response.sourceId && this.activeCardContext?.card?.id === "attack", requiredGuards: response.required, paidGuards });
         this.afterDefended(response.sourceId, response.targetId, response.origin, response.alwaysPoison, response.onComplete);
       } else this.resolveAttackHit(response.sourceId, response.targetId, response.damage, response.origin, response.alwaysPoison, response.onComplete);
     } else if (response.type === "counter") {
@@ -2808,6 +2904,7 @@ class GameEngine {
     this.addSageMark(targetId, "taken");
     this.log("damage", `${this.nameOf(sourceId)}对${this.nameOf(target)}造成${amount}点伤害`);
     this.emitOnePieceEvent({ type: "afterDamage", sourceId, targetId, amount, origin, zoroEnhanced: Boolean(source?.turnFlags.zoroDreamAttack) });
+    this.emitOnePieceEvent({ type: "damageApplied", sourceId, targetId, origin, actualHpLoss: amount, cardUid: this.activeCardContext?.card?.uid || null, ordinaryAttack: origin === "attack" && this.activeCardContext?.sourceId === sourceId && this.activeCardContext?.card?.id === "attack" });
     if (source?.characterId === "zoro") source.turnFlags.zoroDreamAttack = false;
     const causalPlots = source ? this.plotsTargeting(sourceId, "causalMark") : [];
     for (const causal of causalPlots) { this.removePlot(causal); this.draw(causal.ownerId, 2); this.gainEnergy(causal.ownerId, 1); }
@@ -2919,6 +3016,7 @@ class GameEngine {
     target.alive = false;
     target.hp = 0;
     target.revealed = true;
+    this.emitOnePieceEvent({ type: "playerEliminated", sourceId, targetId, playerId: targetId });
     for (const plot of [...target.plots]) this.removePlot(plot);
     for (const owner of this.players) for (const plot of [...owner.plots]) if (plot.targetId === targetId) this.removePlot(plot);
     for (const card of target.hand.splice(0)) this.discard.push(card);
@@ -3001,6 +3099,7 @@ class GameEngine {
     this.telemetry.signatureUses += 1;
     this.log("signature", `${this.nameOf(player)}释放招牌技「${sig.name}」！`);
     if (isOnePieceCharacter(player)) return useOnePieceSignature(this, playerId, targetId, sig);
+    if (isDemonSlayerCharacter(player)) return useDemonSlayerSignature(this, playerId, targetId, sig);
     switch (sig.effect) {
       case "doubleGuard": return this.beginAttack({ sourceId: playerId, targetId, damage: 2, requiredGuards: 2, origin: "signature" });
       case "rasenshuriken": {

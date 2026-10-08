@@ -1,5 +1,6 @@
 import { activeSkills, cardDefinitions, characters, deckProfiles, getCharacter, getMode, roles } from "./data.js";
 import { handleOnePieceEvent, initializeOnePieceState, isOnePieceCharacter, getOnePieceActiveTargets, useOnePieceActive, getOnePieceSignatureTargets, useOnePieceSignature, signatureCost as onePieceSignatureCost } from "./packs/one-piece.js";
+import { handleDemonSlayerEvent, initializeDemonSlayerState, isDemonSlayerCharacter, getDemonSlayerActiveTargets, useDemonSlayerActive, getDemonSlayerSignatureTargets, useDemonSlayerSignature } from "./packs/demon-slayer.js";
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
@@ -104,6 +105,7 @@ export class GameEngine {
     });
 
     for (const player of this.players) initializeOnePieceState(player, this.characterOf(player));
+    for (const player of this.players) initializeDemonSlayerState(player, this.characterOf(player));
     for (const player of this.players) this.draw(player.id, player.baseHandLimit + player.handLimitModifier, false);
     const lord = this.players.find(player => player.roleId === "lord");
     this.anchorSeat = this.mode.id === "ranked2v2"
@@ -209,7 +211,7 @@ export class GameEngine {
       shadowNeckTarget: carry.shadowNeckTarget || null
     };
     player.nextAttackState = { bonus: false, ignoreArmor: false, requiredGuards: 0, shadowNeckTarget: null };
-    this.emitOnePieceEvent({ type: "turnStart", sourceId: playerId });
+    this.emitOnePieceEvent({ type: "turnStart", sourceId: playerId, playerId });
     player.attacksUsed = 0;
     player.attackLimit = 1 + (player.equipment.weapon?.id === "repeater" ? 1 : 0);
     player.rangeInfinite = false;
@@ -293,7 +295,7 @@ export class GameEngine {
         target.sandMarkSetTurn = 0;
       }
     }
-    this.emitOnePieceEvent({ type: "turnEnd", sourceId: playerId });
+    this.emitOnePieceEvent({ type: "turnEnd", sourceId: playerId, playerId });
     this.phase = "between";
     this.startNextTurn();
     return true;
@@ -372,7 +374,9 @@ export class GameEngine {
       this.eventHistory.push({ ...event });
       if (Object.prototype.hasOwnProperty.call(this.telemetry, event.type)) this.telemetry[event.type] += 1;
     }
-    return handleOnePieceEvent(this, event) || event;
+    const result = handleOnePieceEvent(this, event) || event;
+    handleDemonSlayerEvent(this, event);
+    return result;
   }
 
   getVisibleCardPeeks(viewerId) {
@@ -656,6 +660,7 @@ export class GameEngine {
     const player = this.player(playerId), signature = this.characterOf(player)?.signature;
     if (!player?.alive || !signature) return [];
     if (isOnePieceCharacter(player)) return getOnePieceSignatureTargets(this, playerId, signature);
+    if (isDemonSlayerCharacter(player)) return getDemonSlayerSignatureTargets(this, playerId, signature);
     if (signature.effect === "colossal" && player.hp <= 1) return [];
     if (signature.effect === "checkmate") {
       const targetId = player.chessTargetId;
@@ -684,6 +689,7 @@ export class GameEngine {
     const player = this.player(playerId), skill = activeSkills[player?.characterId];
     if (!player?.alive || !skill || player.turnFlags.activeUsed) return [];
     if (isOnePieceCharacter(player)) return getOnePieceActiveTargets(this, playerId, skill);
+    if (isDemonSlayerCharacter(player)) return getDemonSlayerActiveTargets(this, playerId, skill);
     if (skill.cost && player.energy < skill.cost) return [];
     if (["totalConcentration", "odmGear", "tacticalGift"].includes(skill.effect) && !player.hand.length) return [];
     if (skill.effect === "shadowClone" && (this.getSpecialCards(playerId, "clone").length || !player.hand.some(card => card.type === "basic" && !card.responseOnly))) return [];
@@ -726,6 +732,7 @@ export class GameEngine {
     if (!this.getActiveSkillTargets(playerId).includes(targetId)) return { ok: false, reason: "消耗不足或目标不合法" };
     this.telemetry.activeSkillUses += 1;
     if (isOnePieceCharacter(player)) return useOnePieceActive(this, playerId, targetId, skill);
+    if (isDemonSlayerCharacter(player)) return useDemonSlayerActive(this, playerId, targetId, skill);
     if (skill.cost) player.energy -= skill.cost;
     player.turnFlags.activeUsed = true;
     this.log("signature", `${this.nameOf(player)}发动主动技「${skill.name}」`);
@@ -1894,8 +1901,9 @@ export class GameEngine {
         this.pendingResponse = { type: "guard", sourceId, targetId, damage, required: requiredGuards, origin, alwaysPoison, onComplete };
         return { ok: true, pending: true };
       }
-      this.spendGuards(targetId, requiredGuards);
+      const paidGuards = this.spendGuards(targetId, requiredGuards);
       this.log("event", `${this.nameOf(target)}打出${requiredGuards}张【防御】`);
+      this.emitOnePieceEvent({ type: "attackFullyDefended", sourceId, targetId, origin, cardUid: this.activeCardContext?.card?.uid || null, ordinaryAttack: origin === "attack" && this.activeCardContext?.sourceId === sourceId && this.activeCardContext?.card?.id === "attack", requiredGuards, paidGuards });
       return this.afterDefended(sourceId, targetId, origin, alwaysPoison, onComplete);
     }
     this.resolveAttackHit(sourceId, targetId, damage, origin, alwaysPoison, onComplete);
@@ -1956,12 +1964,12 @@ export class GameEngine {
 
   spendGuards(playerId, count) {
     const player = this.player(playerId);
-    let left = count;
+    let left = count, paidGuards = 0;
     while (left > 0) {
       const guard = player.hand.find(card => card.id === "guard");
-      if (guard) { this.removeCard(playerId, guard.uid); left -= 1; continue; }
+      if (guard) { this.removeCard(playerId, guard.uid); left -= 1; paidGuards += 1; continue; }
       const adapt = player.hand.find(card => card.id === "adapt");
-      if (adapt) { this.removeCard(playerId, adapt.uid); left -= 1; continue; }
+      if (adapt) { this.removeCard(playerId, adapt.uid); left -= 1; paidGuards += 1; continue; }
       if (player.equipment.armor?.id === "adaptive_armor" && !player.roundFlags.adaptiveGuard) {
         const substitute = player.hand.find(card => card.type === "basic" && !["guard", "adapt"].includes(card.id));
         if (substitute) { this.removeCard(playerId, substitute.uid); player.roundFlags.adaptiveGuard = true; left -= 1; continue; }
@@ -1991,6 +1999,7 @@ export class GameEngine {
       }
       break;
     }
+    return paidGuards;
   }
 
   respond(useCard) {
@@ -1999,8 +2008,9 @@ export class GameEngine {
     this.pendingResponse = null;
     if (response.type === "guard") {
       if (useCard && this.guardResources(response.targetId) >= response.required) {
-        this.spendGuards(response.targetId, response.required);
+        const paidGuards = this.spendGuards(response.targetId, response.required);
         this.log("event", `${this.nameOf(response.targetId)}成功防御`);
+        this.emitOnePieceEvent({ type: "attackFullyDefended", sourceId: response.sourceId, targetId: response.targetId, origin: response.origin, cardUid: this.activeCardContext?.card?.uid || null, ordinaryAttack: response.origin === "attack" && this.activeCardContext?.sourceId === response.sourceId && this.activeCardContext?.card?.id === "attack", requiredGuards: response.required, paidGuards });
         this.afterDefended(response.sourceId, response.targetId, response.origin, response.alwaysPoison, response.onComplete);
       } else this.resolveAttackHit(response.sourceId, response.targetId, response.damage, response.origin, response.alwaysPoison, response.onComplete);
     } else if (response.type === "counter") {
@@ -2177,6 +2187,7 @@ export class GameEngine {
     this.addSageMark(targetId, "taken");
     this.log("damage", `${this.nameOf(sourceId)}对${this.nameOf(target)}造成${amount}点伤害`);
     this.emitOnePieceEvent({ type: "afterDamage", sourceId, targetId, amount, origin, zoroEnhanced: Boolean(source?.turnFlags.zoroDreamAttack) });
+    this.emitOnePieceEvent({ type: "damageApplied", sourceId, targetId, origin, actualHpLoss: amount, cardUid: this.activeCardContext?.card?.uid || null, ordinaryAttack: origin === "attack" && this.activeCardContext?.sourceId === sourceId && this.activeCardContext?.card?.id === "attack" });
     if (source?.characterId === "zoro") source.turnFlags.zoroDreamAttack = false;
     const causalPlots = source ? this.plotsTargeting(sourceId, "causalMark") : [];
     for (const causal of causalPlots) { this.removePlot(causal); this.draw(causal.ownerId, 2); this.gainEnergy(causal.ownerId, 1); }
@@ -2288,6 +2299,7 @@ export class GameEngine {
     target.alive = false;
     target.hp = 0;
     target.revealed = true;
+    this.emitOnePieceEvent({ type: "playerEliminated", sourceId, targetId, playerId: targetId });
     for (const plot of [...target.plots]) this.removePlot(plot);
     for (const owner of this.players) for (const plot of [...owner.plots]) if (plot.targetId === targetId) this.removePlot(plot);
     for (const card of target.hand.splice(0)) this.discard.push(card);
@@ -2370,6 +2382,7 @@ export class GameEngine {
     this.telemetry.signatureUses += 1;
     this.log("signature", `${this.nameOf(player)}释放招牌技「${sig.name}」！`);
     if (isOnePieceCharacter(player)) return useOnePieceSignature(this, playerId, targetId, sig);
+    if (isDemonSlayerCharacter(player)) return useDemonSlayerSignature(this, playerId, targetId, sig);
     switch (sig.effect) {
       case "doubleGuard": return this.beginAttack({ sourceId: playerId, targetId, damage: 2, requiredGuards: 2, origin: "signature" });
       case "rasenshuriken": {

@@ -9,9 +9,10 @@ const outputDir = path.join(root, "dist");
 const stripImports = source => source.replace(/^import .*?;\r?\n/gm, "");
 const stripExports = source => source.replace(/^export\s+/gm, "");
 
-const [dataSource, onePieceSource, engineSource, appSource] = await Promise.all([
+const [dataSource, onePieceSource, demonSlayerSource, engineSource, appSource] = await Promise.all([
   readFile(path.join(sourceDir, "data.js"), "utf8"),
   readFile(path.join(sourceDir, "packs", "one-piece.js"), "utf8"),
+  readFile(path.join(sourceDir, "packs", "demon-slayer.js"), "utf8"),
   readFile(path.join(sourceDir, "engine.js"), "utf8"),
   readFile(path.join(sourceDir, "app.js"), "utf8")
 ]);
@@ -26,6 +27,8 @@ ${stripExports(stripImports(onePieceSource))}
 
 // engine.js imports this export under an alias; keep the same name in the concatenated bundle.
 const onePieceSignatureCost = signatureCost;
+
+${stripExports(stripImports(demonSlayerSource))}
 
 ${stripExports(stripImports(engineSource))}
 

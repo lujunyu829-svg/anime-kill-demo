@@ -26,6 +26,14 @@ test("固定种子纯包模拟保留逐局阵容和角色独立指标", () => {
   assert.deepEqual(first.residual, {});
 });
 
+test("鬼灭纯包固定种子模拟只使用鬼灭角色", () => {
+  const options = { seed: 3030, pool: "demon_slayer_sun_moon", characterId: "tanjiro", anchor: 0 };
+  const first = runMatch(options), second = runMatch(options);
+  assert.deepEqual(first, second);
+  assert.equal(first.players.length, 4);
+  assert.ok(first.players.every(player => poolIds("demon_slayer_sun_moon").includes(player.characterId)));
+});
+
 test("弗兰奇对乔巴专项使用二人完整角色状态", () => {
   const row = runMatch({ seed: 819, scenario: "franky-chopper" });
   assert.deepEqual(row.players.map(player => player.characterId).sort(), ["chopper", "franky"]);
