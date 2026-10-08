@@ -172,6 +172,22 @@ export class GameEngine {
   completeTurnStart(playerId) {
     const player = this.player(playerId);
     if (!player?.alive || this.winner) return;
+    if (player.characterId === "nezuko" && player.bloodFlame && player.hp < player.maxHp && player.nezukoRegenPromptTurn !== this.turnNumber) {
+      player.nezukoRegenPromptTurn = this.turnNumber;
+      return this.requestChoice(playerId, {
+        title: "再生",
+        options: [{ value: "use", label: "消耗爆血印回复1体力" }, { value: "pass", label: "保留爆血印" }],
+        aiChoice: player.hp <= 2 ? "use" : "pass",
+        onResolve: choice => {
+          if (choice === "use" && player.bloodFlame && player.hp < player.maxHp) {
+            player.bloodFlame = 0;
+            player.bloodFlameSetTurn = 0;
+            this.resolveHeal(playerId, playerId);
+          }
+          this.completeTurnStart(playerId);
+        }
+      });
+    }
     this.returnSealedCards(playerId);
     this.expireFalsePlots(playerId);
     if (player.scoutedTargetId && player.scoutSetTurn < this.turnNumber) {
@@ -655,6 +671,7 @@ export class GameEngine {
       || (card._mitsuriGift?.recipientId === playerId && this.distance(playerId, p.id) <= this.attackRange(playerId) + 1)
       || (player.characterId === "akaza" && player.compassTargetId === p.id)
       || (p.characterId === "akaza" && p.compassTargetId === playerId)
+      || (player.characterId === "muzan" && player.bloodMarkTargetId === p.id)
       || (player.characterId === "sasuke" && player.swapMarkedId === p.id)
       || (player.characterId === "shikamaru" && player.turnFlags.shadowNeckTarget === p.id)
       || (player.characterId === "gaara" && p.sandMarkedBy === playerId)
@@ -1961,18 +1978,20 @@ export class GameEngine {
     return { ok: true, pending: Boolean(this.pendingChoice || this.pendingResponse || this.pendingDiscard) };
   }
 
-  continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete = null, skipAbsoluteDefense = false }) {
+  continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete = null, skipAbsoluteDefense = false, aidResolved = false }) {
     const source = this.player(sourceId), target = this.player(targetId);
     if (!source?.alive || !target?.alive) return { ok: false, reason: "目标已经退场" };
     const card = this.activeCardContext?.sourceId === sourceId ? this.activeCardContext.card : null;
     const ordinaryAttack = origin === "attack" && card?.id === "attack";
-    const targetEvent = { type: "attackTargeted", sourceId, targetId, origin, ordinaryAttack, cancelled: false };
-    this.emitOnePieceEvent(targetEvent);
-    if (targetEvent.cancelled) {
-      this.log("event", `${this.nameOf(target)}以“凪”取消了本次突击`);
-      if (ordinaryAttack) this.notifyCardCancelled(sourceId, "拾壹之型·凪", card, targetId, targetEvent.cancelledById);
-      if (onComplete) onComplete();
-      return { ok: true, cancelled: true };
+    if (!aidResolved) {
+      const targetEvent = { type: "attackTargeted", sourceId, targetId, origin, ordinaryAttack, cancelled: false };
+      this.emitOnePieceEvent(targetEvent);
+      if (targetEvent.cancelled) {
+        this.log("event", `${this.nameOf(target)}以“凪”取消了本次突击`);
+        if (ordinaryAttack) this.notifyCardCancelled(sourceId, "拾壹之型·凪", card, targetId, targetEvent.cancelledById);
+        if (onComplete) onComplete();
+        return { ok: true, cancelled: true };
+      }
     }
     if (target.characterId === "gaara" && origin === "attack" && !skipAbsoluteDefense && !target.roundFlags.sandShield && target.hand.length) {
       const useShield = () => this.requestDiscard(targetId, 1, {
@@ -1994,7 +2013,33 @@ export class GameEngine {
       }
       return useShield();
     }
-    const resources = this.guardResources(targetId);
+    const aidOwner = this.player(target.nezukoAid?.ownerId);
+    if (ordinaryAttack && !aidResolved && aidOwner?.alive && aidOwner.id !== sourceId && this.guardResources(targetId) === requiredGuards - 1) {
+      const basicCards = aidOwner.hand.filter(item => item.type === "basic").map(item => item.uid);
+      if (basicCards.length) return this.requestChoice(aidOwner.id, {
+        title: "护人本能",
+        text: `可弃一张基础牌，为${this.nameOf(target)}补足1张防御。`,
+        options: [{ value: "use", label: "弃牌援护" }, { value: "pass", label: "暂不援护" }],
+        aiChoice: "use",
+        onResolve: choice => {
+          const resume = () => this.continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipAbsoluteDefense: true, aidResolved: true });
+          if (choice !== "use") return resume();
+          this.requestDiscard(aidOwner.id, 1, {
+            reason: "护人本能：弃置1张基础牌",
+            allowedUids: basicCards,
+            onComplete: removed => {
+              if (removed.length && target.alive) {
+                target.nezukoAid = null;
+                target.turnFlags.nezukoAidGuard = 1;
+                target.turnFlags.nezukoAidOwnerId = aidOwner.id;
+              }
+              resume();
+            }
+          });
+        }
+      });
+    }
+    const resources = this.guardResources(targetId, ordinaryAttack);
     if (requiredGuards > 0 && resources >= requiredGuards) {
       if (target.human) {
         this.pendingResponse = { type: "guard", sourceId, targetId, damage, required: requiredGuards, origin, alwaysPoison, onComplete };
@@ -2051,7 +2096,7 @@ export class GameEngine {
     });
   }
 
-  guardResources(playerId) {
+  guardResources(playerId, includeNezukoAid = false) {
     const player = this.player(playerId);
     const guards = player.hand.filter(card => card.id === "guard" || card.id === "adapt").length;
     const armorSubstitute = player.equipment.armor?.id === "adaptive_armor" && !player.roundFlags.adaptiveGuard && player.hand.some(card => card.type === "basic" && !["guard", "adapt"].includes(card.id));
@@ -2059,7 +2104,7 @@ export class GameEngine {
     const canSubstitute = player.characterId === "mikasa" && !player.roundFlags.substitute && player.hand.some(card => card.id !== "guard");
     const crisisHearing = player.characterId === "zenitsu" && player.hp <= 2 && !player.roundFlags.crisisHearing && player.hand.some(card => !card.responseOnly && !["guard", "adapt"].includes(card.id));
     const clone = player.characterId === "naruto" && this.getSpecialCards(playerId, "clone").length ? 1 : 0;
-    return guards + (armorSubstitute ? 1 : 0) + (chopperSubstitute ? 1 : 0) + (canSubstitute ? 1 : 0) + (crisisHearing ? 1 : 0) + clone;
+    return guards + (armorSubstitute ? 1 : 0) + (chopperSubstitute ? 1 : 0) + (canSubstitute ? 1 : 0) + (crisisHearing ? 1 : 0) + (includeNezukoAid ? player.turnFlags.nezukoAidGuard || 0 : 0) + clone;
   }
 
   spendGuards(playerId, count, ordinaryAttack = false) {
@@ -2117,6 +2162,14 @@ export class GameEngine {
           continue;
         }
       }
+      if (ordinaryAttack && player.turnFlags.nezukoAidGuard) {
+        player.turnFlags.nezukoAidGuard = 0;
+        player.turnFlags.nezukoAidConsumedBy = player.turnFlags.nezukoAidOwnerId;
+        player.turnFlags.nezukoAidOwnerId = null;
+        paidGuards += 1;
+        left -= 1;
+        continue;
+      }
       break;
     }
     return paidGuards;
@@ -2127,12 +2180,22 @@ export class GameEngine {
     if (!response) return false;
     this.pendingResponse = null;
     if (response.type === "guard") {
-      if (useCard && this.guardResources(response.targetId) >= response.required) {
-        const paidGuards = this.spendGuards(response.targetId, response.required, response.origin === "attack" && this.activeCardContext?.sourceId === response.sourceId && this.activeCardContext?.card?.id === "attack");
+      const ordinaryAttack = response.origin === "attack" && this.activeCardContext?.sourceId === response.sourceId && this.activeCardContext?.card?.id === "attack";
+      if (useCard && this.guardResources(response.targetId, ordinaryAttack) >= response.required) {
+        const paidGuards = this.spendGuards(response.targetId, response.required, ordinaryAttack);
         this.log("event", `${this.nameOf(response.targetId)}成功防御`);
         this.emitOnePieceEvent({ type: "attackFullyDefended", sourceId: response.sourceId, targetId: response.targetId, origin: response.origin, cardUid: this.activeCardContext?.card?.uid || null, ordinaryAttack: response.origin === "attack" && this.activeCardContext?.sourceId === response.sourceId && this.activeCardContext?.card?.id === "attack", requiredGuards: response.required, paidGuards });
         this.afterDefended(response.sourceId, response.targetId, response.origin, response.alwaysPoison, response.onComplete);
-      } else this.resolveAttackHit(response.sourceId, response.targetId, response.damage, response.origin, response.alwaysPoison, response.onComplete);
+      } else {
+        const target = this.player(response.targetId);
+        if (target?.turnFlags.nezukoAidGuard) { target.turnFlags.nezukoAidGuard = 0; target.turnFlags.nezukoAidOwnerId = null; }
+        this.resolveAttackHit(response.sourceId, response.targetId, response.damage, response.origin, response.alwaysPoison, response.onComplete);
+      }
+    } else if (response.type === "fleshWhipGuard") {
+      if (useCard && this.guardResources(response.targetId) >= response.required) {
+        this.spendGuards(response.targetId, response.required);
+        if (response.onComplete) response.onComplete();
+      } else this.dealDamage(response.sourceId, response.targetId, 1, "strategy", response.onComplete);
     } else if (response.type === "counter") {
       if (useCard) {
         const card = this.player(response.targetId).hand.find(item => item.id === "counter");

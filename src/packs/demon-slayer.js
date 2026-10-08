@@ -24,13 +24,14 @@ export function initializeDemonSlayerState(player, character) {
   if (character.id === "nezuko") {
     player.bloodFlame = 0;
     player.bloodFlameSetTurn = 0;
+    player.nezukoRegenPromptTurn = 0;
   }
   if (character.id === "akaza") {
     player.compassTargetId = null;
     player.compassDefended = false;
     player.compassSetTurn = 0;
   }
-  if (character.id === "muzan") player.bloodMarkTargetId = null;
+  if (character.id === "muzan") { player.bloodMarkTargetId = null; player.bloodMarkSetTurn = 0; }
   return player;
 }
 
@@ -53,6 +54,16 @@ export function consumeBreathReady(game, playerId) {
   return true;
 }
 
+export function gainBloodFlame(game, playerId) {
+  const player = game.player(playerId);
+  if (!player?.alive || player.characterId !== "nezuko" || player.roundFlags.bloodFlameGained) return false;
+  player.roundFlags.bloodFlameGained = true;
+  if (player.bloodFlame) return false;
+  player.bloodFlame = 1;
+  player.bloodFlameSetTurn = game.turnNumber;
+  return true;
+}
+
 function attackTargets(game, playerId, range = 2) {
   return game.players.filter(target => target.alive && target.id !== playerId && (game.mode.id === "classic8" || !game.isAlly(playerId, target.id)) && game.distance(playerId, target.id) <= range).map(target => target.id);
 }
@@ -68,6 +79,8 @@ export function getDemonSlayerActiveTargets(game, playerId, skill) {
   if (skill.effect === "wisteriaMix") return game.players.filter(target => target.alive && target.poison > 0 && game.distance(playerId, target.id) <= 2).map(target => target.id);
   if (skill.effect === "flameGuard") return game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id);
   if (skill.effect === "flexibleBond") return player.hand.some(card => card.type === "basic") ? game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id) : [];
+  if (skill.effect === "protectiveInstinct") return game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 1 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id);
+  if (skill.effect === "bloodBrand") return attackTargets(game, playerId);
   return [];
 }
 
@@ -131,6 +144,23 @@ export function useDemonSlayerActive(game, playerId, targetId, skill) {
       game.emitOnePieceEvent({ type: "cardTransferred", sourceId: playerId, targetId, card, amount: 1 });
     }
   });
+  if (skill.effect === "protectiveInstinct") {
+    target.nezukoAid = { ownerId: playerId, setTurn: game.turnNumber };
+    return { ok: true };
+  }
+  if (skill.effect === "bloodBrand") {
+    const accept = () => { player.bloodMarkTargetId = targetId; player.bloodMarkSetTurn = game.turnNumber; };
+    if (!target.hand.length) { accept(); return { ok: true }; }
+    return game.requestChoice(targetId, {
+      title: "血液烙印",
+      text: "可弃置一张手牌拒绝血印，否则接受。",
+      options: [{ value: "accept", label: "接受血印" }, { value: "discard", label: "弃1手牌拒绝" }],
+      aiChoice: target.hand.length <= 1 ? "accept" : "discard",
+      onResolve: choice => choice === "discard" && target.hand.length
+        ? game.requestDiscard(targetId, 1, { reason: "拒绝血印：请选择1张手牌弃置" })
+        : accept()
+    });
+  }
   return { ok: true };
 }
 
@@ -143,6 +173,7 @@ export function getDemonSlayerSignatureTargets(game, playerId) {
   if (player.characterId === "zenitsu") return attackTargets(game, playerId, 99);
   if (["inosuke", "shinobu"].includes(player.characterId)) return attackTargets(game, playerId);
   if (["rengoku", "mitsuri"].includes(player.characterId)) return attackTargets(game, playerId);
+  if (["nezuko", "muzan"].includes(player.characterId)) return attackTargets(game, playerId);
   return [];
 }
 
@@ -246,6 +277,65 @@ export function useDemonSlayerSignature(game, playerId, targetId) {
       }
     });
   }
+  if (player.characterId === "nezuko") {
+    const support = () => game.requestChoice(playerId, {
+      title: "爆血印",
+      options: [{ value: "use", label: "消耗爆血印，净化并授予护盾" }, { value: "pass", label: "保留爆血印" }],
+      aiChoice: "use",
+      onResolve: choice => {
+        if (choice !== "use" || !player.bloodFlame) return;
+        player.bloodFlame = 0;
+        player.bloodFlameSetTurn = 0;
+        const options = game.players.filter(target => target.alive && game.distance(playerId, target.id) <= 2).flatMap(target => {
+          const statuses = [...(target.poison ? ["poison"] : []), ...(target.energyLocked ? ["energy"] : []), ...(target.signatureLocked ? ["signature"] : [])];
+          return (statuses.length ? statuses : ["none"]).map(status => ({ value: `${target.id}:${status}`, label: `${game.nameOf(target)}：${status === "none" ? "获得护盾" : `清除${status}并获得护盾`}` }));
+        });
+        game.requestChoice(playerId, {
+          title: "爆血净化", options,
+          aiChoice: options.find(option => option.value.endsWith(":poison"))?.value || options[0]?.value,
+          onResolve: value => {
+            const [recipientId, status] = String(value).split(":");
+            const recipient = game.player(recipientId);
+            if (!recipient?.alive) return;
+            if (status === "poison") recipient.poison = Math.max(0, recipient.poison - 1);
+            if (status === "energy") recipient.energyLocked = false;
+            if (status === "signature") recipient.signatureLocked = 0;
+            game.gainShield(recipientId, 1, playerId);
+          }
+        });
+      }
+    });
+    return game.dealDamage(playerId, targetId, 1, "strategy", () => {
+      if (game.player(targetId)?.alive) game.applyPoison(targetId, 1);
+      if (player.alive && player.bloodFlame) support();
+    }) || { ok: true, pending: Boolean(game.pendingChoice || game.pendingResponse || game.pendingDiscard) };
+  }
+  if (player.characterId === "muzan") {
+    const resolve = secondId => {
+      const targets = [targetId, ...(secondId && secondId !== "pass" ? [secondId] : [])].sort((a, b) => game.player(a).seat - game.player(b).seat);
+      const step = index => {
+        if (game.winner || index >= targets.length) return;
+        const victim = game.player(targets[index]);
+        if (!victim?.alive) return step(index + 1);
+        const required = 1 + (player.bloodMarkTargetId === victim.id ? 1 : 0);
+        const complete = () => { if (player.bloodMarkTargetId === victim.id) { player.bloodMarkTargetId = null; player.bloodMarkSetTurn = 0; } step(index + 1); };
+        if (game.guardResources(victim.id) >= required) {
+          if (victim.human) { game.pendingResponse = { type: "fleshWhipGuard", sourceId: playerId, targetId: victim.id, required, onComplete: complete }; return; }
+          game.spendGuards(victim.id, required);
+          return complete();
+        }
+        game.dealDamage(playerId, victim.id, 1, "strategy", complete);
+      };
+      step(0);
+    };
+    const second = attackTargets(game, playerId).filter(id => id !== targetId);
+    if (!second.length) { resolve("pass"); return { ok: true, pending: Boolean(game.pendingResponse || game.pendingChoice || game.pendingDiscard) }; }
+    return game.requestChoice(playerId, {
+      title: "肉鞭乱舞：第二目标",
+      options: [{ value: "pass", label: "只攻击首个目标" }, ...second.map(id => ({ value: id, label: game.nameOf(id) }))],
+      aiChoice: second[0], onResolve: resolve
+    });
+  }
   if (player.characterId !== "tanjiro") return { ok: false, reason: "技能尚未开放" };
   const attack = pierce => game.beginAttack({ sourceId: playerId, targetId, damage: 2, requiredGuards: 2, origin: pierce ? "hinokamiDancePierce" : "hinokamiDance" });
   if (!player.breathReady) return attack(false);
@@ -260,11 +350,20 @@ export function useDemonSlayerSignature(game, playerId, targetId) {
 
 export function handleDemonSlayerEvent(game, event) {
   if (event.type === "cardTransferred" && event.card?._mitsuriGift?.recipientId === event.sourceId) delete event.card._mitsuriGift;
+  if (event.type === "cardResolved" && event.card && !event.card.responseOnly) {
+    for (const owner of game.players.filter(item => item.alive && item.characterId === "muzan" && item.bloodMarkTargetId === event.sourceId)) {
+      owner.bloodMarkTargetId = null;
+      owner.bloodMarkSetTurn = 0;
+      if (game.player(event.sourceId)?.alive) game.applyPoison(event.sourceId, 1);
+    }
+  }
   if (event.type === "damageApplied" && event.ordinaryAttack && event.actualHpLoss > 0) gainBreathReady(game, event.sourceId);
   if (event.type === "attackFullyDefended" && event.ordinaryAttack && event.paidGuards >= event.requiredGuards && event.requiredGuards > 0) gainBreathReady(game, event.targetId);
   if (event.type === "attackFullyDefended" && event.ordinaryAttack) {
     const source = game.player(event.sourceId);
     const defender = game.player(event.targetId);
+    const aidOwner = defender?.turnFlags.nezukoAidConsumedBy;
+    if (aidOwner) { defender.turnFlags.nezukoAidConsumedBy = null; gainBloodFlame(game, aidOwner); }
     if (defender?.characterId === "giyu" && !defender.roundFlags.stillHeart && event.paidGuards >= event.requiredGuards && event.requiredGuards > 0) {
       defender.roundFlags.stillHeart = true;
       game.gainEnergy(defender.id, 1);
@@ -293,6 +392,11 @@ export function handleDemonSlayerEvent(game, event) {
   if (event.type === "damageApplied") {
     const target = game.player(event.targetId);
     const source = game.player(event.sourceId);
+    if (target?.alive && target.characterId === "nezuko" && event.actualHpLoss > 0) gainBloodFlame(game, target.id);
+    if (target?.alive && target.characterId === "muzan" && event.actualHpLoss > 0 && !target.roundFlags.fleshRegen) {
+      target.roundFlags.fleshRegen = true;
+      game.gainShield(target.id, 1, target.id);
+    }
     if (source?.characterId === "shinobu" && event.ordinaryAttack && event.actualHpLoss > 0 && !source.turnFlags.poisonBlade) {
       source.turnFlags.poisonBlade = true;
       game.applyPoison(event.targetId, 1);
@@ -330,10 +434,13 @@ export function handleDemonSlayerEvent(game, event) {
     if (player?.characterId === "inosuke" && player.rageTargetId && player.rageSetTurn < game.turnNumber) { player.rageTargetId = null; player.rageSetTurn = 0; }
     if (player?.characterId === "rengoku") for (const target of game.players) if (target.flameGuard?.ownerId === player.id && target.flameGuard.setTurn < game.turnNumber) target.flameGuard = null;
     if (player?.characterId === "mitsuri") for (const target of game.players) for (const card of target.hand) if (card._mitsuriGift?.ownerId === player.id && card._mitsuriGift.setTurn < game.turnNumber) delete card._mitsuriGift;
+    if (player?.characterId === "nezuko") for (const target of game.players) if (target.nezukoAid?.ownerId === player.id && target.nezukoAid.setTurn < game.turnNumber) target.nezukoAid = null;
+    if (player?.characterId === "muzan" && player.bloodMarkSetTurn < game.turnNumber) { player.bloodMarkTargetId = null; player.bloodMarkSetTurn = 0; }
   }
   if (event.type === "turnEnd") {
     const player = game.player(event.playerId || event.sourceId);
     if (player?.breathReady && player.breathSetTurn < game.turnNumber) consumeBreathReady(game, player.id);
+    if (player?.characterId === "nezuko" && player.bloodFlame && player.bloodFlameSetTurn < game.turnNumber) { player.bloodFlame = 0; player.bloodFlameSetTurn = 0; }
   }
   if (event.type === "playerEliminated") {
     const player = game.player(event.playerId || event.targetId);
@@ -357,5 +464,7 @@ export function handleDemonSlayerEvent(game, event) {
       if (target.deadCalm?.ownerId === player.id || target.id === player.id) target.deadCalm = null;
     }
     if (player.characterId === "muzan") player.bloodMarkTargetId = null;
+    for (const owner of game.players.filter(item => item.characterId === "muzan" && item.bloodMarkTargetId === player.id)) { owner.bloodMarkTargetId = null; owner.bloodMarkSetTurn = 0; }
+    for (const target of game.players) if (target.nezukoAid?.ownerId === player.id || target.id === player.id) target.nezukoAid = null;
   }
 }
