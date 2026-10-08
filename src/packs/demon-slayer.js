@@ -99,7 +99,7 @@ export function getDemonSlayerActiveTargets(game, playerId, skill) {
   const player = game.player(playerId);
   if (!player?.alive || player.turnFlags.activeUsed || player.energy < (skill.cost || 0)) return [];
   if (skill.effect === "scentPursuit") return attackTargets(game, playerId);
-  if (skill.effect === "stillWaterGuard") return game.players.filter(target => target.alive && (target.id === playerId || (game.distance(playerId, target.id) <= 1 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))))).map(target => target.id);
+  if (skill.effect === "stillWaterGuard") return game.players.filter(target => target.alive && (target.id === playerId || (game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))))).map(target => target.id);
   if (skill.effect === "compassNeedle") return attackTargets(game, playerId);
   if (skill.effect === "chargeThunder") return player.hand.length && !player.turnFlags.ordinaryAttackUsed ? [playerId] : [];
   if (skill.effect === "boarRush") return attackTargets(game, playerId, 1);
@@ -195,7 +195,7 @@ export function getDemonSlayerSignatureTargets(game, playerId) {
   const player = game.player(playerId);
   if (!player?.alive) return [];
   if (player.characterId === "tanjiro") return attackTargets(game, playerId);
-  if (player.characterId === "giyu") return game.players.filter(target => target.alive && (target.id === playerId || (game.distance(playerId, target.id) <= 1 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))))).map(target => target.id);
+  if (player.characterId === "giyu") return game.players.filter(target => target.alive && (target.id === playerId || (game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))))).map(target => target.id);
   if (player.characterId === "akaza") return player.compassTargetId && game.player(player.compassTargetId)?.alive ? [player.compassTargetId] : [];
   if (player.characterId === "zenitsu") return attackTargets(game, playerId, 99);
   if (["inosuke", "shinobu"].includes(player.characterId)) return attackTargets(game, playerId);

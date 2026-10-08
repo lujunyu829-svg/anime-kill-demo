@@ -2,7 +2,8 @@ import { GameEngine } from "../src/engine.js";
 import { characters, characterPacks } from "../src/data.js";
 
 export function poolIds(pool = "mixed") {
-  const ids = pool === "mixed" ? characters.map(c => c.id) : characterPacks.find(p => p.id === pool)?.characterIds;
+  const packId = pool === "demon-slayer" ? "demon_slayer_sun_moon" : pool;
+  const ids = pool === "mixed" ? characters.map(c => c.id) : characterPacks.find(p => p.id === packId)?.characterIds;
   if (!ids?.length) throw new Error("未知角色池: " + pool);
   return ids;
 }
@@ -22,7 +23,7 @@ function emptyMetrics() {
   return { activeDeclared: 0, activeEffective: 0, activeTargets: {}, signatureDeclared: 0, signatureEffective: 0, signatureCosts: {}, damage: 0, healing: 0, shield: 0, drawn: 0, discarded: 0, cancelled: 0, equipmentChanges: 0, healingOpportunities: 0, healingUsed: 0, healingSkipped: {}, dreamReasons: {}, awakeRound: 0 };
 }
 function effectState(game) {
-  return JSON.stringify(game.players.map(p => ({ hp: p.hp, alive: p.alive, hand: p.hand.map(c => c.uid), equipment: p.equipment, special: p.specialCards, plots: p.plots, shield: p.shield, poison: p.poison, frozenDraw: p.frozenDraw, skipOffense: p.skipOffense, attackLimit: p.attackLimit, chess: p.chessTargetId, scout: p.scoutedTargetId, bind: p.toadBindTargetId, curse: p.curseSeal, swap: p.swapMarkedId, byakugo: p.byakugoMode, flags: { ...p.turnFlags, activeUsed: undefined, signatureUsed: undefined } })));
+  return JSON.stringify(game.players.map(p => ({ hp: p.hp, alive: p.alive, hand: p.hand.map(c => c.uid), equipment: p.equipment, special: p.specialCards, plots: p.plots, shield: p.shield, poison: p.poison, frozenDraw: p.frozenDraw, skipOffense: p.skipOffense, attackLimit: p.attackLimit, chess: p.chessTargetId, scout: p.scoutedTargetId, bind: p.toadBindTargetId, curse: p.curseSeal, swap: p.swapMarkedId, byakugo: p.byakugoMode, breath: p.breathReady, scent: p.scentTargetId, rage: p.rageTargetId, compass: p.compassTargetId, compassDefended: p.compassDefended, bloodFlame: p.bloodFlame, bloodMark: p.bloodMarkTargetId, stillWaterGuard: p.stillWaterGuard, deadCalm: p.deadCalm, flameGuard: p.flameGuard, nezukoAid: p.nezukoAid, flags: { ...p.turnFlags, activeUsed: undefined, signatureUsed: undefined } })));
 }
 function observe(game) {
   const metrics = new Map(game.players.map(p => [p.id, emptyMetrics()]));

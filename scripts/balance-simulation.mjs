@@ -15,8 +15,8 @@ if (scenario === "balance") {
   }
 } else for (let i = 0; i < games; i++) matches.push(runMatch({ seed: seedBase + i * 7919, pool, mode, anchor: i % 4, scenario }));
 const sourceHash = createHash("sha256");
-for (const path of ["../src/engine.js", "../src/data.js", "../src/packs/one-piece.js", "./simulation.mjs"]) sourceHash.update(readFileSync(new URL(path, import.meta.url)));
-const report = { version: APP_VERSION, sourceHash: sourceHash.digest("hex"), pool, mode, scenario, seedBase, seedStep: 7919, seeds: scenario === "balance" ? [0,1,2,3].map(anchor => ({ anchor, first: seedBase + anchor * 100000, last: seedBase + anchor * 100000 + (games - 1) * 7919, gamesPerCharacter: games })) : { first: seedBase, last: seedBase + (games - 1) * 7919 }, generatedAt: new Date().toISOString(), ...summarizeMatches(matches, scenario === "balance") };
+for (const path of ["../src/engine.js", "../src/data.js", "../src/packs/one-piece.js", "../src/packs/demon-slayer.js", "./simulation.mjs"]) sourceHash.update(readFileSync(new URL(path, import.meta.url)));
+const report = { version: APP_VERSION, sourceHash: sourceHash.digest("hex"), pool, characterPool: poolIds(pool), mode, scenario, seedBase, seedStep: 7919, seeds: scenario === "balance" ? [0,1,2,3].map(anchor => ({ anchor, first: seedBase + anchor * 100000, last: seedBase + anchor * 100000 + (games - 1) * 7919, gamesPerCharacter: games })) : { first: seedBase, last: seedBase + (games - 1) * 7919 }, generatedAt: new Date().toISOString(), ...summarizeMatches(matches, scenario === "balance") };
 const output = option("output", "");
 if (output) {
   mkdirSync(dirname(output), { recursive: true });

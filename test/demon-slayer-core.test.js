@@ -5,8 +5,8 @@ import { GameEngine } from "../src/engine.js";
 import { poolIds } from "../scripts/simulation.mjs";
 
 const demonStats = {
-  tanjiro: [4, 4], zenitsu: [3, 4], inosuke: [4, 3], shinobu: [3, 5],
-  giyu: [4, 4], rengoku: [4, 4], mitsuri: [4, 5], nezuko: [4, 3],
+  tanjiro: [4, 4], zenitsu: [3, 4], inosuke: [4, 3], shinobu: [3, 4],
+  giyu: [5, 5], rengoku: [4, 4], mitsuri: [4, 5], nezuko: [4, 3],
   akaza: [4, 4], muzan: [4, 5]
 };
 const slayers = ["tanjiro", "zenitsu", "inosuke", "shinobu", "giyu", "rengoku", "mitsuri"];

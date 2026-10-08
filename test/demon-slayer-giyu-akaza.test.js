@@ -34,6 +34,48 @@ test("静水护形可保护自己，完全防御不消耗，下一次未防住�
   assert.equal(giyu.stillWaterGuard, null);
 });
 
+test("义勇的护形与凪在交错座次的2V2可保护距离2队友", () => {
+  const game = create("giyu"), giyu = game.player("p0"), ally = game.player("p2");
+  giyu.energy = 4;
+  assert.equal(game.distance("p0", "p2"), 2);
+  assert.ok(game.getActiveSkillTargets("p0").includes("p2"));
+  assert.equal(game.useActiveSkill("p0", "p2").ok, true);
+  assert.equal(ally.stillWaterGuard?.ownerId, "p0");
+  assert.ok(game.getSignatureTargets("p0").includes("p2"));
+  assert.equal(game.useSignature("p0", "p2").ok, true);
+  assert.equal(ally.deadCalm?.ownerId, "p0");
+});
+
+test("义勇有5张独立手牌上限以维持攻防牌资源", () => {
+  const game = new GameEngine({ modeId: "ranked2v2", humanCharacterId: "giyu", fixedAnchorSeat: 0, random: () => 0.25 }).setup();
+  assert.equal(game.player("p0").baseHandLimit, 5);
+  assert.equal(game.handLimit("p0"), 5);
+  assert.ok(game.player("p0").hand.length >= 5);
+});
+
+test("义勇以5点体力维持防御定位", () => {
+  const game = create("giyu"), giyu = game.player("p0");
+  assert.equal(giyu.maxHp, 5);
+  assert.equal(giyu.hp, 5);
+});
+
+test("静水护形不消耗能量但每回合仍仅可使用一次", () => {
+  const game = create("giyu"), giyu = game.player("p0");
+  giyu.energy = 0;
+  assert.equal(game.useActiveSkill("p0", "p0").ok, true);
+  assert.equal(giyu.energy, 0);
+  assert.equal(game.useActiveSkill("p0", "p2").ok, false);
+});
+
+test("凪消耗2能量，能量不足时不能发动", () => {
+  const game = create("giyu"), giyu = game.player("p0");
+  giyu.energy = 1;
+  assert.equal(game.useSignature("p0", "p0").ok, false);
+  giyu.energy = 2;
+  assert.equal(game.useSignature("p0", "p0").ok, true);
+  assert.equal(giyu.energy, 0);
+});
+
 test("静心仅因足额实牌防住普通突击获1能量，护形在义勇下回合开始失效", () => {
   const game = create("giyu"), giyu = game.player("p0"), enemy = game.player("p1");
   giyu.energy = 1;
@@ -134,7 +176,9 @@ test("灭式只对罗针目标发动，交手后完全防御记录使伤害+1，
   game.respond(true);
   assert.equal(akaza.compassDefended, true);
   game.currentPlayerId = "p0";
-  akaza.energy = 4;
+  akaza.energy = 2;
+  assert.equal(game.useSignature("p0", "p1").ok, false);
+  akaza.energy = 3;
   assert.deepEqual(game.getSignatureTargets("p0"), ["p1"]);
   game.useSignature("p0", "p1");
   assert.equal(enemy.hp, enemy.maxHp - 3);

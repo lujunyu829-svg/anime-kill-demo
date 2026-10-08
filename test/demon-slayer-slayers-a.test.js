@@ -72,6 +72,8 @@ test("善逸六连可指定任意距离，呼吸态使其需三防且不可强�
   const game = create("zenitsu", "classic8"), zenitsu = game.player("p0"), target = game.player("p4");
   target.characterId = "ichigo";
   zenitsu.energy = 3;
+  assert.equal(game.useSignature("p0", "p4").ok, false);
+  zenitsu.energy = 4;
   zenitsu.breathReady = 1;
   zenitsu.roundFlags.breathGained = true;
   game.player("p2").hand = [card("intervene", "intervene-one")];
@@ -173,6 +175,8 @@ test("胡蝶忍毒刃只在每回合首次普通突击实际伤血后施毒", ()
 test("胡蝶忍蜈蚣之舞即使完全防御仍施毒，呼吸态可改为两层", () => {
   const game = create("shinobu"), shinobu = game.player("p0"), target = game.player("p1");
   shinobu.energy = 3;
+  assert.equal(game.useSignature("p0", "p1").ok, false);
+  shinobu.energy = 4;
   shinobu.breathReady = 1;
   shinobu.roundFlags.breathGained = true;
   target.hand = [card("guard", "centipede-one"), card("guard", "centipede-two")];

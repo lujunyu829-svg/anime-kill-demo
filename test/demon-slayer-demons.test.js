@@ -87,6 +87,8 @@ test("祢豆子爆血造成策略伤害与毒素，消耗爆血印可净化并�
 test("无惨血印目标可弃手牌拒绝；无手牌则标记，取消牌不触发而完成牌触发", () => {
   const game = create("muzan"), muzan = game.player("p0"), target = game.player("p1");
   muzan.energy = 1;
+  assert.equal(game.useActiveSkill("p0", "p1").ok, false);
+  muzan.energy = 2;
   target.human = true;
   target.hand = [card("focus", "mark-refuse")];
   game.useActiveSkill("p0", "p1");
@@ -96,7 +98,7 @@ test("无惨血印目标可弃手牌拒绝；无手牌则标记，取消牌不�
   assert.equal(muzan.bloodMarkTargetId, null);
 
   muzan.turnFlags.activeUsed = false;
-  muzan.energy = 1;
+  muzan.energy = 2;
   game.useActiveSkill("p0", "p1");
   assert.equal(muzan.bloodMarkTargetId, "p1");
   game.notifyCardCancelled("p1", "测试取消", card("focus", "cancelled-marked"), "p1");
@@ -110,7 +112,7 @@ test("无惨血印目标可弃手牌拒绝；无手牌则标记，取消牌不�
 
 test("无惨受实际伤害首次获盾；血印目标可跨普通距离攻击且标记到下回合开始结束", () => {
   const game = create("muzan", "classic8"), muzan = game.player("p0"), target = game.player("p2");
-  muzan.energy = 1;
+  muzan.energy = 2;
   game.useActiveSkill("p0", "p2");
   muzan.hand = [card("attack", "blood-pressure")];
   assert.ok(game.getCardTargets("p0", muzan.hand[0]).includes("p2"));
@@ -179,7 +181,7 @@ test("护人本能补防仅用于普通突击，不能抵挡肉鞭策略伤害",
 
 test("血印目标退场与祢豆子退场时公开状态清除", () => {
   const game = create("muzan", "classic8"), muzan = game.player("p0"), ward = game.player("p1"), nezuko = game.player("p2");
-  muzan.energy = 1;
+  muzan.energy = 2;
   game.useActiveSkill("p0", "p1");
   nezuko.characterId = "nezuko";
   ward.nezukoAid = { ownerId: nezuko.id, setTurn: game.turnNumber };

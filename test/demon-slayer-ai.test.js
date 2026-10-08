@@ -26,7 +26,7 @@ function createAI(characterId, modeId = "ranked2v2") {
 
 function prepareActive(characterId, state) {
   const { actor, enemy, ally } = state;
-  actor.energy = 1;
+  actor.energy = characterId === "muzan" ? 2 : 1;
   if (characterId === "shinobu") enemy.poison = 2;
   if (["giyu", "rengoku", "nezuko"].includes(characterId)) ally.hp = 1;
   if (characterId === "tanjiro") enemy.hand = [card("guard", "private-guard")];

@@ -1,0 +1,287 @@
+{
+  "version": "0.3.0",
+  "sourceHash": "0f13f3cae0ab5d8736c3aab5e994402308bbad638213d0f67a682eea9239b518",
+  "pool": "demon-slayer",
+  "characterPool": [
+    "tanjiro",
+    "zenitsu",
+    "inosuke",
+    "shinobu",
+    "giyu",
+    "rengoku",
+    "mitsuri",
+    "nezuko",
+    "akaza",
+    "muzan"
+  ],
+  "mode": "ranked2v2",
+  "scenario": "balance",
+  "seedBase": 20261008,
+  "seedStep": 7919,
+  "seeds": [
+    {
+      "anchor": 0,
+      "first": 20261008,
+      "last": 22232839,
+      "gamesPerCharacter": 250
+    },
+    {
+      "anchor": 1,
+      "first": 20361008,
+      "last": 22332839,
+      "gamesPerCharacter": 250
+    },
+    {
+      "anchor": 2,
+      "first": 20461008,
+      "last": 22432839,
+      "gamesPerCharacter": 250
+    },
+    {
+      "anchor": 3,
+      "first": 20561008,
+      "last": 22532839,
+      "gamesPerCharacter": 250
+    }
+  ],
+  "generatedAt": "2026-10-08T14:26:50.017Z",
+  "games": 1000,
+  "unfinished": 0,
+  "camps": {
+    "azure": 627,
+    "crimson": 373
+  },
+  "residual": {},
+  "avgRounds": 6.467,
+  "p95Rounds": 14,
+  "p99Rounds": 35,
+  "maxRounds": 44,
+  "over80": 0,
+  "maxSteps": 360,
+  "roles": [
+    {
+      "character": "shinobu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 0,
+      "games": 250,
+      "wins": 161,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 452,
+        "activeEffective": 452,
+        "activeTargets": {
+          "other": 363,
+          "ally": 8,
+          "self": 81
+        },
+        "signatureDeclared": 363,
+        "signatureEffective": 363,
+        "signatureCosts": {
+          "4": 363
+        },
+        "damage": 680,
+        "healing": 172,
+        "shield": 88,
+        "drawn": 2336,
+        "discarded": 235,
+        "cancelled": 45,
+        "equipmentChanges": 463,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 161,
+      "awakeRounds": 0,
+      "winRate": 64.4,
+      "avgRounds": 6.128,
+      "p95Rounds": 13,
+      "p99Rounds": 18,
+      "maxRounds": 41,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 64.4
+    },
+    {
+      "character": "shinobu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 1,
+      "games": 250,
+      "wins": 144,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 395,
+        "activeEffective": 395,
+        "activeTargets": {
+          "other": 299,
+          "self": 87,
+          "ally": 9
+        },
+        "signatureDeclared": 368,
+        "signatureEffective": 368,
+        "signatureCosts": {
+          "4": 368
+        },
+        "damage": 616,
+        "healing": 191,
+        "shield": 96,
+        "drawn": 2488,
+        "discarded": 249,
+        "cancelled": 61,
+        "equipmentChanges": 450,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 144,
+      "awakeRounds": 0,
+      "winRate": 57.599999999999994,
+      "avgRounds": 6.692,
+      "p95Rounds": 14,
+      "p99Rounds": 29,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 57.599999999999994
+    },
+    {
+      "character": "shinobu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 2,
+      "games": 250,
+      "wins": 176,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 405,
+        "activeEffective": 405,
+        "activeTargets": {
+          "other": 335,
+          "self": 56,
+          "ally": 14
+        },
+        "signatureDeclared": 385,
+        "signatureEffective": 385,
+        "signatureCosts": {
+          "4": 385
+        },
+        "damage": 720,
+        "healing": 160,
+        "shield": 70,
+        "drawn": 2611,
+        "discarded": 257,
+        "cancelled": 54,
+        "equipmentChanges": 449,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 176,
+      "awakeRounds": 0,
+      "winRate": 70.39999999999999,
+      "avgRounds": 6,
+      "p95Rounds": 12,
+      "p99Rounds": 19,
+      "maxRounds": 39,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 70.39999999999999
+    },
+    {
+      "character": "shinobu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 3,
+      "games": 250,
+      "wins": 146,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 475,
+        "activeEffective": 475,
+        "activeTargets": {
+          "other": 346,
+          "self": 105,
+          "ally": 24
+        },
+        "signatureDeclared": 376,
+        "signatureEffective": 376,
+        "signatureCosts": {
+          "4": 376
+        },
+        "damage": 676,
+        "healing": 212,
+        "shield": 128,
+        "drawn": 2840,
+        "discarded": 233,
+        "cancelled": 54,
+        "equipmentChanges": 479,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 146,
+      "awakeRounds": 0,
+      "winRate": 58.4,
+      "avgRounds": 7.048,
+      "p95Rounds": 16,
+      "p99Rounds": 40,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 58.4
+    }
+  ]
+}
