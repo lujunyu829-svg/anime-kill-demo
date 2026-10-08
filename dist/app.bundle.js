@@ -669,6 +669,7 @@ function initializeDemonSlayerState(player, character) {
     player.scentCardName = null;
     player.scentSetTurn = 0;
   }
+  if (character.id === "giyu") player.stillWaterGuard = null;
   if (character.id === "nezuko") {
     player.bloodFlame = 0;
     player.bloodFlameSetTurn = 0;
@@ -676,6 +677,7 @@ function initializeDemonSlayerState(player, character) {
   if (character.id === "akaza") {
     player.compassTargetId = null;
     player.compassDefended = false;
+    player.compassSetTurn = 0;
   }
   if (character.id === "muzan") player.bloodMarkTargetId = null;
   return player;
@@ -708,6 +710,8 @@ function getDemonSlayerActiveTargets(game, playerId, skill) {
   const player = game.player(playerId);
   if (!player?.alive || player.turnFlags.activeUsed || player.energy < (skill.cost || 0)) return [];
   if (skill.effect === "scentPursuit") return attackTargets(game, playerId);
+  if (skill.effect === "stillWaterGuard") return game.players.filter(target => target.alive && (target.id === playerId || (game.distance(playerId, target.id) <= 1 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))))).map(target => target.id);
+  if (skill.effect === "compassNeedle") return attackTargets(game, playerId);
   return [];
 }
 
@@ -723,6 +727,16 @@ function useDemonSlayerActive(game, playerId, targetId, skill) {
     player.scentCardName = card?.name || null;
     game.log("event", `${game.nameOf(player)}以嗅觉追迹标记了${game.nameOf(target)}`);
   }
+  if (skill.effect === "stillWaterGuard") {
+    target.stillWaterGuard = { ownerId: playerId, setTurn: game.turnNumber };
+    game.log("event", `${game.nameOf(player)}为${game.nameOf(target)}布置静水护形`);
+  }
+  if (skill.effect === "compassNeedle") {
+    player.compassTargetId = targetId;
+    player.compassDefended = false;
+    player.compassSetTurn = game.turnNumber;
+    game.log("event", `${game.nameOf(player)}以罗针锁定${game.nameOf(target)}`);
+  }
   return { ok: true };
 }
 
@@ -730,12 +744,32 @@ function getDemonSlayerSignatureTargets(game, playerId) {
   const player = game.player(playerId);
   if (!player?.alive) return [];
   if (player.characterId === "tanjiro") return attackTargets(game, playerId);
+  if (player.characterId === "giyu") return game.players.filter(target => target.alive && (target.id === playerId || (game.distance(playerId, target.id) <= 1 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))))).map(target => target.id);
+  if (player.characterId === "akaza") return player.compassTargetId && game.player(player.compassTargetId)?.alive ? [player.compassTargetId] : [];
   return [];
 }
 
 function useDemonSlayerSignature(game, playerId, targetId) {
   const player = game.player(playerId);
-  if (player.characterId !== "tanjiro" || !getDemonSlayerSignatureTargets(game, playerId).includes(targetId)) return { ok: false, reason: "目标不合法" };
+  if (!getDemonSlayerSignatureTargets(game, playerId).includes(targetId)) return { ok: false, reason: "目标不合法" };
+  if (player.characterId === "giyu") {
+    const place = strategy => {
+      game.player(targetId).deadCalm = { ownerId: playerId, setTurn: game.turnNumber, strategy };
+      return { ok: true };
+    };
+    if (!player.breathReady) return place(false);
+    return game.requestChoice(playerId, {
+      title: "拾壹之型·凪",
+      options: [{ value: "use", label: "消耗呼吸态，可取消策略伤害" }, { value: "pass", label: "保留呼吸态" }],
+      aiChoice: "use",
+      onResolve: choice => place(choice === "use" && consumeBreathReady(game, playerId))
+    });
+  }
+  if (player.characterId === "akaza") {
+    const damage = 2 + (player.compassDefended ? 1 : 0);
+    return game.beginAttack({ sourceId: playerId, targetId, damage, requiredGuards: 2, origin: "annihilationStyle", onComplete: () => { player.compassTargetId = null; player.compassDefended = false; player.compassSetTurn = 0; } });
+  }
+  if (player.characterId !== "tanjiro") return { ok: false, reason: "技能尚未开放" };
   const attack = pierce => game.beginAttack({ sourceId: playerId, targetId, damage: 2, requiredGuards: 2, origin: pierce ? "hinokamiDancePierce" : "hinokamiDance" });
   if (!player.breathReady) return attack(false);
   return game.requestChoice(playerId, {
@@ -752,9 +786,37 @@ function handleDemonSlayerEvent(game, event) {
   if (event.type === "attackFullyDefended" && event.ordinaryAttack && event.paidGuards >= event.requiredGuards && event.requiredGuards > 0) gainBreathReady(game, event.targetId);
   if (event.type === "attackFullyDefended" && event.ordinaryAttack) {
     const source = game.player(event.sourceId);
+    const defender = game.player(event.targetId);
+    if (defender?.characterId === "giyu" && !defender.roundFlags.stillHeart && event.paidGuards >= event.requiredGuards && event.requiredGuards > 0) {
+      defender.roundFlags.stillHeart = true;
+      game.gainEnergy(defender.id, 1);
+    }
+    if (defender?.characterId === "akaza" && defender.compassTargetId === event.sourceId && event.paidGuards >= event.requiredGuards && event.requiredGuards > 0) defender.compassDefended = true;
     if (source?.alive && source.characterId === "tanjiro" && !source.roundFlags.waterTriggered) {
       source.roundFlags.waterTriggered = true;
       if (source.hand.length && game.discard.some(card => card.uid === event.cardUid)) source.turnFlags.waterRecoveryUid = event.cardUid;
+    }
+  }
+  if (event.type === "attackTargeted" && event.ordinaryAttack) {
+    const target = game.player(event.targetId);
+    if (target?.deadCalm) { event.cancelledById = target.deadCalm.ownerId; target.deadCalm = null; event.cancelled = true; }
+  }
+  if (event.type === "beforeDamage") {
+    const target = game.player(event.targetId);
+    if (event.origin === "attack" && target?.stillWaterGuard) {
+      event.amount = Math.max(0, event.amount - 1);
+      target.stillWaterGuard = null;
+    }
+    if (event.origin === "strategy" && target?.deadCalm?.strategy) {
+      event.amount = 0;
+      target.deadCalm = null;
+    }
+  }
+  if (event.type === "damageApplied") {
+    const target = game.player(event.targetId);
+    if (target?.alive && target.characterId === "akaza" && target.compassTargetId === event.sourceId && event.actualHpLoss > 0 && !target.roundFlags.demonRegen) {
+      target.roundFlags.demonRegen = true;
+      game.gainShield(target.id, 1, target.id);
     }
   }
   if (event.type === "turnStart") {
@@ -763,6 +825,15 @@ function handleDemonSlayerEvent(game, event) {
       player.scentTargetId = null;
       player.scentCardName = null;
       player.scentSetTurn = 0;
+    }
+    if (player?.characterId === "giyu") for (const target of game.players) {
+      if (target.stillWaterGuard?.ownerId === player.id && target.stillWaterGuard.setTurn < game.turnNumber) target.stillWaterGuard = null;
+      if (target.deadCalm?.ownerId === player.id && target.deadCalm.setTurn < game.turnNumber) target.deadCalm = null;
+    }
+    if (player?.characterId === "akaza" && player.compassSetTurn < game.turnNumber) {
+      player.compassTargetId = null;
+      player.compassDefended = false;
+      player.compassSetTurn = 0;
     }
   }
   if (event.type === "turnEnd") {
@@ -780,6 +851,11 @@ function handleDemonSlayerEvent(game, event) {
     }
     if (player.characterId === "nezuko") { player.bloodFlame = 0; player.bloodFlameSetTurn = 0; }
     if (player.characterId === "akaza") { player.compassTargetId = null; player.compassDefended = false; }
+    for (const owner of game.players.filter(item => item.characterId === "akaza" && item.compassTargetId === player.id)) { owner.compassTargetId = null; owner.compassDefended = false; owner.compassSetTurn = 0; }
+    for (const target of game.players) {
+      if (target.stillWaterGuard?.ownerId === player.id || target.id === player.id) target.stillWaterGuard = null;
+      if (target.deadCalm?.ownerId === player.id || target.id === player.id) target.deadCalm = null;
+    }
     if (player.characterId === "muzan") player.bloodMarkTargetId = null;
   }
 }
@@ -1431,6 +1507,9 @@ class GameEngine {
     }
     if (card.id === "attack") return this.players.filter(p => p.alive && p.id !== playerId && (
       this.distance(playerId, p.id) <= this.attackRange(playerId)
+      || (player.characterId === "giyu" && player.breathReady && this.distance(playerId, p.id) <= this.attackRange(playerId) + 1)
+      || (player.characterId === "akaza" && player.compassTargetId === p.id)
+      || (p.characterId === "akaza" && p.compassTargetId === playerId)
       || (player.characterId === "sasuke" && player.swapMarkedId === p.id)
       || (player.characterId === "shikamaru" && player.turnFlags.shadowNeckTarget === p.id)
       || (player.characterId === "gaara" && p.sandMarkedBy === playerId)
@@ -2516,7 +2595,7 @@ class GameEngine {
     });
   }
 
-  beginAttack({ sourceId, targetId, damage = 1, requiredGuards = 1, origin = "attack", alwaysPoison = false, onComplete = null, skipIntervene = false, skipRaven = false, freeUse = false, jinbePiercing = false, breathOfferResolved = false, scentApplied = false }) {
+  beginAttack({ sourceId, targetId, damage = 1, requiredGuards = 1, origin = "attack", alwaysPoison = false, onComplete = null, skipIntervene = false, skipRaven = false, freeUse = false, jinbePiercing = false, breathOfferResolved = false, breathPierce = false, scentApplied = false }) {
     if (this.winner) return { ok: false, reason: "对局已经结束" };
     const source = this.player(sourceId), target = this.player(targetId);
     if (!source?.alive || !target?.alive) return { ok: false, reason: "目标已经退场" };
@@ -2531,6 +2610,16 @@ class GameEngine {
           const enhanced = choice !== "pass" && this.player(targetId)?.alive && consumeBreathReady(this, sourceId);
           this.beginAttack({ sourceId, targetId, damage: damage + (enhanced && choice === "damage" ? 1 : 0), requiredGuards: requiredGuards + (enhanced && choice === "guard" ? 1 : 0), origin, alwaysPoison, onComplete, skipIntervene, skipRaven, freeUse, jinbePiercing, breathOfferResolved: true, scentApplied });
         }
+      });
+    }
+    if (ordinaryAttack && source.characterId === "giyu" && source.breathReady && !breathOfferResolved) {
+      const distant = this.distance(sourceId, targetId) > this.attackRange(sourceId);
+      return this.requestChoice(sourceId, {
+        title: "水面斩",
+        text: "消耗呼吸态令本次普通突击距离+1并忽略防具。",
+        options: [...(distant ? [] : [{ value: "pass", label: "保留呼吸态" }]), { value: "use", label: "消耗呼吸态" }],
+        aiChoice: "use",
+        onResolve: choice => this.beginAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipIntervene, skipRaven, freeUse, jinbePiercing, breathOfferResolved: true, breathPierce: choice === "use" && consumeBreathReady(this, sourceId) })
       });
     }
     let observationDefended = false;
@@ -2559,11 +2648,11 @@ class GameEngine {
       this.log("event", this.nameOf(source) + "以护盾施展“鱼人空手道”，本次突击无视防具");
     }
     if (!skipRaven) {
-      const raven = this.offerRavenSubstitution({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipIntervene, freeUse, jinbePiercing, breathOfferResolved, scentApplied });
+      const raven = this.offerRavenSubstitution({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipIntervene, freeUse, jinbePiercing, breathOfferResolved, breathPierce, scentApplied });
       if (raven) return raven;
     }
     if (!skipIntervene) {
-      const intervention = this.offerAttackIntervention({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, freeUse, jinbePiercing, breathOfferResolved, scentApplied });
+      const intervention = this.offerAttackIntervention({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, freeUse, jinbePiercing, breathOfferResolved, breathPierce, scentApplied });
       if (intervention) return intervention;
     }
     if (ordinaryAttack && !scentApplied && source.characterId === "tanjiro" && source.scentTargetId === targetId) {
@@ -2574,6 +2663,11 @@ class GameEngine {
       scentApplied = true;
       this.log("event", `${this.nameOf(source)}抓住破绽，此次突击额外需要1张防御`);
     }
+    if (ordinaryAttack && source.characterId === "akaza" && source.compassTargetId === targetId && !source.turnFlags.compassPressureUsed) {
+      source.turnFlags.compassPressureUsed = true;
+      requiredGuards += 1;
+    }
+    if (breathPierce) source.turnFlags.ignoreArmorTarget = targetId;
     if (source.characterId === "itachi" && origin === "attack" && source.plots.some(plot => plot.isFalse && plot.targetId === targetId)) {
       requiredGuards += 1;
       this.log("event", `${this.nameOf(source)}以“月读前兆”压迫幻象目标，此次攻击额外需要1张防御`);
@@ -2688,6 +2782,16 @@ class GameEngine {
   continueAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete = null, skipAbsoluteDefense = false }) {
     const source = this.player(sourceId), target = this.player(targetId);
     if (!source?.alive || !target?.alive) return { ok: false, reason: "目标已经退场" };
+    const card = this.activeCardContext?.sourceId === sourceId ? this.activeCardContext.card : null;
+    const ordinaryAttack = origin === "attack" && card?.id === "attack";
+    const targetEvent = { type: "attackTargeted", sourceId, targetId, origin, ordinaryAttack, cancelled: false };
+    this.emitOnePieceEvent(targetEvent);
+    if (targetEvent.cancelled) {
+      this.log("event", `${this.nameOf(target)}以“凪”取消了本次突击`);
+      if (ordinaryAttack) this.notifyCardCancelled(sourceId, "拾壹之型·凪", card, targetId, targetEvent.cancelledById);
+      if (onComplete) onComplete();
+      return { ok: true, cancelled: true };
+    }
     if (target.characterId === "gaara" && origin === "attack" && !skipAbsoluteDefense && !target.roundFlags.sandShield && target.hand.length) {
       const useShield = () => this.requestDiscard(targetId, 1, {
         reason: "绝对防御：请选择1张手牌弃置以取消攻击",
@@ -2725,7 +2829,7 @@ class GameEngine {
 
   offerAttackIntervention(payload) {
     const { sourceId, targetId, origin } = payload;
-    if (!["attack", "signature", "hinokamiDance", "hinokamiDancePierce", "goemon", "asura", "diableJambe", "impactWolf", "vagabondDrill", "arrowNotch", "blackFlash", "active"].includes(origin)) return null;
+    if (!["attack", "signature", "hinokamiDance", "hinokamiDancePierce", "annihilationStyle", "goemon", "asura", "diableJambe", "impactWolf", "vagabondDrill", "arrowNotch", "blackFlash", "active"].includes(origin)) return null;
     const eligible = this.players.filter(player => player.alive && player.id !== sourceId && player.id !== targetId && player.hand.some(card => card.id === "intervene"));
     if (!eligible.length) return null;
     const candidate = eligible.find(player => player.human) || eligible.find(player => this.aiIsAlly(player.id, targetId) && !this.aiIsAlly(player.id, sourceId));
