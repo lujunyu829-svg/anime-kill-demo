@@ -93,7 +93,7 @@ export const activeSkills = {
   giyu: { name: "静水护形", target: "ally", cost: 1, costText: "1能量 · 距离1内", effect: "stillWaterGuard", text: "目标下一次未完全防住的普通突击伤害-1，持续到你的下回合开始。" },
   rengoku: { name: "炎柱守护", target: "ally", cost: 1, costText: "1能量 · 距离2内", effect: "flameGuard", text: "距离2内一名其他角色首次成为别人单目标普通突击目标时，可将最终目标改为你。" },
   mitsuri: { name: "柔韧连携", target: "ally", cost: 1, costText: "1能量 · 距离2内 · 交1基础牌", effect: "flexibleBond", text: "交出1基础牌；受赠者使用为突击时距离+1，使用为防御时获得1护盾。" },
-  nezuko: { name: "护人本能", target: "ally", cost: 1, costText: "1能量 · 距离1内", effect: "protectiveInstinct", text: "目标首次响应普通突击时，可弃1张基础手牌为其提供1张防御。" },
+  nezuko: { name: "护人本能", target: "ally", cost: 1, costText: "1能量 · 距离2内", effect: "protectiveInstinct", text: "目标首次响应普通突击时，可弃1张基础手牌为其提供1张防御。" },
   akaza: { name: "术式展开·罗针", target: "enemy", cost: 1, costText: "1能量 · 距离2内", effect: "compassNeedle", text: "公开标记目标；双方互相发动攻击时距离视为1，直至你的下回合开始。" },
   muzan: { name: "血液烙印", target: "enemy", cost: 1, costText: "1能量 · 距离2内", effect: "bloodBrand", text: "目标可弃1手牌拒绝，否则接受血印；其下一张实际结算的非响应牌后获得1层毒。" },
   gojo: { name: "六眼", target: "self", costText: "无消耗", effect: "sixEyes", text: "摸2张牌，然后弃1张牌。每回合限一次。" },

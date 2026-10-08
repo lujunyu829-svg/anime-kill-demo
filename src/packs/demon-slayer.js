@@ -68,6 +68,33 @@ function attackTargets(game, playerId, range = 2) {
   return game.players.filter(target => target.alive && target.id !== playerId && (game.mode.id === "classic8" || !game.isAlly(playerId, target.id)) && game.distance(playerId, target.id) <= range).map(target => target.id);
 }
 
+export function scoreDemonSlayerActive(game, playerId, targetId, skill) {
+  const player = game.player(playerId), target = game.player(targetId);
+  if (!player?.alive || !target?.alive || !skill) return -Infinity;
+  const ally = game.aiIsAlly(playerId, targetId);
+  const danger = (target.maxHp - target.hp) * 18 + (target.hp <= 2 ? 25 : 0) + target.poison * 8 - target.shield * 8;
+  const pressure = 65 - target.hp * 7 - target.shield * 6 - target.hand.length * 2;
+  if (skill.effect === "chargeThunder") return player.hand.length && !player.breathReady && player.shield < 3 ? 45 : -Infinity;
+  if (skill.effect === "stillWaterGuard") return ally && !target.stillWaterGuard && (target.hp < target.maxHp || target.shield < 2) ? 35 + danger : -Infinity;
+  if (skill.effect === "flameGuard") return ally && target.id !== playerId && player.hp > 1 && !target.flameGuard && (target.hp < target.maxHp || target.shield < 2) ? 35 + danger : -Infinity;
+  if (skill.effect === "protectiveInstinct") return ally && player.hand.some(card => card.type === "basic") && !target.nezukoAid && (target.hp < target.maxHp || target.shield < 2) ? 35 + danger : -Infinity;
+  if (skill.effect === "flexibleBond") return ally && player.hand.some(card => card.type === "basic") ? 35 + danger - target.hand.length * 2 : -Infinity;
+  if (skill.effect === "wisteriaMix") return target.poison > 0 ? (ally ? 75 + danger : 35 + pressure) : -Infinity;
+  if (ally) return -Infinity;
+  if (skill.effect === "scentPursuit") return player.scentTargetId === targetId ? -Infinity : 35 + pressure;
+  if (skill.effect === "compassNeedle") return player.compassTargetId === targetId ? -Infinity : 35 + pressure;
+  if (skill.effect === "bloodBrand") return player.bloodMarkTargetId === targetId ? -Infinity : 35 + pressure + (target.hand.length === 0 ? 20 : 0);
+  return 35 + pressure;
+}
+
+export function scoreDemonSlayerSignature(game, playerId, targetId) {
+  const player = game.player(playerId), target = game.player(targetId);
+  if (!player?.alive || !target?.alive) return -Infinity;
+  if (player.characterId === "giyu") return game.aiIsAlly(playerId, targetId) && !target.deadCalm && (target.hp < target.maxHp || target.shield < 2) ? 85 + (target.maxHp - target.hp) * 18 - target.shield * 8 : -Infinity;
+  if (game.aiIsAlly(playerId, targetId) || (player.characterId === "rengoku" && player.hp <= 1)) return -Infinity;
+  return 110 - target.hp * 7 - target.shield * 6 - target.hand.length * 2 + (player.characterId === "akaza" && player.compassDefended ? 15 : 0);
+}
+
 export function getDemonSlayerActiveTargets(game, playerId, skill) {
   const player = game.player(playerId);
   if (!player?.alive || player.turnFlags.activeUsed || player.energy < (skill.cost || 0)) return [];
@@ -79,7 +106,7 @@ export function getDemonSlayerActiveTargets(game, playerId, skill) {
   if (skill.effect === "wisteriaMix") return game.players.filter(target => target.alive && target.poison > 0 && game.distance(playerId, target.id) <= 2).map(target => target.id);
   if (skill.effect === "flameGuard") return game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id);
   if (skill.effect === "flexibleBond") return player.hand.some(card => card.type === "basic") ? game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id) : [];
-  if (skill.effect === "protectiveInstinct") return game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 1 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id);
+  if (skill.effect === "protectiveInstinct") return game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id);
   if (skill.effect === "bloodBrand") return attackTargets(game, playerId);
   return [];
 }
@@ -119,7 +146,7 @@ export function useDemonSlayerActive(game, playerId, targetId, skill) {
     title: "藤花调剂",
     text: "移除目标1层毒，并选择净化或催毒。",
     options: [{ value: "cleanse", label: "净化：获得1护盾" }, { value: "catalyze", label: "催毒：失去1体力" }],
-    aiChoice: game.mode.id === "ranked2v2" && game.isAlly(playerId, targetId) ? "cleanse" : "catalyze",
+    aiChoice: game.aiIsAlly(playerId, targetId) ? "cleanse" : "catalyze",
     onResolve: choice => {
       if (!target.alive || target.poison <= 0) return;
       target.poison -= 1;
@@ -253,12 +280,12 @@ export function useDemonSlayerSignature(game, playerId, targetId) {
         onResolve: choice => attack(choice === "use" && consumeBreathReady(game, playerId))
       });
     };
-    const collaborators = game.players.filter(target => target.alive && target.id !== playerId && target.id !== targetId && (game.mode.id === "classic8" || game.isAlly(playerId, target.id)) && target.hand.some(card => card.id === "attack" && game.getCardTargets(target.id, card).includes(targetId)));
+    const collaborators = game.players.filter(target => target.alive && target.id !== playerId && target.id !== targetId && (game.mode.id === "classic8" || game.isAlly(playerId, target.id)));
     if (!collaborators.length) return ownAttack();
     return game.requestChoice(playerId, {
       title: "恋之呼吸·协作者",
       options: [{ value: "pass", label: "独自完成攻击" }, ...collaborators.map(target => ({ value: target.id, label: `邀请${game.nameOf(target)}` }))],
-      aiChoice: collaborators[0].id,
+      aiChoice: collaborators.find(target => game.aiIsAlly(playerId, target.id) && target.hand.length > 0)?.id || "pass",
       onResolve: collaboratorId => {
         const collaborator = game.player(collaboratorId);
         if (!collaborator?.alive || collaboratorId === "pass") return ownAttack();
@@ -267,7 +294,7 @@ export function useDemonSlayerSignature(game, playerId, targetId) {
         game.requestChoice(collaboratorId, {
           title: "恋之呼吸：协同突击",
           options: [{ value: "pass", label: "放弃协同" }, ...attacks.map(card => ({ value: card.uid, label: `打出【${card.name}】` }))],
-          aiChoice: attacks[0].uid,
+          aiChoice: game.aiIsAlly(collaboratorId, playerId) ? attacks[0].uid : "pass",
           onResolve: uid => {
             if (uid === "pass") return ownAttack();
             const result = game.playCard(collaboratorId, uid, targetId, { freeUse: true, onComplete: ownAttack });
@@ -292,7 +319,10 @@ export function useDemonSlayerSignature(game, playerId, targetId) {
         });
         game.requestChoice(playerId, {
           title: "爆血净化", options,
-          aiChoice: options.find(option => option.value.endsWith(":poison"))?.value || options[0]?.value,
+          aiChoice: [...options].filter(option => game.aiIsAlly(playerId, option.value.split(":")[0])).sort((a, b) => {
+            const value = option => game.aiTargetScore(playerId, option.value.split(":")[0], "support") + (option.value.endsWith(":none") ? 0 : 30);
+            return value(b) - value(a);
+          })[0]?.value || options[0]?.value,
           onResolve: value => {
             const [recipientId, status] = String(value).split(":");
             const recipient = game.player(recipientId);

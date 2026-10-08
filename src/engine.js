@@ -1,6 +1,6 @@
 import { activeSkills, cardDefinitions, characters, deckProfiles, getCharacter, getMode, roles } from "./data.js";
 import { handleOnePieceEvent, initializeOnePieceState, isOnePieceCharacter, getOnePieceActiveTargets, useOnePieceActive, getOnePieceSignatureTargets, useOnePieceSignature, signatureCost as onePieceSignatureCost } from "./packs/one-piece.js";
-import { handleDemonSlayerEvent, initializeDemonSlayerState, isDemonSlayerCharacter, getDemonSlayerActiveTargets, useDemonSlayerActive, getDemonSlayerSignatureTargets, useDemonSlayerSignature, gainBreathReady, consumeBreathReady } from "./packs/demon-slayer.js";
+import { handleDemonSlayerEvent, initializeDemonSlayerState, isDemonSlayerCharacter, getDemonSlayerActiveTargets, useDemonSlayerActive, getDemonSlayerSignatureTargets, useDemonSlayerSignature, gainBreathReady, consumeBreathReady, scoreDemonSlayerActive, scoreDemonSlayerSignature } from "./packs/demon-slayer.js";
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
@@ -2970,8 +2970,28 @@ export class GameEngine {
       const targets = this.getAITargets(playerId, this.getSignatureTargets(playerId));
       if (targets.length) { const result = this.useSignature(playerId, this.aiChooseTarget(playerId, targets, "attack")); if (result.ok !== false) return { acted: true }; }
     }
+    const demonSlayer = isDemonSlayerCharacter(player);
+    if (demonSlayer) {
+      const skill = activeSkills[player.characterId];
+      const active = this.getActiveSkillTargets(playerId).map(id => ({ id, score: scoreDemonSlayerActive(this, playerId, id, skill) })).filter(item => item.score > 0).sort((a, b) => b.score - a.score)[0];
+      const signature = player.energy >= this.signatureCost(playerId) && player.signatureLocked <= 0
+        ? this.getSignatureTargets(playerId).map(id => ({ id, score: scoreDemonSlayerSignature(this, playerId, id) })).filter(item => item.score > 0).sort((a, b) => b.score - a.score)[0]
+        : null;
+      if (signature && (!active || signature.score >= active.score)) {
+        const result = this.useSignature(playerId, signature.id);
+        if (result?.ok !== false) return { acted: true };
+      }
+      if (active) {
+        const result = this.useActiveSkill(playerId, active.id);
+        if (result?.ok !== false) return { acted: true };
+      }
+      if (signature) {
+        const result = this.useSignature(playerId, signature.id);
+        if (result?.ok !== false) return { acted: true };
+      }
+    }
     const frankyDuel = player.characterId === "franky" && this.players.filter(item => item.alive).length === 2;
-    const activeTargets = this.getActiveSkillTargets(playerId).filter(id => this.aiActiveUseful(player, activeSkills[player.characterId], id));
+    const activeTargets = demonSlayer ? [] : this.getActiveSkillTargets(playerId).filter(id => this.aiActiveUseful(player, activeSkills[player.characterId], id));
     const activeSkill = activeSkills[player.characterId];
     const chopperPriority = player.characterId === "chopper" && activeSkill?.effect === "medicine" && activeTargets.some(id => { const target = this.player(id); return target && (target.hp <= 2 || target.poison >= 2 || target.energyLocked); });
     if (activeTargets.length && !player.turnFlags.activeUsed && (chopperPriority || ["medicine","allBlueKitchen","oceanGuard","copyNinjutsu"].includes(activeSkill?.effect) || this.random() < .55)) {
@@ -2986,7 +3006,7 @@ export class GameEngine {
     const sig = this.characterOf(player).signature;
     const usefulSignature = player.characterId !== "orochimaru" || player.hand.some(card => card._curseSpoil === playerId && this.aiImmortalityValue(player,card) > 0);
     const frankyReady = !frankyDuel || !player.equipment.weapon || !player.equipment.armor || player.shield < 2 || this.discard.some(card => ["weapon", "armor"].includes(card.slot) && this.aiEquipmentGain(player, card) > 0);
-    if (usefulSignature && frankyReady && player.energy >= this.signatureCost(playerId) && player.signatureLocked <= 0) {
+    if (!demonSlayer && usefulSignature && frankyReady && player.energy >= this.signatureCost(playerId) && player.signatureLocked <= 0) {
       const targets = this.getSignatureTargets(playerId);
       const choices = sig.target === "enemy" ? this.getAITargets(playerId, targets) : sig.target === "ally" ? targets.filter(id => this.aiIsAlly(playerId, id)) : targets;
       if (choices.length) { const purpose = sig.target === "enemy" ? "attack" : (sig.target === "ally" ? "support" : "generic"); const result = this.useSignature(playerId, this.aiChooseTarget(playerId, choices, purpose)); if (result.ok !== false) return { acted: true }; }

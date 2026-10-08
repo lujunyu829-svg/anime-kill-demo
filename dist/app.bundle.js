@@ -97,7 +97,7 @@ const activeSkills = {
   giyu: { name: "静水护形", target: "ally", cost: 1, costText: "1能量 · 距离1内", effect: "stillWaterGuard", text: "目标下一次未完全防住的普通突击伤害-1，持续到你的下回合开始。" },
   rengoku: { name: "炎柱守护", target: "ally", cost: 1, costText: "1能量 · 距离2内", effect: "flameGuard", text: "距离2内一名其他角色首次成为别人单目标普通突击目标时，可将最终目标改为你。" },
   mitsuri: { name: "柔韧连携", target: "ally", cost: 1, costText: "1能量 · 距离2内 · 交1基础牌", effect: "flexibleBond", text: "交出1基础牌；受赠者使用为突击时距离+1，使用为防御时获得1护盾。" },
-  nezuko: { name: "护人本能", target: "ally", cost: 1, costText: "1能量 · 距离1内", effect: "protectiveInstinct", text: "目标首次响应普通突击时，可弃1张基础手牌为其提供1张防御。" },
+  nezuko: { name: "护人本能", target: "ally", cost: 1, costText: "1能量 · 距离2内", effect: "protectiveInstinct", text: "目标首次响应普通突击时，可弃1张基础手牌为其提供1张防御。" },
   akaza: { name: "术式展开·罗针", target: "enemy", cost: 1, costText: "1能量 · 距离2内", effect: "compassNeedle", text: "公开标记目标；双方互相发动攻击时距离视为1，直至你的下回合开始。" },
   muzan: { name: "血液烙印", target: "enemy", cost: 1, costText: "1能量 · 距离2内", effect: "bloodBrand", text: "目标可弃1手牌拒绝，否则接受血印；其下一张实际结算的非响应牌后获得1层毒。" },
   gojo: { name: "六眼", target: "self", costText: "无消耗", effect: "sixEyes", text: "摸2张牌，然后弃1张牌。每回合限一次。" },
@@ -719,6 +719,33 @@ function attackTargets(game, playerId, range = 2) {
   return game.players.filter(target => target.alive && target.id !== playerId && (game.mode.id === "classic8" || !game.isAlly(playerId, target.id)) && game.distance(playerId, target.id) <= range).map(target => target.id);
 }
 
+function scoreDemonSlayerActive(game, playerId, targetId, skill) {
+  const player = game.player(playerId), target = game.player(targetId);
+  if (!player?.alive || !target?.alive || !skill) return -Infinity;
+  const ally = game.aiIsAlly(playerId, targetId);
+  const danger = (target.maxHp - target.hp) * 18 + (target.hp <= 2 ? 25 : 0) + target.poison * 8 - target.shield * 8;
+  const pressure = 65 - target.hp * 7 - target.shield * 6 - target.hand.length * 2;
+  if (skill.effect === "chargeThunder") return player.hand.length && !player.breathReady && player.shield < 3 ? 45 : -Infinity;
+  if (skill.effect === "stillWaterGuard") return ally && !target.stillWaterGuard && (target.hp < target.maxHp || target.shield < 2) ? 35 + danger : -Infinity;
+  if (skill.effect === "flameGuard") return ally && target.id !== playerId && player.hp > 1 && !target.flameGuard && (target.hp < target.maxHp || target.shield < 2) ? 35 + danger : -Infinity;
+  if (skill.effect === "protectiveInstinct") return ally && player.hand.some(card => card.type === "basic") && !target.nezukoAid && (target.hp < target.maxHp || target.shield < 2) ? 35 + danger : -Infinity;
+  if (skill.effect === "flexibleBond") return ally && player.hand.some(card => card.type === "basic") ? 35 + danger - target.hand.length * 2 : -Infinity;
+  if (skill.effect === "wisteriaMix") return target.poison > 0 ? (ally ? 75 + danger : 35 + pressure) : -Infinity;
+  if (ally) return -Infinity;
+  if (skill.effect === "scentPursuit") return player.scentTargetId === targetId ? -Infinity : 35 + pressure;
+  if (skill.effect === "compassNeedle") return player.compassTargetId === targetId ? -Infinity : 35 + pressure;
+  if (skill.effect === "bloodBrand") return player.bloodMarkTargetId === targetId ? -Infinity : 35 + pressure + (target.hand.length === 0 ? 20 : 0);
+  return 35 + pressure;
+}
+
+function scoreDemonSlayerSignature(game, playerId, targetId) {
+  const player = game.player(playerId), target = game.player(targetId);
+  if (!player?.alive || !target?.alive) return -Infinity;
+  if (player.characterId === "giyu") return game.aiIsAlly(playerId, targetId) && !target.deadCalm && (target.hp < target.maxHp || target.shield < 2) ? 85 + (target.maxHp - target.hp) * 18 - target.shield * 8 : -Infinity;
+  if (game.aiIsAlly(playerId, targetId) || (player.characterId === "rengoku" && player.hp <= 1)) return -Infinity;
+  return 110 - target.hp * 7 - target.shield * 6 - target.hand.length * 2 + (player.characterId === "akaza" && player.compassDefended ? 15 : 0);
+}
+
 function getDemonSlayerActiveTargets(game, playerId, skill) {
   const player = game.player(playerId);
   if (!player?.alive || player.turnFlags.activeUsed || player.energy < (skill.cost || 0)) return [];
@@ -730,7 +757,7 @@ function getDemonSlayerActiveTargets(game, playerId, skill) {
   if (skill.effect === "wisteriaMix") return game.players.filter(target => target.alive && target.poison > 0 && game.distance(playerId, target.id) <= 2).map(target => target.id);
   if (skill.effect === "flameGuard") return game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id);
   if (skill.effect === "flexibleBond") return player.hand.some(card => card.type === "basic") ? game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id) : [];
-  if (skill.effect === "protectiveInstinct") return game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 1 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id);
+  if (skill.effect === "protectiveInstinct") return game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id);
   if (skill.effect === "bloodBrand") return attackTargets(game, playerId);
   return [];
 }
@@ -770,7 +797,7 @@ function useDemonSlayerActive(game, playerId, targetId, skill) {
     title: "藤花调剂",
     text: "移除目标1层毒，并选择净化或催毒。",
     options: [{ value: "cleanse", label: "净化：获得1护盾" }, { value: "catalyze", label: "催毒：失去1体力" }],
-    aiChoice: game.mode.id === "ranked2v2" && game.isAlly(playerId, targetId) ? "cleanse" : "catalyze",
+    aiChoice: game.aiIsAlly(playerId, targetId) ? "cleanse" : "catalyze",
     onResolve: choice => {
       if (!target.alive || target.poison <= 0) return;
       target.poison -= 1;
@@ -904,12 +931,12 @@ function useDemonSlayerSignature(game, playerId, targetId) {
         onResolve: choice => attack(choice === "use" && consumeBreathReady(game, playerId))
       });
     };
-    const collaborators = game.players.filter(target => target.alive && target.id !== playerId && target.id !== targetId && (game.mode.id === "classic8" || game.isAlly(playerId, target.id)) && target.hand.some(card => card.id === "attack" && game.getCardTargets(target.id, card).includes(targetId)));
+    const collaborators = game.players.filter(target => target.alive && target.id !== playerId && target.id !== targetId && (game.mode.id === "classic8" || game.isAlly(playerId, target.id)));
     if (!collaborators.length) return ownAttack();
     return game.requestChoice(playerId, {
       title: "恋之呼吸·协作者",
       options: [{ value: "pass", label: "独自完成攻击" }, ...collaborators.map(target => ({ value: target.id, label: `邀请${game.nameOf(target)}` }))],
-      aiChoice: collaborators[0].id,
+      aiChoice: collaborators.find(target => game.aiIsAlly(playerId, target.id) && target.hand.length > 0)?.id || "pass",
       onResolve: collaboratorId => {
         const collaborator = game.player(collaboratorId);
         if (!collaborator?.alive || collaboratorId === "pass") return ownAttack();
@@ -918,7 +945,7 @@ function useDemonSlayerSignature(game, playerId, targetId) {
         game.requestChoice(collaboratorId, {
           title: "恋之呼吸：协同突击",
           options: [{ value: "pass", label: "放弃协同" }, ...attacks.map(card => ({ value: card.uid, label: `打出【${card.name}】` }))],
-          aiChoice: attacks[0].uid,
+          aiChoice: game.aiIsAlly(collaboratorId, playerId) ? attacks[0].uid : "pass",
           onResolve: uid => {
             if (uid === "pass") return ownAttack();
             const result = game.playCard(collaboratorId, uid, targetId, { freeUse: true, onComplete: ownAttack });
@@ -943,7 +970,10 @@ function useDemonSlayerSignature(game, playerId, targetId) {
         });
         game.requestChoice(playerId, {
           title: "爆血净化", options,
-          aiChoice: options.find(option => option.value.endsWith(":poison"))?.value || options[0]?.value,
+          aiChoice: [...options].filter(option => game.aiIsAlly(playerId, option.value.split(":")[0])).sort((a, b) => {
+            const value = option => game.aiTargetScore(playerId, option.value.split(":")[0], "support") + (option.value.endsWith(":none") ? 0 : 30);
+            return value(b) - value(a);
+          })[0]?.value || options[0]?.value,
           onResolve: value => {
             const [recipientId, status] = String(value).split(":");
             const recipient = game.player(recipientId);
@@ -4090,8 +4120,28 @@ class GameEngine {
       const targets = this.getAITargets(playerId, this.getSignatureTargets(playerId));
       if (targets.length) { const result = this.useSignature(playerId, this.aiChooseTarget(playerId, targets, "attack")); if (result.ok !== false) return { acted: true }; }
     }
+    const demonSlayer = isDemonSlayerCharacter(player);
+    if (demonSlayer) {
+      const skill = activeSkills[player.characterId];
+      const active = this.getActiveSkillTargets(playerId).map(id => ({ id, score: scoreDemonSlayerActive(this, playerId, id, skill) })).filter(item => item.score > 0).sort((a, b) => b.score - a.score)[0];
+      const signature = player.energy >= this.signatureCost(playerId) && player.signatureLocked <= 0
+        ? this.getSignatureTargets(playerId).map(id => ({ id, score: scoreDemonSlayerSignature(this, playerId, id) })).filter(item => item.score > 0).sort((a, b) => b.score - a.score)[0]
+        : null;
+      if (signature && (!active || signature.score >= active.score)) {
+        const result = this.useSignature(playerId, signature.id);
+        if (result?.ok !== false) return { acted: true };
+      }
+      if (active) {
+        const result = this.useActiveSkill(playerId, active.id);
+        if (result?.ok !== false) return { acted: true };
+      }
+      if (signature) {
+        const result = this.useSignature(playerId, signature.id);
+        if (result?.ok !== false) return { acted: true };
+      }
+    }
     const frankyDuel = player.characterId === "franky" && this.players.filter(item => item.alive).length === 2;
-    const activeTargets = this.getActiveSkillTargets(playerId).filter(id => this.aiActiveUseful(player, activeSkills[player.characterId], id));
+    const activeTargets = demonSlayer ? [] : this.getActiveSkillTargets(playerId).filter(id => this.aiActiveUseful(player, activeSkills[player.characterId], id));
     const activeSkill = activeSkills[player.characterId];
     const chopperPriority = player.characterId === "chopper" && activeSkill?.effect === "medicine" && activeTargets.some(id => { const target = this.player(id); return target && (target.hp <= 2 || target.poison >= 2 || target.energyLocked); });
     if (activeTargets.length && !player.turnFlags.activeUsed && (chopperPriority || ["medicine","allBlueKitchen","oceanGuard","copyNinjutsu"].includes(activeSkill?.effect) || this.random() < .55)) {
@@ -4106,7 +4156,7 @@ class GameEngine {
     const sig = this.characterOf(player).signature;
     const usefulSignature = player.characterId !== "orochimaru" || player.hand.some(card => card._curseSpoil === playerId && this.aiImmortalityValue(player,card) > 0);
     const frankyReady = !frankyDuel || !player.equipment.weapon || !player.equipment.armor || player.shield < 2 || this.discard.some(card => ["weapon", "armor"].includes(card.slot) && this.aiEquipmentGain(player, card) > 0);
-    if (usefulSignature && frankyReady && player.energy >= this.signatureCost(playerId) && player.signatureLocked <= 0) {
+    if (!demonSlayer && usefulSignature && frankyReady && player.energy >= this.signatureCost(playerId) && player.signatureLocked <= 0) {
       const targets = this.getSignatureTargets(playerId);
       const choices = sig.target === "enemy" ? this.getAITargets(playerId, targets) : sig.target === "ally" ? targets.filter(id => this.aiIsAlly(playerId, id)) : targets;
       if (choices.length) { const purpose = sig.target === "enemy" ? "attack" : (sig.target === "ally" ? "support" : "generic"); const result = this.useSignature(playerId, this.aiChooseTarget(playerId, choices, purpose)); if (result.ok !== false) return { acted: true }; }
