@@ -19,6 +19,7 @@ export function initializeDemonSlayerState(player, character) {
     player.scentSetTurn = 0;
   }
   if (character.id === "giyu") player.stillWaterGuard = null;
+  if (character.id === "inosuke") { player.rageTargetId = null; player.rageSetTurn = 0; }
   if (character.id === "nezuko") {
     player.bloodFlame = 0;
     player.bloodFlameSetTurn = 0;
@@ -61,6 +62,9 @@ export function getDemonSlayerActiveTargets(game, playerId, skill) {
   if (skill.effect === "scentPursuit") return attackTargets(game, playerId);
   if (skill.effect === "stillWaterGuard") return game.players.filter(target => target.alive && (target.id === playerId || (game.distance(playerId, target.id) <= 1 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))))).map(target => target.id);
   if (skill.effect === "compassNeedle") return attackTargets(game, playerId);
+  if (skill.effect === "chargeThunder") return player.hand.length && !player.turnFlags.ordinaryAttackUsed ? [playerId] : [];
+  if (skill.effect === "boarRush") return attackTargets(game, playerId, 1);
+  if (skill.effect === "wisteriaMix") return game.players.filter(target => target.alive && target.poison > 0 && game.distance(playerId, target.id) <= 2).map(target => target.id);
   return [];
 }
 
@@ -86,6 +90,27 @@ export function useDemonSlayerActive(game, playerId, targetId, skill) {
     player.compassSetTurn = game.turnNumber;
     game.log("event", `${game.nameOf(player)}以罗针锁定${game.nameOf(target)}`);
   }
+  if (skill.effect === "chargeThunder") return game.requestDiscard(playerId, 1, {
+    reason: "蓄雷：请选择1张手牌弃置",
+    onComplete: () => {
+      gainBreathReady(game, playerId);
+      game.gainShield(playerId, 1, playerId);
+      game.forceEndPlayPhase(playerId);
+    }
+  });
+  if (skill.effect === "boarRush") return game.beginAttack({ sourceId: playerId, targetId, damage: 1, requiredGuards: 1, origin: "boarRush" });
+  if (skill.effect === "wisteriaMix") return game.requestChoice(playerId, {
+    title: "藤花调剂",
+    text: "移除目标1层毒，并选择净化或催毒。",
+    options: [{ value: "cleanse", label: "净化：获得1护盾" }, { value: "catalyze", label: "催毒：失去1体力" }],
+    aiChoice: game.mode.id === "ranked2v2" && game.isAlly(playerId, targetId) ? "cleanse" : "catalyze",
+    onResolve: choice => {
+      if (!target.alive || target.poison <= 0) return;
+      target.poison -= 1;
+      if (choice === "cleanse") game.gainShield(targetId, 1, playerId);
+      else game.loseHp(targetId, 1, playerId, "wisteriaMix");
+    }
+  });
   return { ok: true };
 }
 
@@ -95,6 +120,8 @@ export function getDemonSlayerSignatureTargets(game, playerId) {
   if (player.characterId === "tanjiro") return attackTargets(game, playerId);
   if (player.characterId === "giyu") return game.players.filter(target => target.alive && (target.id === playerId || (game.distance(playerId, target.id) <= 1 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))))).map(target => target.id);
   if (player.characterId === "akaza") return player.compassTargetId && game.player(player.compassTargetId)?.alive ? [player.compassTargetId] : [];
+  if (player.characterId === "zenitsu") return attackTargets(game, playerId, 99);
+  if (["inosuke", "shinobu"].includes(player.characterId)) return attackTargets(game, playerId);
   return [];
 }
 
@@ -117,6 +144,41 @@ export function useDemonSlayerSignature(game, playerId, targetId) {
   if (player.characterId === "akaza") {
     const damage = 2 + (player.compassDefended ? 1 : 0);
     return game.beginAttack({ sourceId: playerId, targetId, damage, requiredGuards: 2, origin: "annihilationStyle", onComplete: () => { player.compassTargetId = null; player.compassDefended = false; player.compassSetTurn = 0; } });
+  }
+  if (player.characterId === "zenitsu") {
+    const attack = boost => game.beginAttack({ sourceId: playerId, targetId, damage: 2, requiredGuards: boost ? 3 : 2, origin: "thunderSixfold", skipIntervene: boost });
+    if (!player.breathReady) return attack(false);
+    return game.requestChoice(playerId, {
+      title: "霹雳一闪·六连",
+      options: [{ value: "use", label: "消耗呼吸态：三防且不可介入" }, { value: "pass", label: "保留呼吸态" }],
+      aiChoice: "use",
+      onResolve: choice => attack(choice === "use" && consumeBreathReady(game, playerId))
+    });
+  }
+  if (player.characterId === "inosuke") {
+    const attack = boost => {
+      const second = () => {
+        if (player.alive && game.player(targetId)?.alive) game.beginAttack({ sourceId: playerId, targetId, damage: 1, requiredGuards: boost ? 2 : 1, origin: "beastRend" });
+      };
+      return game.beginAttack({ sourceId: playerId, targetId, damage: 1, requiredGuards: 1, origin: "beastRend", onComplete: second });
+    };
+    if (!player.breathReady) return attack(false);
+    return game.requestChoice(playerId, {
+      title: "兽之呼吸·乱裂",
+      options: [{ value: "use", label: "消耗呼吸态强化第二段" }, { value: "pass", label: "保留呼吸态" }],
+      aiChoice: "use",
+      onResolve: choice => attack(choice === "use" && consumeBreathReady(game, playerId))
+    });
+  }
+  if (player.characterId === "shinobu") {
+    const attack = boost => game.beginAttack({ sourceId: playerId, targetId, damage: 1, requiredGuards: 2, origin: boost ? "centipedeDanceBoost" : "centipedeDance", alwaysPoison: true });
+    if (!player.breathReady) return attack(false);
+    return game.requestChoice(playerId, {
+      title: "蜈蚣之舞",
+      options: [{ value: "use", label: "消耗呼吸态，施加2层毒" }, { value: "pass", label: "保留呼吸态，施加1层毒" }],
+      aiChoice: "use",
+      onResolve: choice => attack(choice === "use" && consumeBreathReady(game, playerId))
+    });
   }
   if (player.characterId !== "tanjiro") return { ok: false, reason: "技能尚未开放" };
   const attack = pierce => game.beginAttack({ sourceId: playerId, targetId, damage: 2, requiredGuards: 2, origin: pierce ? "hinokamiDancePierce" : "hinokamiDance" });
@@ -163,6 +225,16 @@ export function handleDemonSlayerEvent(game, event) {
   }
   if (event.type === "damageApplied") {
     const target = game.player(event.targetId);
+    const source = game.player(event.sourceId);
+    if (source?.characterId === "shinobu" && event.ordinaryAttack && event.actualHpLoss > 0 && !source.turnFlags.poisonBlade) {
+      source.turnFlags.poisonBlade = true;
+      game.applyPoison(event.targetId, 1);
+    }
+    if (target?.characterId === "inosuke" && source?.alive && source.id !== target.id && event.actualHpLoss > 0 && !target.roundFlags.rageMarked) {
+      target.roundFlags.rageMarked = true;
+      target.rageTargetId = source.id;
+      target.rageSetTurn = game.turnNumber;
+    }
     if (target?.alive && target.characterId === "akaza" && target.compassTargetId === event.sourceId && event.actualHpLoss > 0 && !target.roundFlags.demonRegen) {
       target.roundFlags.demonRegen = true;
       game.gainShield(target.id, 1, target.id);
@@ -184,6 +256,7 @@ export function handleDemonSlayerEvent(game, event) {
       player.compassDefended = false;
       player.compassSetTurn = 0;
     }
+    if (player?.characterId === "inosuke" && player.rageTargetId && player.rageSetTurn < game.turnNumber) { player.rageTargetId = null; player.rageSetTurn = 0; }
   }
   if (event.type === "turnEnd") {
     const player = game.player(event.playerId || event.sourceId);
@@ -200,6 +273,7 @@ export function handleDemonSlayerEvent(game, event) {
     }
     if (player.characterId === "nezuko") { player.bloodFlame = 0; player.bloodFlameSetTurn = 0; }
     if (player.characterId === "akaza") { player.compassTargetId = null; player.compassDefended = false; }
+    for (const owner of game.players.filter(item => item.characterId === "inosuke" && (item.id === player.id || item.rageTargetId === player.id))) { owner.rageTargetId = null; owner.rageSetTurn = 0; }
     for (const owner of game.players.filter(item => item.characterId === "akaza" && item.compassTargetId === player.id)) { owner.compassTargetId = null; owner.compassDefended = false; owner.compassSetTurn = 0; }
     for (const target of game.players) {
       if (target.stillWaterGuard?.ownerId === player.id || target.id === player.id) target.stillWaterGuard = null;

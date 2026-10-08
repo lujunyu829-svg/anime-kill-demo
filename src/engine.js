@@ -631,6 +631,7 @@ export class GameEngine {
     if (player.characterId === "zoro" && player.equipment.weapon) range += 1;
     if (player.characterId === "sanji" && !player.equipment.weapon) range += 1;
     if (player.characterId === "jiraiya" && player.sageMarks > 0) range += 1;
+    if (player.characterId === "inosuke") range += 1;
     if (player.characterId === "naruto" && this.getSpecialCards(playerId, "clone").length) return 99;
     return range;
   }
@@ -648,6 +649,7 @@ export class GameEngine {
     if (card.id === "attack") return this.players.filter(p => p.alive && p.id !== playerId && (
       this.distance(playerId, p.id) <= this.attackRange(playerId)
       || (player.characterId === "giyu" && player.breathReady && this.distance(playerId, p.id) <= this.attackRange(playerId) + 1)
+      || (player.characterId === "zenitsu" && player.breathReady && (this.mode.id === "classic8" || !this.isAlly(playerId, p.id)))
       || (player.characterId === "akaza" && player.compassTargetId === p.id)
       || (p.characterId === "akaza" && p.compassTargetId === playerId)
       || (player.characterId === "sasuke" && player.swapMarkedId === p.id)
@@ -1129,6 +1131,7 @@ export class GameEngine {
       this.log("event", `${this.nameOf(player)}使用研究类别牌，获得1点能量`);
     }
     if (card.id === "attack") {
+      if (player.characterId === "zenitsu") player.turnFlags.ordinaryAttackUsed = true;
       if (!options.freeUse) player.attacksUsed += 1;
       const result = this.beginAttack({ sourceId: playerId, targetId, damage: 1, requiredGuards: 1, origin: "attack", freeUse: options.freeUse, onComplete: () => this.finalizeCardResolved(playerId, [targetId], card) });
       return this.finishBasicUse(playerId, card, result, targetId);
@@ -1762,6 +1765,16 @@ export class GameEngine {
         onResolve: choice => this.beginAttack({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipIntervene, skipRaven, freeUse, jinbePiercing, breathOfferResolved: true, breathPierce: choice === "use" && consumeBreathReady(this, sourceId) })
       });
     }
+    if (ordinaryAttack && source.characterId === "zenitsu" && source.breathReady && !breathOfferResolved) {
+      const distant = this.distance(sourceId, targetId) > this.attackRange(sourceId);
+      return this.requestChoice(sourceId, {
+        title: "一之型",
+        text: "消耗呼吸态使本次普通突击无视距离并额外需要1张防御。",
+        options: [...(distant ? [] : [{ value: "pass", label: "保留呼吸态" }]), { value: "use", label: "消耗呼吸态" }],
+        aiChoice: "use",
+        onResolve: choice => this.beginAttack({ sourceId, targetId, damage, requiredGuards: requiredGuards + (choice === "use" && consumeBreathReady(this, sourceId) ? 1 : 0), origin, alwaysPoison, onComplete, skipIntervene, skipRaven, freeUse, jinbePiercing, breathOfferResolved: true })
+      });
+    }
     let observationDefended = false;
     if (origin === "attack" && target.characterId === "luffy" && !target.roundFlags.observation) {
       target.roundFlags.observation = true;
@@ -1805,6 +1818,11 @@ export class GameEngine {
     }
     if (ordinaryAttack && source.characterId === "akaza" && source.compassTargetId === targetId && !source.turnFlags.compassPressureUsed) {
       source.turnFlags.compassPressureUsed = true;
+      requiredGuards += 1;
+    }
+    if (ordinaryAttack && source.characterId === "inosuke" && source.rageTargetId === targetId) {
+      source.rageTargetId = null;
+      source.rageSetTurn = 0;
       requiredGuards += 1;
     }
     if (breathPierce) source.turnFlags.ignoreArmorTarget = targetId;
@@ -1969,7 +1987,7 @@ export class GameEngine {
 
   offerAttackIntervention(payload) {
     const { sourceId, targetId, origin } = payload;
-    if (!["attack", "signature", "hinokamiDance", "hinokamiDancePierce", "annihilationStyle", "goemon", "asura", "diableJambe", "impactWolf", "vagabondDrill", "arrowNotch", "blackFlash", "active"].includes(origin)) return null;
+    if (!["attack", "signature", "hinokamiDance", "hinokamiDancePierce", "annihilationStyle", "thunderSixfold", "beastRend", "centipedeDance", "centipedeDanceBoost", "goemon", "asura", "diableJambe", "impactWolf", "vagabondDrill", "arrowNotch", "blackFlash", "active"].includes(origin)) return null;
     const eligible = this.players.filter(player => player.alive && player.id !== sourceId && player.id !== targetId && player.hand.some(card => card.id === "intervene"));
     if (!eligible.length) return null;
     const candidate = eligible.find(player => player.human) || eligible.find(player => this.aiIsAlly(player.id, targetId) && !this.aiIsAlly(player.id, sourceId));
@@ -2015,8 +2033,9 @@ export class GameEngine {
     const armorSubstitute = player.equipment.armor?.id === "adaptive_armor" && !player.roundFlags.adaptiveGuard && player.hand.some(card => card.type === "basic" && !["guard", "adapt"].includes(card.id));
     const chopperSubstitute = player.characterId === "chopper" && !player.roundFlags.chopperFur && player.hand.some(card => card.type === "basic" && !card.responseOnly && !["guard", "adapt"].includes(card.id));
     const canSubstitute = player.characterId === "mikasa" && !player.roundFlags.substitute && player.hand.some(card => card.id !== "guard");
+    const crisisHearing = player.characterId === "zenitsu" && player.hp <= 2 && !player.roundFlags.crisisHearing && player.hand.some(card => !card.responseOnly && !["guard", "adapt"].includes(card.id));
     const clone = player.characterId === "naruto" && this.getSpecialCards(playerId, "clone").length ? 1 : 0;
-    return guards + (armorSubstitute ? 1 : 0) + (chopperSubstitute ? 1 : 0) + (canSubstitute ? 1 : 0) + clone;
+    return guards + (armorSubstitute ? 1 : 0) + (chopperSubstitute ? 1 : 0) + (canSubstitute ? 1 : 0) + (crisisHearing ? 1 : 0) + clone;
   }
 
   spendGuards(playerId, count) {
@@ -2050,6 +2069,16 @@ export class GameEngine {
         if (substitute) {
           this.removeCard(playerId, substitute.uid);
           player.roundFlags.substitute = true;
+          left -= 1;
+          continue;
+        }
+      }
+      if (player.characterId === "zenitsu" && player.hp <= 2 && !player.roundFlags.crisisHearing) {
+        const substitute = player.hand.find(card => !card.responseOnly && !["guard", "adapt"].includes(card.id));
+        if (substitute) {
+          this.removeCard(playerId, substitute.uid);
+          player.roundFlags.crisisHearing = true;
+          paidGuards += 1;
           left -= 1;
           continue;
         }
@@ -2105,7 +2134,7 @@ export class GameEngine {
     if (shikamaru) this.triggerTacticalForesight(shikamaru.id, sourceId, "棋子攻击被防御");
     const finish = () => {
       if (origin === "blackFlash" && source) this.gainEnergy(sourceId, 2);
-      if (alwaysPoison) this.applyPoison(targetId, origin === "venomStrike" ? 2 : 1);
+      if (alwaysPoison && this.player(targetId)?.alive) this.applyPoison(targetId, ["venomStrike", "centipedeDanceBoost"].includes(origin) ? 2 : 1);
       const target = this.player(targetId);
       const scoutedByHinata = this.players.some(owner => owner.alive && owner.characterId === "hinata" && owner.scoutedTargetId === targetId);
       if (target?.equipment.armor?.id === "reflector" && !target.roundFlags.reflector && !scoutedByHinata) { target.roundFlags.reflector = true; this.draw(targetId, 1); }
@@ -2155,7 +2184,7 @@ export class GameEngine {
     }
     const damageResult = this.dealDamage(sourceId, targetId, damage, origin, onComplete);
     if (damageResult?.pending) return damageResult;
-    if (alwaysPoison && target.alive) this.applyPoison(targetId, origin === "venomStrike" ? 1 : 1);
+    if (alwaysPoison && target.alive) this.applyPoison(targetId, origin === "centipedeDanceBoost" ? 2 : 1);
   }
 
   addSageMark(playerId, kind) {
@@ -2268,7 +2297,6 @@ export class GameEngine {
     for (const causal of causalPlots) { this.removePlot(causal); this.draw(causal.ownerId, 2); this.gainEnergy(causal.ownerId, 1); }
 
     if (source?.characterId === "rukia" && origin === "attack") target.frozenDraw = 1;
-    if (source?.characterId === "shinobu" && origin === "attack") this.applyPoison(targetId, 1);
     if (source?.characterId === "yuji" && origin === "attack" && !source.turnFlags.divergent) {
       source.turnFlags.divergent = true;
       if (target.hp > 0 && target.hand.length) return this.requestDiscard(targetId, 1, { reason: "受到径庭拳命中：请选择1张手牌弃置", shouldLog: false, onComplete: () => this.finishDamageResolution(sourceId, targetId, onComplete, origin) });
