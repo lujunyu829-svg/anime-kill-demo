@@ -20,6 +20,7 @@ export function initializeDemonSlayerState(player, character) {
   }
   if (character.id === "giyu") player.stillWaterGuard = null;
   if (character.id === "inosuke") { player.rageTargetId = null; player.rageSetTurn = 0; }
+  if (character.id === "rengoku") player.flameGuard = null;
   if (character.id === "nezuko") {
     player.bloodFlame = 0;
     player.bloodFlameSetTurn = 0;
@@ -65,6 +66,8 @@ export function getDemonSlayerActiveTargets(game, playerId, skill) {
   if (skill.effect === "chargeThunder") return player.hand.length && !player.turnFlags.ordinaryAttackUsed ? [playerId] : [];
   if (skill.effect === "boarRush") return attackTargets(game, playerId, 1);
   if (skill.effect === "wisteriaMix") return game.players.filter(target => target.alive && target.poison > 0 && game.distance(playerId, target.id) <= 2).map(target => target.id);
+  if (skill.effect === "flameGuard") return game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id);
+  if (skill.effect === "flexibleBond") return player.hand.some(card => card.type === "basic") ? game.players.filter(target => target.alive && target.id !== playerId && game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))).map(target => target.id) : [];
   return [];
 }
 
@@ -111,6 +114,23 @@ export function useDemonSlayerActive(game, playerId, targetId, skill) {
       else game.loseHp(targetId, 1, playerId, "wisteriaMix");
     }
   });
+  if (skill.effect === "flameGuard") {
+    target.flameGuard = { ownerId: playerId, setTurn: game.turnNumber };
+    return { ok: true };
+  }
+  if (skill.effect === "flexibleBond") return game.requestChoice(playerId, {
+    title: "柔韧连携：选择基础牌",
+    options: player.hand.filter(card => card.type === "basic").map(card => ({ value: card.uid, label: `交出【${card.name}】` })),
+    aiChoice: player.hand.find(card => card.type === "basic")?.uid,
+    onResolve: uid => {
+      const index = player.hand.findIndex(card => card.uid === uid && card.type === "basic");
+      if (index < 0 || !target.alive) return;
+      const [card] = player.hand.splice(index, 1);
+      card._mitsuriGift = { ownerId: playerId, recipientId: targetId, setTurn: game.turnNumber };
+      target.hand.push(card);
+      game.emitOnePieceEvent({ type: "cardTransferred", sourceId: playerId, targetId, card, amount: 1 });
+    }
+  });
   return { ok: true };
 }
 
@@ -122,6 +142,7 @@ export function getDemonSlayerSignatureTargets(game, playerId) {
   if (player.characterId === "akaza") return player.compassTargetId && game.player(player.compassTargetId)?.alive ? [player.compassTargetId] : [];
   if (player.characterId === "zenitsu") return attackTargets(game, playerId, 99);
   if (["inosuke", "shinobu"].includes(player.characterId)) return attackTargets(game, playerId);
+  if (["rengoku", "mitsuri"].includes(player.characterId)) return attackTargets(game, playerId);
   return [];
 }
 
@@ -180,6 +201,51 @@ export function useDemonSlayerSignature(game, playerId, targetId) {
       onResolve: choice => attack(choice === "use" && consumeBreathReady(game, playerId))
     });
   }
+  if (player.characterId === "rengoku") {
+    const attack = boost => game.beginAttack({ sourceId: playerId, targetId, damage: boost ? 3 : 2, requiredGuards: 2, origin: "flamePillar", onComplete: () => { if (player.alive) game.loseHp(playerId, 1, null, "flamePillar"); } });
+    if (!player.breathReady) return attack(false);
+    return game.requestChoice(playerId, {
+      title: "玖之型·炼狱",
+      options: [{ value: "use", label: "消耗呼吸态：伤害+1" }, { value: "pass", label: "保留呼吸态" }],
+      aiChoice: "use",
+      onResolve: choice => attack(choice === "use" && consumeBreathReady(game, playerId))
+    });
+  }
+  if (player.characterId === "mitsuri") {
+    const ownAttack = () => {
+      const attack = boost => game.beginAttack({ sourceId: playerId, targetId, damage: 1, requiredGuards: boost ? 2 : 1, origin: "loveBloom" });
+      if (!player.breathReady) return attack(false);
+      return game.requestChoice(playerId, {
+        title: "恋之呼吸·摇曳花影",
+        options: [{ value: "use", label: "消耗呼吸态：额外需要1张防御" }, { value: "pass", label: "保留呼吸态" }],
+        aiChoice: "use",
+        onResolve: choice => attack(choice === "use" && consumeBreathReady(game, playerId))
+      });
+    };
+    const collaborators = game.players.filter(target => target.alive && target.id !== playerId && target.id !== targetId && (game.mode.id === "classic8" || game.isAlly(playerId, target.id)) && target.hand.some(card => card.id === "attack" && game.getCardTargets(target.id, card).includes(targetId)));
+    if (!collaborators.length) return ownAttack();
+    return game.requestChoice(playerId, {
+      title: "恋之呼吸·协作者",
+      options: [{ value: "pass", label: "独自完成攻击" }, ...collaborators.map(target => ({ value: target.id, label: `邀请${game.nameOf(target)}` }))],
+      aiChoice: collaborators[0].id,
+      onResolve: collaboratorId => {
+        const collaborator = game.player(collaboratorId);
+        if (!collaborator?.alive || collaboratorId === "pass") return ownAttack();
+        const attacks = collaborator.hand.filter(card => card.id === "attack" && game.getCardTargets(collaboratorId, card).includes(targetId));
+        if (!attacks.length) return ownAttack();
+        game.requestChoice(collaboratorId, {
+          title: "恋之呼吸：协同突击",
+          options: [{ value: "pass", label: "放弃协同" }, ...attacks.map(card => ({ value: card.uid, label: `打出【${card.name}】` }))],
+          aiChoice: attacks[0].uid,
+          onResolve: uid => {
+            if (uid === "pass") return ownAttack();
+            const result = game.playCard(collaboratorId, uid, targetId, { freeUse: true, onComplete: ownAttack });
+            if (result.ok === false) ownAttack();
+          }
+        });
+      }
+    });
+  }
   if (player.characterId !== "tanjiro") return { ok: false, reason: "技能尚未开放" };
   const attack = pierce => game.beginAttack({ sourceId: playerId, targetId, damage: 2, requiredGuards: 2, origin: pierce ? "hinokamiDancePierce" : "hinokamiDance" });
   if (!player.breathReady) return attack(false);
@@ -193,6 +259,7 @@ export function useDemonSlayerSignature(game, playerId, targetId) {
 }
 
 export function handleDemonSlayerEvent(game, event) {
+  if (event.type === "cardTransferred" && event.card?._mitsuriGift?.recipientId === event.sourceId) delete event.card._mitsuriGift;
   if (event.type === "damageApplied" && event.ordinaryAttack && event.actualHpLoss > 0) gainBreathReady(game, event.sourceId);
   if (event.type === "attackFullyDefended" && event.ordinaryAttack && event.paidGuards >= event.requiredGuards && event.requiredGuards > 0) gainBreathReady(game, event.targetId);
   if (event.type === "attackFullyDefended" && event.ordinaryAttack) {
@@ -230,6 +297,10 @@ export function handleDemonSlayerEvent(game, event) {
       source.turnFlags.poisonBlade = true;
       game.applyPoison(event.targetId, 1);
     }
+    if (event.ordinaryAttack && event.actualHpLoss > 0 && event.cardUid) {
+      const gift = game.activeCardContext?.card?.uid === event.cardUid ? game.activeCardContext.card._mitsuriGift : null;
+      if (gift?.recipientId === event.sourceId) gainBreathReady(game, gift.ownerId);
+    }
     if (target?.characterId === "inosuke" && source?.alive && source.id !== target.id && event.actualHpLoss > 0 && !target.roundFlags.rageMarked) {
       target.roundFlags.rageMarked = true;
       target.rageTargetId = source.id;
@@ -257,6 +328,8 @@ export function handleDemonSlayerEvent(game, event) {
       player.compassSetTurn = 0;
     }
     if (player?.characterId === "inosuke" && player.rageTargetId && player.rageSetTurn < game.turnNumber) { player.rageTargetId = null; player.rageSetTurn = 0; }
+    if (player?.characterId === "rengoku") for (const target of game.players) if (target.flameGuard?.ownerId === player.id && target.flameGuard.setTurn < game.turnNumber) target.flameGuard = null;
+    if (player?.characterId === "mitsuri") for (const target of game.players) for (const card of target.hand) if (card._mitsuriGift?.ownerId === player.id && card._mitsuriGift.setTurn < game.turnNumber) delete card._mitsuriGift;
   }
   if (event.type === "turnEnd") {
     const player = game.player(event.playerId || event.sourceId);
@@ -274,6 +347,10 @@ export function handleDemonSlayerEvent(game, event) {
     if (player.characterId === "nezuko") { player.bloodFlame = 0; player.bloodFlameSetTurn = 0; }
     if (player.characterId === "akaza") { player.compassTargetId = null; player.compassDefended = false; }
     for (const owner of game.players.filter(item => item.characterId === "inosuke" && (item.id === player.id || item.rageTargetId === player.id))) { owner.rageTargetId = null; owner.rageSetTurn = 0; }
+    for (const target of game.players) {
+      if (target.flameGuard?.ownerId === player.id || target.id === player.id) target.flameGuard = null;
+      for (const card of target.hand) if (card._mitsuriGift?.ownerId === player.id || target.id === player.id) delete card._mitsuriGift;
+    }
     for (const owner of game.players.filter(item => item.characterId === "akaza" && item.compassTargetId === player.id)) { owner.compassTargetId = null; owner.compassDefended = false; owner.compassSetTurn = 0; }
     for (const target of game.players) {
       if (target.stillWaterGuard?.ownerId === player.id || target.id === player.id) target.stillWaterGuard = null;

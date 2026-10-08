@@ -91,7 +91,7 @@ export const activeSkills = {
   inosuke: { name: "猪突猛进", target: "enemy", cost: 1, costText: "1能量 · 距离1内", effect: "boarRush", text: "对距离1内目标发动不计次数的虚拟攻击，造成1伤害、需要1张防御。" },
   shinobu: { name: "藤花调剂", target: "other", cost: 1, costText: "1能量 · 距离2内", effect: "wisteriaMix", text: "移除目标1层毒，选择使其获得1护盾，或令其立即失去1体力。" },
   giyu: { name: "静水护形", target: "ally", cost: 1, costText: "1能量 · 距离1内", effect: "stillWaterGuard", text: "目标下一次未完全防住的普通突击伤害-1，持续到你的下回合开始。" },
-  rengoku: { name: "炎柱守护", target: "ally", cost: 1, costText: "1能量 · 距离1内", effect: "flameGuard", text: "目标首次成为别人单目标普通突击目标时，可将最终目标改为你。" },
+  rengoku: { name: "炎柱守护", target: "ally", cost: 1, costText: "1能量 · 距离2内", effect: "flameGuard", text: "距离2内一名其他角色首次成为别人单目标普通突击目标时，可将最终目标改为你。" },
   mitsuri: { name: "柔韧连携", target: "ally", cost: 1, costText: "1能量 · 距离2内 · 交1基础牌", effect: "flexibleBond", text: "交出1基础牌；受赠者使用为突击时距离+1，使用为防御时获得1护盾。" },
   nezuko: { name: "护人本能", target: "ally", cost: 1, costText: "1能量 · 距离1内", effect: "protectiveInstinct", text: "目标首次响应普通突击时，可弃1张基础手牌为其提供1张防御。" },
   akaza: { name: "术式展开·罗针", target: "enemy", cost: 1, costText: "1能量 · 距离2内", effect: "compassNeedle", text: "公开标记目标；双方互相发动攻击时距离视为1，直至你的下回合开始。" },
