@@ -19,7 +19,7 @@ const modes = [
 const characterHandLimits = {
   shikamaru: 5, itachi: 5, hinata: 5, orochimaru: 5, chopper: 5, rukia: 5, armin: 5,
   gaara: 3, sakura: 5, kakashi: 5, nami: 5, usopp: 5, robin: 5,
-  zenitsu: 4, inosuke: 3, shinobu: 5, mitsuri: 5, nezuko: 3, muzan: 5
+  zenitsu: 4, inosuke: 3, shinobu: 4, giyu: 5, mitsuri: 5, nezuko: 3, muzan: 5
 };
 
 const characters = [
@@ -46,14 +46,14 @@ const characters = [
   { id: "ichigo", name: "黑崎一护", series: "死神", role: "输出", hp: 4, glyph: "斩", color: "#e78b39", skills: [{ name: "斩月", text: "你的攻击距离+1。" }, { name: "战意", text: "每回合首次攻击被防御后摸1张牌。" }], signature: { name: "卍解", cost: 4, target: "self", text: "本回合攻击距离无限、攻击次数+1，并摸1张攻击牌。", effect: "bankai" } },
   { id: "rukia", name: "朽木露琪亚", series: "死神", role: "控制", hp: 3, glyph: "雪", color: "#9fb9e9", skills: [{ name: "初舞·月白", text: "攻击造成伤害后，目标下回合少摸1张牌。" }, { name: "袖白雪", text: "你使用单目标策略牌时无视距离。" }], signature: { name: "白霞罚", cost: 4, target: "enemy", text: "令目标下个出牌阶段无法使用攻击和策略牌。", effect: "freeze" } },
   { id: "tanjiro", name: "灶门炭治郎", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "输出", hp: 4, glyph: "炭", color: "#55aa8a", skills: [{ name: "水之呼吸", text: "每轮首次普通突击被完全防御后，可弃另一张手牌，从弃牌堆取回本次突击；不返还突击次数。" }, { name: "呼吸衔接", text: "声明普通突击时可消耗呼吸态，选择伤害+1或额外需要1张防御。" }], signature: { name: "火之神神乐·圆舞", cost: 4, target: "enemy", text: "对距离2内目标发动2伤害、需要2张防御的强袭；可消耗呼吸态忽略防具。", effect: "hinokamiDance" } },
-  { id: "zenitsu", name: "我妻善逸", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "爆发", hp: 3, glyph: "雷", color: "#e8bd4d", skills: [{ name: "一之型", text: "普通突击可消耗呼吸态，无视距离且额外需要1张防御。" }, { name: "危机听觉", text: "体力不高于2时，每轮一次可将1张非响应手牌当作防御打出。" }], signature: { name: "霹雳一闪·六连", cost: 3, target: "enemy", text: "对任意其他角色发动2伤害、需要2张防御的强袭；消耗呼吸态可额外要求1张防御且不可介入。", effect: "thunderSixfold" } },
+  { id: "zenitsu", name: "我妻善逸", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "爆发", hp: 3, glyph: "雷", color: "#e8bd4d", skills: [{ name: "一之型", text: "普通突击可消耗呼吸态，无视距离且额外需要1张防御。" }, { name: "危机听觉", text: "体力不高于2时，每轮一次可将1张非响应手牌当作防御打出。" }], signature: { name: "霹雳一闪·六连", cost: 4, target: "enemy", text: "对任意其他角色发动2伤害、需要2张防御的强袭；消耗呼吸态可额外要求1张防御且不可介入。", effect: "thunderSixfold" } },
   { id: "inosuke", name: "嘴平伊之助", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "爆发", hp: 4, glyph: "兽", color: "#6e9fc1", skills: [{ name: "兽之触觉", text: "普通突击攻击距离+1。" }, { name: "狂乱反扑", text: "每轮首次实际受他人伤害后标记来源；下次对其普通突击额外需要1张防御。" }], signature: { name: "兽之呼吸·乱裂", cost: 4, target: "enemy", text: "对距离2内目标依次发动两次各1伤害、需要1张防御的攻击；可消耗呼吸态令第二次额外需要1张防御。", effect: "beastRend" } },
-  { id: "shinobu", name: "胡蝶忍", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "控制", hp: 3, glyph: "蝶", color: "#a678d3", skills: [{ name: "毒刃", text: "每回合首次普通突击实际造成体力伤害后，给最终目标施加1层毒。" }, { name: "轻身", text: "没有防具时，其他角色计算与你的距离+1。" }], signature: { name: "蜈蚣之舞", cost: 3, target: "enemy", text: "对距离2内目标发动1伤害、需要2张防御的攻击；无论命中或防住，结算后施加1层毒，消耗呼吸态改为2层。", effect: "centipedeDance" } },
-  { id: "giyu", name: "富冈义勇", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "防御", hp: 4, glyph: "水", color: "#5f8db1", skills: [{ name: "静心", text: "每轮首次实际打出足额防御牌完全防住普通突击后，额外获得1能量。" }, { name: "水面斩", text: "普通突击可消耗呼吸态，距离+1且忽略防具。" }], signature: { name: "拾壹之型·凪", cost: 3, target: "ally", text: "取消目标下次成为目标的普通突击；消耗呼吸态可改为取消普通突击或一次策略伤害。", effect: "deadCalm" } },
+  { id: "shinobu", name: "胡蝶忍", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "控制", hp: 3, glyph: "蝶", color: "#a678d3", skills: [{ name: "毒刃", text: "每回合首次普通突击实际造成体力伤害后，给最终目标施加1层毒。" }, { name: "轻身", text: "没有防具时，其他角色计算与你的距离+1。" }], signature: { name: "蜈蚣之舞", cost: 4, target: "enemy", text: "对距离2内目标发动1伤害、需要2张防御的攻击；无论命中或防住，结算后施加1层毒，消耗呼吸态改为2层。", effect: "centipedeDance" } },
+{ id: "giyu", name: "富冈义勇", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "防御", hp: 5, glyph: "水", color: "#5f8db1", skills: [{ name: "静心", text: "每轮首次实际打出足额防御牌完全防住普通突击后，额外获得1能量。" }, { name: "水面斩", text: "普通突击可消耗呼吸态，距离+1且忽略防具。" }], signature: { name: "拾壹之型·凪", cost: 2, target: "ally", text: "取消目标下次成为目标的普通突击；消耗呼吸态可改为取消普通突击或一次策略伤害。", effect: "deadCalm" } },
   { id: "rengoku", name: "炼狱杏寿郎", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "防御/爆发", hp: 4, glyph: "炎", color: "#e5874c", skills: [{ name: "燃心", text: "每轮首次成功承接炎柱守护的攻击并在结算后存活，获得1能量。" }, { name: "炎之呼吸", text: "普通突击可消耗呼吸态令伤害+1。" }], signature: { name: "玖之型·炼狱", cost: 4, target: "enemy", text: "对距离2内目标发动2伤害、需要2张防御的强袭；消耗呼吸态伤害+1，结算后自己失去1体力。", effect: "flamePillar" } },
   { id: "mitsuri", name: "甘露寺蜜璃", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "协同", hp: 4, glyph: "恋", color: "#dc8eae", skills: [{ name: "恋之柔剑", text: "普通突击攻击距离+1。" }, { name: "心意相通", text: "每轮首次受赠基础牌实际造成体力伤害或完全防住普通突击时，获得呼吸态。" }], signature: { name: "恋之呼吸·摇曳花影", cost: 3, target: "enemy", text: "邀请协作者对共同合法目标打出突击，随后自己发动1伤害攻击；消耗呼吸态额外需要1张防御。单人残局仍可发动后半段。", effect: "loveBloom" } },
   { id: "nezuko", name: "灶门祢豆子", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "辅助", hp: 4, glyph: "血", color: "#d989a4", skills: [{ name: "爆血印", text: "护人本能令普通突击完全被防住，或每轮首次实际受伤时，获得1枚爆血印。" }, { name: "再生", text: "自己回合开始且已受伤时，可消耗爆血印回复1体力。" }], signature: { name: "血鬼术·爆血", cost: 3, target: "enemy", text: "对距离2内目标造成1策略伤害并施毒；可消耗爆血印为自己或距离2内角色净化一项异常并授予1护盾。", effect: "explodingBlood" } },
-  { id: "akaza", name: "猗窝座", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "爆发", hp: 4, glyph: "罗", color: "#ac7ac1", skills: [{ name: "斗气感应", text: "每回合首次对罗针目标普通突击额外需要1张防御。" }, { name: "鬼躯再生", text: "每轮首次实际受到罗针目标伤害并存活后，获得1护盾。" }], signature: { name: "破坏杀·灭式", cost: 4, target: "enemy", text: "仅对罗针目标发动2伤害、需要2张防御的强袭；若罗针设立后曾完全防住其普通突击，伤害+1。", effect: "annihilationStyle" } },
+  { id: "akaza", name: "猗窝座", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "爆发", hp: 4, glyph: "罗", color: "#ac7ac1", skills: [{ name: "斗气感应", text: "每回合首次对罗针目标普通突击额外需要1张防御。" }, { name: "鬼躯再生", text: "每轮首次实际受到罗针目标伤害并存活后，获得1护盾。" }], signature: { name: "破坏杀·灭式", cost: 3, target: "enemy", text: "仅对罗针目标发动2伤害、需要2张防御的强袭；若罗针设立后曾完全防住其普通突击，伤害+1。", effect: "annihilationStyle" } },
   { id: "muzan", name: "鬼舞辻无惨", series: "鬼灭之刃", packId: "demon_slayer_sun_moon", pack: "日轮与血月", role: "控制", hp: 4, glyph: "鬼", color: "#9b4d66", skills: [{ name: "血肉再生", text: "每轮首次实际受伤并存活后，获得1护盾。" }, { name: "鬼王威压", text: "对自己的血印目标使用普通突击时无视距离。" }], signature: { name: "肉鞭乱舞", cost: 4, target: "enemy", text: "最多选择两名距离2内目标，依座次各需防御否则受到1策略伤害；血印目标额外需要1张防御。", effect: "fleshWhips" } },
   { id: "gojo", name: "五条悟", series: "咒术回战", role: "防御", hp: 3, glyph: "∞", color: "#75bff2", skills: [{ name: "无下限", text: "每轮首次成为攻击目标时，攻击者须额外弃1张牌，否则攻击无效。" }], signature: { name: "虚式·茈", cost: 4, target: "enemy", text: "目标弃2张牌，否则受到1点伤害并失去装备。", effect: "hollowPurple" } },
   { id: "yuji", name: "虎杖悠仁", series: "咒术回战", role: "资源", hp: 4, glyph: "拳", color: "#e66b7c", skills: [{ name: "径庭拳", text: "每回合首次攻击命中后，目标弃1张牌。" }, { name: "不屈容器", text: "每轮首次体力降至2或以下时摸2张牌。" }], signature: { name: "黑闪", cost: 3, target: "enemy", text: "发动一次攻击；命中时伤害+1，被防御则返还2点能量。", effect: "blackFlash" } },
@@ -92,14 +92,14 @@ const activeSkills = {
   rukia: { name: "初舞·月白", target: "enemy", cost: 1, costText: "1能量", effect: "firstDance", text: "令一名敌方下回合少摸1张牌。" },
   tanjiro: { name: "嗅觉追迹", target: "enemy", cost: 1, costText: "1能量 · 距离2内", effect: "scentPursuit", text: "私下查看目标1张随机手牌，并公开放置破绽；下一次对其普通突击额外需要1张防御。" },
   zenitsu: { name: "蓄雷", target: "self", costText: "弃1手牌 · 结束出牌阶段", effect: "chargeThunder", text: "本回合未使用普通突击时，弃1张手牌并结束出牌阶段，获得呼吸态和1护盾。" },
-  inosuke: { name: "猪突猛进", target: "enemy", cost: 1, costText: "1能量 · 距离1内", effect: "boarRush", text: "对距离1内目标发动不计次数的虚拟攻击，造成1伤害、需要1张防御。" },
+inosuke: { name: "猪突猛进", target: "enemy", cost: 1, costText: "1能量 · 距离1内", effect: "boarRush", text: "对距离1内目标发动不计次数的虚拟攻击，造成1伤害、需要1张防御。" },
   shinobu: { name: "藤花调剂", target: "other", cost: 1, costText: "1能量 · 距离2内", effect: "wisteriaMix", text: "移除目标1层毒，选择使其获得1护盾，或令其立即失去1体力。" },
-  giyu: { name: "静水护形", target: "ally", cost: 1, costText: "1能量 · 距离1内", effect: "stillWaterGuard", text: "目标下一次未完全防住的普通突击伤害-1，持续到你的下回合开始。" },
+giyu: { name: "静水护形", target: "ally", cost: 0, costText: "0能量 · 距离2内", effect: "stillWaterGuard", text: "目标下一次未完全防住的普通突击伤害-1，持续到你的下回合开始。" },
   rengoku: { name: "炎柱守护", target: "ally", cost: 1, costText: "1能量 · 距离2内", effect: "flameGuard", text: "距离2内一名其他角色首次成为别人单目标普通突击目标时，可将最终目标改为你。" },
   mitsuri: { name: "柔韧连携", target: "ally", cost: 1, costText: "1能量 · 距离2内 · 交1基础牌", effect: "flexibleBond", text: "交出1基础牌；受赠者使用为突击时距离+1，使用为防御时获得1护盾。" },
   nezuko: { name: "护人本能", target: "ally", cost: 1, costText: "1能量 · 距离2内", effect: "protectiveInstinct", text: "目标首次响应普通突击时，可弃1张基础手牌为其提供1张防御。" },
   akaza: { name: "术式展开·罗针", target: "enemy", cost: 1, costText: "1能量 · 距离2内", effect: "compassNeedle", text: "公开标记目标；双方互相发动攻击时距离视为1，直至你的下回合开始。" },
-  muzan: { name: "血液烙印", target: "enemy", cost: 1, costText: "1能量 · 距离2内", effect: "bloodBrand", text: "目标可弃1手牌拒绝，否则接受血印；其下一张实际结算的非响应牌后获得1层毒。" },
+  muzan: { name: "血液烙印", target: "enemy", cost: 2, costText: "2能量 · 距离2内", effect: "bloodBrand", text: "目标可弃1手牌拒绝，否则接受血印；其下一张实际结算的非响应牌后获得1层毒。" },
   gojo: { name: "六眼", target: "self", costText: "无消耗", effect: "sixEyes", text: "摸2张牌，然后弃1张牌。每回合限一次。" },
   yuji: { name: "径庭拳", target: "self", cost: 1, costText: "1能量", effect: "divergentPrep", text: "本回合下一次攻击命中时伤害+1。" },
   mikasa: { name: "立体机动", target: "self", costText: "弃1张牌", effect: "odmGear", text: "弃1张牌，本回合攻击次数与攻击距离各+1。" },
@@ -750,7 +750,7 @@ function getDemonSlayerActiveTargets(game, playerId, skill) {
   const player = game.player(playerId);
   if (!player?.alive || player.turnFlags.activeUsed || player.energy < (skill.cost || 0)) return [];
   if (skill.effect === "scentPursuit") return attackTargets(game, playerId);
-  if (skill.effect === "stillWaterGuard") return game.players.filter(target => target.alive && (target.id === playerId || (game.distance(playerId, target.id) <= 1 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))))).map(target => target.id);
+  if (skill.effect === "stillWaterGuard") return game.players.filter(target => target.alive && (target.id === playerId || (game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))))).map(target => target.id);
   if (skill.effect === "compassNeedle") return attackTargets(game, playerId);
   if (skill.effect === "chargeThunder") return player.hand.length && !player.turnFlags.ordinaryAttackUsed ? [playerId] : [];
   if (skill.effect === "boarRush") return attackTargets(game, playerId, 1);
@@ -846,7 +846,7 @@ function getDemonSlayerSignatureTargets(game, playerId) {
   const player = game.player(playerId);
   if (!player?.alive) return [];
   if (player.characterId === "tanjiro") return attackTargets(game, playerId);
-  if (player.characterId === "giyu") return game.players.filter(target => target.alive && (target.id === playerId || (game.distance(playerId, target.id) <= 1 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))))).map(target => target.id);
+  if (player.characterId === "giyu") return game.players.filter(target => target.alive && (target.id === playerId || (game.distance(playerId, target.id) <= 2 && (game.mode.id === "classic8" || game.isAlly(playerId, target.id))))).map(target => target.id);
   if (player.characterId === "akaza") return player.compassTargetId && game.player(player.compassTargetId)?.alive ? [player.compassTargetId] : [];
   if (player.characterId === "zenitsu") return attackTargets(game, playerId, 99);
   if (["inosuke", "shinobu"].includes(player.characterId)) return attackTargets(game, playerId);
@@ -1546,15 +1546,24 @@ class GameEngine {
 
   getVisibleDemonSlayerState(viewerId, ownerId) {
     const owner = this.player(ownerId);
-    if (!owner || !isDemonSlayerCharacter(owner)) return {};
-    const visible = {
+    if (!owner) return {};
+    const visible = isDemonSlayerCharacter(owner) ? {
       breathReady: owner.breathReady ?? null,
       bloodFlame: owner.bloodFlame ?? null,
       compassTargetId: owner.compassTargetId ?? null,
       compassDefended: owner.compassDefended ?? null,
       bloodMarkTargetId: owner.bloodMarkTargetId ?? null,
-      scentTargetId: owner.scentTargetId ?? null
-    };
+      scentTargetId: owner.scentTargetId ?? null,
+      rageTargetId: owner.rageTargetId ?? null
+    } : {};
+    for (const [field, key] of [["stillWaterGuard", "stillWaterGuardOwnerId"], ["deadCalm", "deadCalmOwnerId"], ["flameGuard", "flameGuardOwnerId"], ["nezukoAid", "nezukoAidOwnerId"]]) {
+      if (owner[field]?.ownerId) visible[key] = owner[field].ownerId;
+    }
+    for (const marker of this.players.filter(player => player.alive && isDemonSlayerCharacter(player))) {
+      if (marker.scentTargetId === ownerId) visible.scentMarkedBy = marker.id;
+      if (marker.compassTargetId === ownerId) visible.compassMarkedBy = marker.id;
+      if (marker.bloodMarkTargetId === ownerId) visible.bloodMarkedBy = marker.id;
+    }
     if (viewerId === ownerId && owner.scentCardName) visible.scentCardName = owner.scentCardName;
     return visible;
   }
@@ -4286,6 +4295,10 @@ const slotLabels = { weapon: "武器槽", armor: "防具槽", charm: "饰品槽"
 const strategyKindLabels = { instant: "即时策略", plot: "暗置伏笔", response: "响应策略" };
 const predictionRoleIds = ["loyal", "rebel", "lone"];
 
+document.addEventListener("error", event => {
+  if (event.target instanceof HTMLImageElement && event.target.hasAttribute("data-portrait")) event.target.remove();
+}, true);
+
 function artMarkup(card, className, alt = "") {
   const path = cardArtPath(card.id);
   return path ? `<span class="${className}"><img src="${path}" alt="${alt}" draggable="false" decoding="async"></span>` : `<span class="${className} generated-art" aria-label="${alt}"><i>${card.icon}</i><b>${card.strategyKind === "plot" ? "PLOT" : card.type === "equipment" ? "GEAR" : card.type === "strategy" ? "TACTIC" : "BASIC"}</b></span>`;
@@ -4303,6 +4316,19 @@ function dreamBadge(player, character) {
   if (!character?.dream || !player?.dreamState) return "";
   const state = player.dreamState;
   return `<span class="dream-badge ${state.awakened ? "dream-awakened" : ""}" title="梦想：${character.dream.name}">${state.awakened ? "觉醒" : `航迹 ${state.progress}/3`}</span>`;
+}
+
+function demonStatusBadges(player) {
+  const viewerId = engine.players.find(item => item.human)?.id;
+  const visible = engine.getVisibleDemonSlayerState(viewerId, player.id);
+  const badges = [];
+  if (visible.breathReady) badges.push(["呼", "呼吸态：下次本人回合结束前可用于强化"]);
+  if (visible.bloodFlame) badges.push(["爆", "爆血印：可用于再生或爆血净化"]);
+  if (visible.scentMarkedBy) badges.push(["破", "破绽：下次普通突击需要额外防御"]);
+  if (visible.compassMarkedBy) badges.push(["罗", "罗针锁定"]);
+  if (visible.bloodMarkedBy) badges.push(["血", "血印：下一张完成结算的非响应牌后中毒"]);
+  if (visible.flameGuardOwnerId || visible.stillWaterGuardOwnerId || visible.deadCalmOwnerId || visible.nezukoAidOwnerId) badges.push(["护", "已有守护效果，详情可查看来源与时效"]);
+  return badges.length ? `<span class="demon-status-mini" aria-label="鬼灭角色状态">${badges.slice(0, 3).map(([glyph, title]) => `<i title="${title}">${glyph}</i>`).join("")}</span>` : "";
 }
 
 function cardTags(card) {
@@ -4337,7 +4363,7 @@ function renderLobby() {
   const visibleCharacters = selectedSeries === "all" ? characters : characters.filter(character => character.series === selectedSeries);
   characterList.innerHTML = visibleCharacters.map(character => `
     <button class="character-choice ${character.id === selectedCharacter ? "selected" : ""}" data-character="${character.id}" style="--char:${character.color}" aria-pressed="${character.id === selectedCharacter}">
-      <span class="role-chip">${character.role}</span>${character.pack ? `<span class="pack-chip">${character.pack}</span>` : ""}<span class="choice-avatar"><img src="${portraitPath(character.id)}" alt="${character.name}立绘"></span>
+      <span class="role-chip">${character.role}</span>${character.pack ? `<span class="pack-chip">${character.pack}</span>` : ""}<span class="choice-avatar" data-glyph="${character.glyph}"><img data-portrait src="${portraitPath(character.id)}" alt="${character.name}立绘"></span>
       <h4>${character.name}</h4><p>${character.series}</p><small>体力 ${character.hp} · 手牌 ${character.handLimit}</small>
     </button>`).join("");
   renderCharacterPreview(selectedCharacter);
@@ -4358,7 +4384,7 @@ function renderCharacterPreview(characterId) {
   const skillCards = characterSkillEntries(character);
   characterPreview.style.setProperty("--char", character.color);
   characterPreview.innerHTML = `
-    <div class="preview-portrait"><img src="${portraitPath(character.id)}" alt="${character.name}技能预览立绘"></div>
+    <div class="preview-portrait" data-glyph="${character.glyph}"><img data-portrait src="${portraitPath(character.id)}" alt="${character.name}技能预览立绘"></div>
     <div class="preview-content">
       <div class="preview-heading"><div><span>${character.series}${character.pack ? ` · 扩展包「${character.pack}」` : ""}</span><h3>${character.name}</h3></div><div class="preview-stats"><b>${character.role}</b><span>体力 ${character.hp}</span><span>手牌上限 ${character.handLimit}</span></div></div>
       <div class="preview-skills">${skillCards.map(skill => `<article><i>${skill.icon}</i><div><small>${skill.kind} · ${skill.meta}</small><h4>${skill.name}</h4><p>${skill.text}</p></div></article>`).join("")}</div>
@@ -4596,7 +4622,7 @@ function playerCardTemplate(player, targetable = false) {
   const chessMarks = engine.players.filter(owner => owner.chessTargetId === player.id).length;
   const position = tableSeatPosition(engine.mode.playerCount, player.seat);
   return `<article class="player-card ${player.id === engine.currentPlayerId ? "current" : ""} ${targetable ? "targetable" : ""} ${engine.pendingStrategySequence?.currentTargetId === player.id ? "strategy-focus" : ""} ${!player.alive ? "dead" : ""}" data-player="${player.id}" style="--char:${character.color};--role-color:var(--${shownRole?.color || "muted"});--seat-x:${position.x}%;--seat-y:${position.y}%">
-    <span class="portrait"><img src="${portraitPath(character.id)}" alt="${character.name}立绘"></span><span class="seat">${player.seat + 1}</span><span class="identity-dot ${prediction ? "predicted" : ""}">${identityLabel}</span>${player.id === engine.currentPlayerId ? `<span class="turn-badge">行动中</span>` : ""}${targetable ? `<span class="target-badge">可选择</span>` : ""}
+    <span class="portrait" data-glyph="${character.glyph}"><img data-portrait src="${portraitPath(character.id)}" alt="${character.name}立绘"></span>${demonStatusBadges(player)}<span class="seat">${player.seat + 1}</span><span class="identity-dot ${prediction ? "predicted" : ""}">${identityLabel}</span>${player.id === engine.currentPlayerId ? `<span class="turn-badge">行动中</span>` : ""}${targetable ? `<span class="target-badge">可选择</span>` : ""}
     <h4>${character.name} ${dreamBadge(player, character)}</h4>
     <div class="stat-row"><span>♥ ${player.hp}/${player.maxHp}</span><span>牌 ${player.hand.length}</span></div>
     ${hpPips(player, "seat-hp")}
@@ -4633,7 +4659,7 @@ function playerAreaTemplate(player) {
   const plots = engine.getVisiblePlots(player.id, player.id);
   const plotTray = plots.length ? `<div class="self-plots">${plots.map(plot => `<span title="${plot.card.name} → ${engine.nameOf(plot.targetId)}"><i>${plot.card.icon}</i><b>${plot.card.name}</b></span>`).join("")}</div>` : "";
   const specialTray = player.specialCards.length || player.sealedCards.length ? `<div class="self-specials">${player.specialCards.map(item => item.kind === "lie" ? `<span class="lie" title="未知谎言 → ${engine.nameOf(item.targetId)}"><i>谎</i><b>未知谎言</b></span>` : `<span title="${item.kind === "clone" ? "影分身" : "百豪牌"} · ${item.card.name}"><i>${item.kind === "clone" ? "分" : "印"}</i><b>${item.card.name}</b></span>`).join("")}${player.sealedCards.map(item => `<span class="sealed" title="被月读封存：${item.card.name}"><i>封</i><b>${item.card.name}</b></span>`).join("")}</div>` : "";
-  return `<div class="self-summary ${engine.pendingStrategySequence?.currentTargetId === player.id ? "strategy-focus" : ""}" data-player="${player.id}" style="--char:${character.color}"><span class="mini-avatar"><img src="${portraitPath(character.id)}" alt="${character.name}立绘"></span><div><h3>${character.name} ${dreamBadge(player, character)}</h3><p>${character.series} · ${character.role}</p><span class="stat-row"><b>♥ ${player.hp}/${player.maxHp}</b><b>◆ ${player.energy}/${player.maxEnergy}</b><b>牌 ${player.hand.length}/${engine.handLimit(player.id)}</b></span>${hpPips(player, "self-hp")}</div><button type="button" class="self-detail-button" data-inspect-player="${player.id}" aria-label="查看自己的状态与技能">状态与技能</button></div><div class="self-equipment">${equipment}</div>${plotTray}${specialTray}<div class="hand">${hand || `<p style="color:var(--muted);font-size:11px">暂无手牌</p>`}</div>`;
+  return `<div class="self-summary ${engine.pendingStrategySequence?.currentTargetId === player.id ? "strategy-focus" : ""}" data-player="${player.id}" style="--char:${character.color}"><span class="mini-avatar" data-glyph="${character.glyph}"><img data-portrait src="${portraitPath(character.id)}" alt="${character.name}立绘"></span><div><h3>${character.name} ${dreamBadge(player, character)}</h3><span class="self-demon-status">${demonStatusBadges(player)}</span><p>${character.series} · ${character.role}</p><span class="stat-row"><b>♥ ${player.hp}/${player.maxHp}</b><b>◆ ${player.energy}/${player.maxEnergy}</b><b>牌 ${player.hand.length}/${engine.handLimit(player.id)}</b></span>${hpPips(player, "self-hp")}</div><button type="button" class="self-detail-button" data-inspect-player="${player.id}" aria-label="查看自己的状态与技能">状态与技能</button></div><div class="self-equipment">${equipment}</div>${plotTray}${specialTray}<div class="hand">${hand || `<p style="color:var(--muted);font-size:11px">暂无手牌</p>`}</div>`;
 }
 
 function playerStatusItems(player) {
@@ -4704,6 +4730,21 @@ function playerStatusItems(player) {
   const markedBy = engine.players.filter(owner => owner.chessTargetId === player.id);
   if (markedBy.length) add("被落子", `被${markedBy.map(owner => engine.nameOf(owner)).join("、")}标记`, "danger");
   if (player.sealedCards.length) add("月读封存", `${player.sealedCards.length}张手牌暂时离开手牌区`, "danger");
+  const viewerId = engine.players.find(item => item.human)?.id;
+  const visible = engine.getVisibleDemonSlayerState(viewerId, player.id);
+  if (visible.breathReady) add("呼吸态", "可用于强化下一次规定技能或突击；至下次自己回合结束", "buff");
+  if (visible.bloodFlame) add("爆血印", "1枚；可用于再生或爆血净化，二者互斥", "buff");
+  if (visible.scentTargetId) add("嗅觉追迹", `破绽目标：${engine.nameOf(visible.scentTargetId)}${visible.scentCardName ? ` · 私查牌：${visible.scentCardName}` : ""}`, "buff");
+  if (visible.scentMarkedBy) add("破绽", `被${engine.nameOf(visible.scentMarkedBy)}追迹；下次普通突击额外需要1张防御`, "danger");
+  if (visible.rageTargetId) add("兽之怒", `已锁定${engine.nameOf(visible.rageTargetId)}`, "buff");
+  if (visible.compassTargetId) add("罗针", `已锁定${engine.nameOf(visible.compassTargetId)}；双方攻击距离视为1${visible.compassDefended ? " · 已完成防御蓄势" : ""}`, "buff");
+  if (visible.compassMarkedBy) add("罗针锁定", `被${engine.nameOf(visible.compassMarkedBy)}锁定`, "danger");
+  if (visible.bloodMarkTargetId) add("血印", `目标：${engine.nameOf(visible.bloodMarkTargetId)}；其下一张完成结算的非响应牌后中毒`, "buff");
+  if (visible.bloodMarkedBy) add("血液烙印", `被${engine.nameOf(visible.bloodMarkedBy)}标记；下一张完成结算的非响应牌后中毒`, "danger");
+  if (visible.stillWaterGuardOwnerId) add("静水护形", `由${engine.nameOf(visible.stillWaterGuardOwnerId)}保护；下次未完全防住的普通突击伤害-1`, "buff");
+  if (visible.deadCalmOwnerId) add("拾壹之型·凪", `由${engine.nameOf(visible.deadCalmOwnerId)}布置；可取消下一次攻击`, "buff");
+  if (visible.flameGuardOwnerId) add("炎柱守护", `由${engine.nameOf(visible.flameGuardOwnerId)}保护；下次单目标普通突击可转移`, "buff");
+  if (visible.nezukoAidOwnerId) add("护人本能", `由${engine.nameOf(visible.nezukoAidOwnerId)}援护；需要补防时可弃基础牌提供1张防御`, "buff");
   return items;
 }
 
@@ -4769,7 +4810,7 @@ function renderPlayerDetail(playerId) {
   detail.style.setProperty("--char", character.color);
   detail.style.setProperty("--detail-role", showRole ? `var(--${role.color})` : "var(--muted)");
   detail.innerHTML = `<div class="player-detail-hero">
-    <div class="player-detail-portrait"><img src="${portraitPath(character.id)}" alt="${character.name}立绘"></div>
+    <div class="player-detail-portrait" data-glyph="${character.glyph}"><img data-portrait src="${portraitPath(character.id)}" alt="${character.name}立绘"></div>
     <div class="player-detail-summary">
       <p class="eyebrow">SEAT ${player.seat + 1} · ${character.series}</p>
       <div class="player-detail-title"><div><h2>${character.name}</h2><span>${character.role}</span></div><strong class="detail-identity ${showRole ? "confirmed" : "hidden-role"}">${identityName}</strong></div>
