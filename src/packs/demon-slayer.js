@@ -13,6 +13,11 @@ export function initializeDemonSlayerState(player, character) {
     player.breathReady = 0;
     player.breathSetTurn = 0;
   }
+  if (character.id === "tanjiro") {
+    player.scentTargetId = null;
+    player.scentCardName = null;
+    player.scentSetTurn = 0;
+  }
   if (character.id === "nezuko") {
     player.bloodFlame = 0;
     player.bloodFlameSetTurn = 0;
@@ -44,14 +49,71 @@ export function consumeBreathReady(game, playerId) {
   return true;
 }
 
-export function getDemonSlayerActiveTargets() { return []; }
-export function useDemonSlayerActive() { return { ok: false, reason: "技能尚未开放" }; }
-export function getDemonSlayerSignatureTargets() { return []; }
-export function useDemonSlayerSignature() { return { ok: false, reason: "技能尚未开放" }; }
+function attackTargets(game, playerId, range = 2) {
+  return game.players.filter(target => target.alive && target.id !== playerId && (game.mode.id === "classic8" || !game.isAlly(playerId, target.id)) && game.distance(playerId, target.id) <= range).map(target => target.id);
+}
+
+export function getDemonSlayerActiveTargets(game, playerId, skill) {
+  const player = game.player(playerId);
+  if (!player?.alive || player.turnFlags.activeUsed || player.energy < (skill.cost || 0)) return [];
+  if (skill.effect === "scentPursuit") return attackTargets(game, playerId);
+  return [];
+}
+
+export function useDemonSlayerActive(game, playerId, targetId, skill) {
+  if (!getDemonSlayerActiveTargets(game, playerId, skill).includes(targetId)) return { ok: false, reason: "消耗不足或目标不合法" };
+  const player = game.player(playerId), target = game.player(targetId);
+  player.energy -= skill.cost || 0;
+  player.turnFlags.activeUsed = true;
+  if (skill.effect === "scentPursuit") {
+    player.scentTargetId = targetId;
+    player.scentSetTurn = game.turnNumber;
+    const card = target.hand[Math.floor(game.random() * target.hand.length)];
+    player.scentCardName = card?.name || null;
+    game.log("event", `${game.nameOf(player)}以嗅觉追迹标记了${game.nameOf(target)}`);
+  }
+  return { ok: true };
+}
+
+export function getDemonSlayerSignatureTargets(game, playerId) {
+  const player = game.player(playerId);
+  if (!player?.alive) return [];
+  if (player.characterId === "tanjiro") return attackTargets(game, playerId);
+  return [];
+}
+
+export function useDemonSlayerSignature(game, playerId, targetId) {
+  const player = game.player(playerId);
+  if (player.characterId !== "tanjiro" || !getDemonSlayerSignatureTargets(game, playerId).includes(targetId)) return { ok: false, reason: "目标不合法" };
+  const attack = pierce => game.beginAttack({ sourceId: playerId, targetId, damage: 2, requiredGuards: 2, origin: pierce ? "hinokamiDancePierce" : "hinokamiDance" });
+  if (!player.breathReady) return attack(false);
+  return game.requestChoice(playerId, {
+    title: "火之神神乐·圆舞",
+    text: "可消耗呼吸态令此次强袭忽略防具。",
+    options: [{ value: "use", label: "消耗呼吸态，忽略防具" }, { value: "pass", label: "保留呼吸态" }],
+    aiChoice: "use",
+    onResolve: choice => attack(choice === "use" && consumeBreathReady(game, playerId))
+  });
+}
 
 export function handleDemonSlayerEvent(game, event) {
   if (event.type === "damageApplied" && event.ordinaryAttack && event.actualHpLoss > 0) gainBreathReady(game, event.sourceId);
   if (event.type === "attackFullyDefended" && event.ordinaryAttack && event.paidGuards >= event.requiredGuards && event.requiredGuards > 0) gainBreathReady(game, event.targetId);
+  if (event.type === "attackFullyDefended" && event.ordinaryAttack) {
+    const source = game.player(event.sourceId);
+    if (source?.alive && source.characterId === "tanjiro" && !source.roundFlags.waterTriggered) {
+      source.roundFlags.waterTriggered = true;
+      if (source.hand.length && game.discard.some(card => card.uid === event.cardUid)) source.turnFlags.waterRecoveryUid = event.cardUid;
+    }
+  }
+  if (event.type === "turnStart") {
+    const player = game.player(event.playerId || event.sourceId);
+    if (player?.characterId === "tanjiro" && player.scentTargetId && player.scentSetTurn < game.turnNumber) {
+      player.scentTargetId = null;
+      player.scentCardName = null;
+      player.scentSetTurn = 0;
+    }
+  }
   if (event.type === "turnEnd") {
     const player = game.player(event.playerId || event.sourceId);
     if (player?.breathReady && player.breathSetTurn < game.turnNumber) consumeBreathReady(game, player.id);
@@ -60,6 +122,11 @@ export function handleDemonSlayerEvent(game, event) {
     const player = game.player(event.playerId || event.targetId);
     if (!player) return;
     if (SLAYER_IDS.has(player.characterId)) { player.breathReady = 0; player.breathSetTurn = 0; }
+    for (const owner of game.players.filter(item => item.characterId === "tanjiro" && (item.id === player.id || item.scentTargetId === player.id))) {
+      owner.scentTargetId = null;
+      owner.scentCardName = null;
+      owner.scentSetTurn = 0;
+    }
     if (player.characterId === "nezuko") { player.bloodFlame = 0; player.bloodFlameSetTurn = 0; }
     if (player.characterId === "akaza") { player.compassTargetId = null; player.compassDefended = false; }
     if (player.characterId === "muzan") player.bloodMarkTargetId = null;

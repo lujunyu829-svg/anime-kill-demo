@@ -1,6 +1,6 @@
 import { activeSkills, cardDefinitions, characters, deckProfiles, getCharacter, getMode, roles } from "./data.js";
 import { handleOnePieceEvent, initializeOnePieceState, isOnePieceCharacter, getOnePieceActiveTargets, useOnePieceActive, getOnePieceSignatureTargets, useOnePieceSignature, signatureCost as onePieceSignatureCost } from "./packs/one-piece.js";
-import { handleDemonSlayerEvent, initializeDemonSlayerState, isDemonSlayerCharacter, getDemonSlayerActiveTargets, useDemonSlayerActive, getDemonSlayerSignatureTargets, useDemonSlayerSignature } from "./packs/demon-slayer.js";
+import { handleDemonSlayerEvent, initializeDemonSlayerState, isDemonSlayerCharacter, getDemonSlayerActiveTargets, useDemonSlayerActive, getDemonSlayerSignatureTargets, useDemonSlayerSignature, consumeBreathReady } from "./packs/demon-slayer.js";
 
 const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
 
@@ -222,13 +222,6 @@ export class GameEngine {
     if (this.mode.id === "ranked2v2" && this.round === 1 && this.turnNumber === 1) drawCount = Math.min(drawCount, 1);
     player.frozenDraw = 0;
     this.draw(player.id, drawCount);
-    if (player.characterId === "tanjiro") {
-      const top = this.peek();
-      if (top?.type === "basic") {
-        player.hand.push(this.takeTop());
-        this.log("event", `${this.nameOf(player)}以“嗅觉”获得了1张基础牌`);
-      }
-    }
     this.log("turn", `${this.nameOf(player)}的回合`);
   }
 
@@ -382,6 +375,21 @@ export class GameEngine {
   getVisibleCardPeeks(viewerId) {
     return this.eventHistory.filter(event => event.type === "hiddenCardViewed" && event.reason === "robinBloom" && event.viewerId === viewerId && event.round === this.round)
       .map(event => ({ ownerId: event.ownerId, cardName: event.card.name, round: event.round }));
+  }
+
+  getVisibleDemonSlayerState(viewerId, ownerId) {
+    const owner = this.player(ownerId);
+    if (!owner || !isDemonSlayerCharacter(owner)) return {};
+    const visible = {
+      breathReady: owner.breathReady ?? null,
+      bloodFlame: owner.bloodFlame ?? null,
+      compassTargetId: owner.compassTargetId ?? null,
+      compassDefended: owner.compassDefended ?? null,
+      bloodMarkTargetId: owner.bloodMarkTargetId ?? null,
+      scentTargetId: owner.scentTargetId ?? null
+    };
+    if (viewerId === ownerId && owner.scentCardName) visible.scentCardName = owner.scentCardName;
+    return visible;
   }
 
   refreshEnergyCap(playerOrId) {
@@ -1724,10 +1732,23 @@ export class GameEngine {
     });
   }
 
-  beginAttack({ sourceId, targetId, damage = 1, requiredGuards = 1, origin = "attack", alwaysPoison = false, onComplete = null, skipIntervene = false, skipRaven = false, freeUse = false, jinbePiercing = false }) {
+  beginAttack({ sourceId, targetId, damage = 1, requiredGuards = 1, origin = "attack", alwaysPoison = false, onComplete = null, skipIntervene = false, skipRaven = false, freeUse = false, jinbePiercing = false, breathOfferResolved = false, scentApplied = false }) {
     if (this.winner) return { ok: false, reason: "对局已经结束" };
     const source = this.player(sourceId), target = this.player(targetId);
     if (!source?.alive || !target?.alive) return { ok: false, reason: "目标已经退场" };
+    const ordinaryAttack = origin === "attack" && this.activeCardContext?.sourceId === sourceId && this.activeCardContext?.card?.id === "attack";
+    if (ordinaryAttack && source.characterId === "tanjiro" && source.breathReady && !breathOfferResolved) {
+      return this.requestChoice(sourceId, {
+        title: "呼吸衔接",
+        text: "选择是否消耗呼吸态强化这次普通突击。",
+        options: [{ value: "pass", label: "保留呼吸态" }, { value: "damage", label: "本次伤害+1" }, { value: "guard", label: "额外需要1张防御" }],
+        aiChoice: target.hp <= 2 ? "guard" : "damage",
+        onResolve: choice => {
+          const enhanced = choice !== "pass" && this.player(targetId)?.alive && consumeBreathReady(this, sourceId);
+          this.beginAttack({ sourceId, targetId, damage: damage + (enhanced && choice === "damage" ? 1 : 0), requiredGuards: requiredGuards + (enhanced && choice === "guard" ? 1 : 0), origin, alwaysPoison, onComplete, skipIntervene, skipRaven, freeUse, jinbePiercing, breathOfferResolved: true, scentApplied });
+        }
+      });
+    }
     let observationDefended = false;
     if (origin === "attack" && target.characterId === "luffy" && !target.roundFlags.observation) {
       target.roundFlags.observation = true;
@@ -1754,12 +1775,20 @@ export class GameEngine {
       this.log("event", this.nameOf(source) + "以护盾施展“鱼人空手道”，本次突击无视防具");
     }
     if (!skipRaven) {
-      const raven = this.offerRavenSubstitution({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipIntervene, freeUse, jinbePiercing });
+      const raven = this.offerRavenSubstitution({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, skipIntervene, freeUse, jinbePiercing, breathOfferResolved, scentApplied });
       if (raven) return raven;
     }
     if (!skipIntervene) {
-      const intervention = this.offerAttackIntervention({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, freeUse, jinbePiercing });
+      const intervention = this.offerAttackIntervention({ sourceId, targetId, damage, requiredGuards, origin, alwaysPoison, onComplete, freeUse, jinbePiercing, breathOfferResolved, scentApplied });
       if (intervention) return intervention;
+    }
+    if (ordinaryAttack && !scentApplied && source.characterId === "tanjiro" && source.scentTargetId === targetId) {
+      source.scentTargetId = null;
+      source.scentCardName = null;
+      source.scentSetTurn = 0;
+      requiredGuards += 1;
+      scentApplied = true;
+      this.log("event", `${this.nameOf(source)}抓住破绽，此次突击额外需要1张防御`);
     }
     if (source.characterId === "itachi" && origin === "attack" && source.plots.some(plot => plot.isFalse && plot.targetId === targetId)) {
       requiredGuards += 1;
@@ -1912,7 +1941,7 @@ export class GameEngine {
 
   offerAttackIntervention(payload) {
     const { sourceId, targetId, origin } = payload;
-    if (!["attack", "signature", "goemon", "asura", "diableJambe", "impactWolf", "vagabondDrill", "arrowNotch", "blackFlash", "active"].includes(origin)) return null;
+    if (!["attack", "signature", "hinokamiDance", "hinokamiDancePierce", "goemon", "asura", "diableJambe", "impactWolf", "vagabondDrill", "arrowNotch", "blackFlash", "active"].includes(origin)) return null;
     const eligible = this.players.filter(player => player.alive && player.id !== sourceId && player.id !== targetId && player.hand.some(card => card.id === "intervene"));
     if (!eligible.length) return null;
     const candidate = eligible.find(player => player.human) || eligible.find(player => this.aiIsAlly(player.id, targetId) && !this.aiIsAlly(player.id, sourceId));
@@ -2054,11 +2083,29 @@ export class GameEngine {
       if (target?.equipment.armor?.id === "reflector" && !target.roundFlags.reflector && !scoutedByHinata) { target.roundFlags.reflector = true; this.draw(targetId, 1); }
       if (onComplete) onComplete();
     };
-    if (source?.characterId === "tanjiro" && !source.turnFlags.water) {
-      source.turnFlags.water = true;
-      if (source.hand.length) return this.requestDiscard(sourceId, 1, { reason: "水之呼吸：请选择1张手牌弃置后再摸1张牌", shouldLog: false, onComplete: () => { this.draw(sourceId, 1); finish(); } });
-      this.draw(sourceId, 1); finish();
-      return { ok: true, defended: true };
+    const waterUid = source?.turnFlags.waterRecoveryUid;
+    if (source?.characterId === "tanjiro" && waterUid) {
+      source.turnFlags.waterRecoveryUid = null;
+      const payable = source.hand.map(card => card.uid);
+      if (!payable.length || !this.discard.some(card => card.uid === waterUid)) { finish(); return { ok: true, defended: true }; }
+      return this.requestChoice(sourceId, {
+        title: "水之呼吸",
+        text: "可弃置另一张手牌，取回本次被完全防住的突击。",
+        options: [{ value: "use", label: "弃牌取回突击" }, { value: "pass", label: "保留手牌" }],
+        aiChoice: "use",
+        onResolve: choice => {
+          if (choice !== "use") { finish(); return; }
+          this.requestDiscard(sourceId, 1, {
+            reason: "水之呼吸：弃置另一张手牌",
+            allowedUids: payable,
+            onComplete: () => {
+              const index = this.discard.findIndex(card => card.uid === waterUid);
+              if (index >= 0 && source.alive) source.hand.push(this.discard.splice(index, 1)[0]);
+              finish();
+            }
+          });
+        }
+      });
     }
     finish();
     return { ok: true, defended: true };
@@ -2072,7 +2119,7 @@ export class GameEngine {
     if (markedPierce) source.turnFlags.ignoreArmorTarget = null;
     const goemonPierce = source?.turnFlags.goemonIgnoreArmorTarget === targetId;
     if (goemonPierce) source.turnFlags.goemonIgnoreArmorTarget = null;
-    const ignoresArmor = (source?.equipment.weapon?.id === "piercer" && origin === "attack") || markedPierce || goemonPierce || (source?.characterId === "hinata" && source.scoutedTargetId === targetId) || origin === "asura" || (source?.characterId === "sanji" && origin === "attack" && !source.equipment.weapon) || (source?.characterId === "jinbe" && origin === "attack" && source.shield > 0);
+    const ignoresArmor = (source?.equipment.weapon?.id === "piercer" && origin === "attack") || markedPierce || goemonPierce || (source?.characterId === "hinata" && source.scoutedTargetId === targetId) || ["asura", "hinokamiDancePierce"].includes(origin) || (source?.characterId === "sanji" && origin === "attack" && !source.equipment.weapon) || (source?.characterId === "jinbe" && origin === "attack" && source.shield > 0);
     if (!ignoresArmor && target.equipment.armor?.id === "armor" && target.armorReady) {
       target.armorReady = false;
       damage = Math.max(0, damage - 1);
