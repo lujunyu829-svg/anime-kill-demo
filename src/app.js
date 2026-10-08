@@ -33,6 +33,10 @@ const slotLabels = { weapon: "武器槽", armor: "防具槽", charm: "饰品槽"
 const strategyKindLabels = { instant: "即时策略", plot: "暗置伏笔", response: "响应策略" };
 const predictionRoleIds = ["loyal", "rebel", "lone"];
 
+document.addEventListener("error", event => {
+  if (event.target instanceof HTMLImageElement && event.target.hasAttribute("data-portrait")) event.target.remove();
+}, true);
+
 function artMarkup(card, className, alt = "") {
   const path = cardArtPath(card.id);
   return path ? `<span class="${className}"><img src="${path}" alt="${alt}" draggable="false" decoding="async"></span>` : `<span class="${className} generated-art" aria-label="${alt}"><i>${card.icon}</i><b>${card.strategyKind === "plot" ? "PLOT" : card.type === "equipment" ? "GEAR" : card.type === "strategy" ? "TACTIC" : "BASIC"}</b></span>`;
@@ -50,6 +54,19 @@ function dreamBadge(player, character) {
   if (!character?.dream || !player?.dreamState) return "";
   const state = player.dreamState;
   return `<span class="dream-badge ${state.awakened ? "dream-awakened" : ""}" title="梦想：${character.dream.name}">${state.awakened ? "觉醒" : `航迹 ${state.progress}/3`}</span>`;
+}
+
+function demonStatusBadges(player) {
+  const viewerId = engine.players.find(item => item.human)?.id;
+  const visible = engine.getVisibleDemonSlayerState(viewerId, player.id);
+  const badges = [];
+  if (visible.breathReady) badges.push(["呼", "呼吸态：下次本人回合结束前可用于强化"]);
+  if (visible.bloodFlame) badges.push(["爆", "爆血印：可用于再生或爆血净化"]);
+  if (visible.scentMarkedBy) badges.push(["破", "破绽：下次普通突击需要额外防御"]);
+  if (visible.compassMarkedBy) badges.push(["罗", "罗针锁定"]);
+  if (visible.bloodMarkedBy) badges.push(["血", "血印：下一张完成结算的非响应牌后中毒"]);
+  if (visible.flameGuardOwnerId || visible.stillWaterGuardOwnerId || visible.deadCalmOwnerId || visible.nezukoAidOwnerId) badges.push(["护", "已有守护效果，详情可查看来源与时效"]);
+  return badges.length ? `<span class="demon-status-mini" aria-label="鬼灭角色状态">${badges.slice(0, 3).map(([glyph, title]) => `<i title="${title}">${glyph}</i>`).join("")}</span>` : "";
 }
 
 function cardTags(card) {
@@ -84,7 +101,7 @@ function renderLobby() {
   const visibleCharacters = selectedSeries === "all" ? characters : characters.filter(character => character.series === selectedSeries);
   characterList.innerHTML = visibleCharacters.map(character => `
     <button class="character-choice ${character.id === selectedCharacter ? "selected" : ""}" data-character="${character.id}" style="--char:${character.color}" aria-pressed="${character.id === selectedCharacter}">
-      <span class="role-chip">${character.role}</span>${character.pack ? `<span class="pack-chip">${character.pack}</span>` : ""}<span class="choice-avatar"><img src="${portraitPath(character.id)}" alt="${character.name}立绘"></span>
+      <span class="role-chip">${character.role}</span>${character.pack ? `<span class="pack-chip">${character.pack}</span>` : ""}<span class="choice-avatar" data-glyph="${character.glyph}"><img data-portrait src="${portraitPath(character.id)}" alt="${character.name}立绘"></span>
       <h4>${character.name}</h4><p>${character.series}</p><small>体力 ${character.hp} · 手牌 ${character.handLimit}</small>
     </button>`).join("");
   renderCharacterPreview(selectedCharacter);
@@ -105,7 +122,7 @@ function renderCharacterPreview(characterId) {
   const skillCards = characterSkillEntries(character);
   characterPreview.style.setProperty("--char", character.color);
   characterPreview.innerHTML = `
-    <div class="preview-portrait"><img src="${portraitPath(character.id)}" alt="${character.name}技能预览立绘"></div>
+    <div class="preview-portrait" data-glyph="${character.glyph}"><img data-portrait src="${portraitPath(character.id)}" alt="${character.name}技能预览立绘"></div>
     <div class="preview-content">
       <div class="preview-heading"><div><span>${character.series}${character.pack ? ` · 扩展包「${character.pack}」` : ""}</span><h3>${character.name}</h3></div><div class="preview-stats"><b>${character.role}</b><span>体力 ${character.hp}</span><span>手牌上限 ${character.handLimit}</span></div></div>
       <div class="preview-skills">${skillCards.map(skill => `<article><i>${skill.icon}</i><div><small>${skill.kind} · ${skill.meta}</small><h4>${skill.name}</h4><p>${skill.text}</p></div></article>`).join("")}</div>
@@ -343,7 +360,7 @@ function playerCardTemplate(player, targetable = false) {
   const chessMarks = engine.players.filter(owner => owner.chessTargetId === player.id).length;
   const position = tableSeatPosition(engine.mode.playerCount, player.seat);
   return `<article class="player-card ${player.id === engine.currentPlayerId ? "current" : ""} ${targetable ? "targetable" : ""} ${engine.pendingStrategySequence?.currentTargetId === player.id ? "strategy-focus" : ""} ${!player.alive ? "dead" : ""}" data-player="${player.id}" style="--char:${character.color};--role-color:var(--${shownRole?.color || "muted"});--seat-x:${position.x}%;--seat-y:${position.y}%">
-    <span class="portrait"><img src="${portraitPath(character.id)}" alt="${character.name}立绘"></span><span class="seat">${player.seat + 1}</span><span class="identity-dot ${prediction ? "predicted" : ""}">${identityLabel}</span>${player.id === engine.currentPlayerId ? `<span class="turn-badge">行动中</span>` : ""}${targetable ? `<span class="target-badge">可选择</span>` : ""}
+    <span class="portrait" data-glyph="${character.glyph}"><img data-portrait src="${portraitPath(character.id)}" alt="${character.name}立绘"></span>${demonStatusBadges(player)}<span class="seat">${player.seat + 1}</span><span class="identity-dot ${prediction ? "predicted" : ""}">${identityLabel}</span>${player.id === engine.currentPlayerId ? `<span class="turn-badge">行动中</span>` : ""}${targetable ? `<span class="target-badge">可选择</span>` : ""}
     <h4>${character.name} ${dreamBadge(player, character)}</h4>
     <div class="stat-row"><span>♥ ${player.hp}/${player.maxHp}</span><span>牌 ${player.hand.length}</span></div>
     ${hpPips(player, "seat-hp")}
@@ -380,7 +397,7 @@ function playerAreaTemplate(player) {
   const plots = engine.getVisiblePlots(player.id, player.id);
   const plotTray = plots.length ? `<div class="self-plots">${plots.map(plot => `<span title="${plot.card.name} → ${engine.nameOf(plot.targetId)}"><i>${plot.card.icon}</i><b>${plot.card.name}</b></span>`).join("")}</div>` : "";
   const specialTray = player.specialCards.length || player.sealedCards.length ? `<div class="self-specials">${player.specialCards.map(item => item.kind === "lie" ? `<span class="lie" title="未知谎言 → ${engine.nameOf(item.targetId)}"><i>谎</i><b>未知谎言</b></span>` : `<span title="${item.kind === "clone" ? "影分身" : "百豪牌"} · ${item.card.name}"><i>${item.kind === "clone" ? "分" : "印"}</i><b>${item.card.name}</b></span>`).join("")}${player.sealedCards.map(item => `<span class="sealed" title="被月读封存：${item.card.name}"><i>封</i><b>${item.card.name}</b></span>`).join("")}</div>` : "";
-  return `<div class="self-summary ${engine.pendingStrategySequence?.currentTargetId === player.id ? "strategy-focus" : ""}" data-player="${player.id}" style="--char:${character.color}"><span class="mini-avatar"><img src="${portraitPath(character.id)}" alt="${character.name}立绘"></span><div><h3>${character.name} ${dreamBadge(player, character)}</h3><p>${character.series} · ${character.role}</p><span class="stat-row"><b>♥ ${player.hp}/${player.maxHp}</b><b>◆ ${player.energy}/${player.maxEnergy}</b><b>牌 ${player.hand.length}/${engine.handLimit(player.id)}</b></span>${hpPips(player, "self-hp")}</div><button type="button" class="self-detail-button" data-inspect-player="${player.id}" aria-label="查看自己的状态与技能">状态与技能</button></div><div class="self-equipment">${equipment}</div>${plotTray}${specialTray}<div class="hand">${hand || `<p style="color:var(--muted);font-size:11px">暂无手牌</p>`}</div>`;
+  return `<div class="self-summary ${engine.pendingStrategySequence?.currentTargetId === player.id ? "strategy-focus" : ""}" data-player="${player.id}" style="--char:${character.color}"><span class="mini-avatar" data-glyph="${character.glyph}"><img data-portrait src="${portraitPath(character.id)}" alt="${character.name}立绘"></span><div><h3>${character.name} ${dreamBadge(player, character)}</h3><span class="self-demon-status">${demonStatusBadges(player)}</span><p>${character.series} · ${character.role}</p><span class="stat-row"><b>♥ ${player.hp}/${player.maxHp}</b><b>◆ ${player.energy}/${player.maxEnergy}</b><b>牌 ${player.hand.length}/${engine.handLimit(player.id)}</b></span>${hpPips(player, "self-hp")}</div><button type="button" class="self-detail-button" data-inspect-player="${player.id}" aria-label="查看自己的状态与技能">状态与技能</button></div><div class="self-equipment">${equipment}</div>${plotTray}${specialTray}<div class="hand">${hand || `<p style="color:var(--muted);font-size:11px">暂无手牌</p>`}</div>`;
 }
 
 function playerStatusItems(player) {
@@ -451,6 +468,21 @@ function playerStatusItems(player) {
   const markedBy = engine.players.filter(owner => owner.chessTargetId === player.id);
   if (markedBy.length) add("被落子", `被${markedBy.map(owner => engine.nameOf(owner)).join("、")}标记`, "danger");
   if (player.sealedCards.length) add("月读封存", `${player.sealedCards.length}张手牌暂时离开手牌区`, "danger");
+  const viewerId = engine.players.find(item => item.human)?.id;
+  const visible = engine.getVisibleDemonSlayerState(viewerId, player.id);
+  if (visible.breathReady) add("呼吸态", "可用于强化下一次规定技能或突击；至下次自己回合结束", "buff");
+  if (visible.bloodFlame) add("爆血印", "1枚；可用于再生或爆血净化，二者互斥", "buff");
+  if (visible.scentTargetId) add("嗅觉追迹", `破绽目标：${engine.nameOf(visible.scentTargetId)}${visible.scentCardName ? ` · 私查牌：${visible.scentCardName}` : ""}`, "buff");
+  if (visible.scentMarkedBy) add("破绽", `被${engine.nameOf(visible.scentMarkedBy)}追迹；下次普通突击额外需要1张防御`, "danger");
+  if (visible.rageTargetId) add("兽之怒", `已锁定${engine.nameOf(visible.rageTargetId)}`, "buff");
+  if (visible.compassTargetId) add("罗针", `已锁定${engine.nameOf(visible.compassTargetId)}；双方攻击距离视为1${visible.compassDefended ? " · 已完成防御蓄势" : ""}`, "buff");
+  if (visible.compassMarkedBy) add("罗针锁定", `被${engine.nameOf(visible.compassMarkedBy)}锁定`, "danger");
+  if (visible.bloodMarkTargetId) add("血印", `目标：${engine.nameOf(visible.bloodMarkTargetId)}；其下一张完成结算的非响应牌后中毒`, "buff");
+  if (visible.bloodMarkedBy) add("血液烙印", `被${engine.nameOf(visible.bloodMarkedBy)}标记；下一张完成结算的非响应牌后中毒`, "danger");
+  if (visible.stillWaterGuardOwnerId) add("静水护形", `由${engine.nameOf(visible.stillWaterGuardOwnerId)}保护；下次未完全防住的普通突击伤害-1`, "buff");
+  if (visible.deadCalmOwnerId) add("拾壹之型·凪", `由${engine.nameOf(visible.deadCalmOwnerId)}布置；可取消下一次攻击`, "buff");
+  if (visible.flameGuardOwnerId) add("炎柱守护", `由${engine.nameOf(visible.flameGuardOwnerId)}保护；下次单目标普通突击可转移`, "buff");
+  if (visible.nezukoAidOwnerId) add("护人本能", `由${engine.nameOf(visible.nezukoAidOwnerId)}援护；需要补防时可弃基础牌提供1张防御`, "buff");
   return items;
 }
 
@@ -516,7 +548,7 @@ function renderPlayerDetail(playerId) {
   detail.style.setProperty("--char", character.color);
   detail.style.setProperty("--detail-role", showRole ? `var(--${role.color})` : "var(--muted)");
   detail.innerHTML = `<div class="player-detail-hero">
-    <div class="player-detail-portrait"><img src="${portraitPath(character.id)}" alt="${character.name}立绘"></div>
+    <div class="player-detail-portrait" data-glyph="${character.glyph}"><img data-portrait src="${portraitPath(character.id)}" alt="${character.name}立绘"></div>
     <div class="player-detail-summary">
       <p class="eyebrow">SEAT ${player.seat + 1} · ${character.series}</p>
       <div class="player-detail-title"><div><h2>${character.name}</h2><span>${character.role}</span></div><strong class="detail-identity ${showRole ? "confirmed" : "hidden-role"}">${identityName}</strong></div>

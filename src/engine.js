@@ -396,15 +396,24 @@ export class GameEngine {
 
   getVisibleDemonSlayerState(viewerId, ownerId) {
     const owner = this.player(ownerId);
-    if (!owner || !isDemonSlayerCharacter(owner)) return {};
-    const visible = {
+    if (!owner) return {};
+    const visible = isDemonSlayerCharacter(owner) ? {
       breathReady: owner.breathReady ?? null,
       bloodFlame: owner.bloodFlame ?? null,
       compassTargetId: owner.compassTargetId ?? null,
       compassDefended: owner.compassDefended ?? null,
       bloodMarkTargetId: owner.bloodMarkTargetId ?? null,
-      scentTargetId: owner.scentTargetId ?? null
-    };
+      scentTargetId: owner.scentTargetId ?? null,
+      rageTargetId: owner.rageTargetId ?? null
+    } : {};
+    for (const [field, key] of [["stillWaterGuard", "stillWaterGuardOwnerId"], ["deadCalm", "deadCalmOwnerId"], ["flameGuard", "flameGuardOwnerId"], ["nezukoAid", "nezukoAidOwnerId"]]) {
+      if (owner[field]?.ownerId) visible[key] = owner[field].ownerId;
+    }
+    for (const marker of this.players.filter(player => player.alive && isDemonSlayerCharacter(player))) {
+      if (marker.scentTargetId === ownerId) visible.scentMarkedBy = marker.id;
+      if (marker.compassTargetId === ownerId) visible.compassMarkedBy = marker.id;
+      if (marker.bloodMarkTargetId === ownerId) visible.bloodMarkedBy = marker.id;
+    }
     if (viewerId === ownerId && owner.scentCardName) visible.scentCardName = owner.scentCardName;
     return visible;
   }
