@@ -1,17 +1,17 @@
 (function () {
   const saveKey = "anime-kill.saved-match.v2";
-  let legacy = false;
+  let legacyVersion = null;
   try {
     const raw = localStorage.getItem(saveKey);
     if (raw) {
       const save = JSON.parse(raw);
-      legacy = save?.schemaVersion === 2 && save?.appVersion === "0.2.0";
+      if (save?.schemaVersion === 2 && ["0.2.0", "0.2.1"].includes(save?.appVersion)) legacyVersion = save.appVersion;
     }
   } catch { /* 交由当前版存档入口报告损坏或存储错误。 */ }
 
-  if (legacy) {
+  if (legacyVersion) {
     const notice = document.createElement("div");
-    notice.textContent = "正在继续 v0.2.0 旧版规则对局；结束后返回新版。";
+    notice.textContent = `正在继续 v${legacyVersion} 旧版规则对局；结束后返回新版。`;
     Object.assign(notice.style, {
       position: "fixed", left: "8px", bottom: "8px", zIndex: "1000",
       padding: "5px 9px", borderRadius: "6px", color: "#fff",
@@ -24,7 +24,7 @@
       if (["startButton", "discardSaveButton"].includes(id)) {
         event.preventDefault();
         event.stopImmediatePropagation();
-        if (!window.confirm("放弃 v0.2.0 未完成对局并切换到新版？此操作无法撤销。")) return;
+        if (!window.confirm(`放弃 v${legacyVersion} 未完成对局并切换到新版？此操作无法撤销。`)) return;
         try { localStorage.removeItem(saveKey); }
         catch { window.alert("无法删除旧存档，请检查设备存储后重试。"); return; }
         location.reload();
@@ -40,7 +40,7 @@
   }
 
   const script = document.createElement("script");
-  script.src = legacy ? "./legacy/v0.2.0/app.bundle.js" : "./dist/app.bundle.js";
+  script.src = legacyVersion ? `./legacy/v${legacyVersion}/app.bundle.js` : "./dist/app.bundle.js";
   script.onerror = () => {
     const error = document.createElement("div");
     error.textContent = "游戏脚本加载失败，请重试。存档仍保留在本机。";

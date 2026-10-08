@@ -85,3 +85,15 @@ test("五类 v0.2.0 真实存档保留版本与待处理窗口，当前引擎拒
     assert.equal(inspected.valid, false, name);
   }
 });
+
+test("v0.2.1 真实响应窗口存档保留命令日志，当前引擎拒绝误恢复", async () => {
+  const raw = await readFile(new URL("./fixtures/v021-response.json", import.meta.url), "utf8");
+  const save = JSON.parse(raw);
+  assert.equal(save.schemaVersion, 2);
+  assert.equal(save.appVersion, "0.2.1");
+  assert.equal(save.stateDigest.pendingKind, "response");
+  assert.ok(save.seed > 0 && save.commands.length > 0);
+  const inspected = inspectSavedMatch({ getItem(key) { assert.equal(key, SAVE_KEY); return raw; } });
+  assert.equal(inspected.exists, true);
+  assert.equal(inspected.valid, false);
+});

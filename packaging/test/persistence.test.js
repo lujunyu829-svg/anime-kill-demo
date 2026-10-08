@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { GameSession, SAVE_KEY, discardSavedMatch, inspectSavedMatch, restoreSavedMatch, stateDigest } from "../runtime/persistence.js";
+import { APP_VERSION, GameSession, SAVE_KEY, discardSavedMatch, inspectSavedMatch, restoreSavedMatch, stateDigest } from "../runtime/persistence.js";
 
 class MemoryStorage {
   constructor() { this.values = new Map(); }
@@ -10,6 +10,7 @@ class MemoryStorage {
 }
 
 test("初始对局可以序列化并确定性恢复", () => {
+  assert.equal(APP_VERSION, "0.3.0");
   const storage = new MemoryStorage();
   const session = new GameSession({ config: { modeId: "ranked2v2", humanCharacterId: "naruto" }, seed: 829, storage });
   assert.equal(session.saveNow().ok, true);
@@ -45,7 +46,7 @@ test("损坏和旧版本存档不会阻止清理", () => {
 test("当前版拒绝旧版和未知版本存档但保留安全删除入口", () => {
   const storage = new MemoryStorage();
   const session = new GameSession({ config: { modeId: "ranked2v2", humanCharacterId: "naruto" }, seed: 829, storage });
-  for (const version of ["0.2.0", "0.3.0", undefined]) {
+  for (const version of ["0.2.0", "0.2.1", undefined]) {
     const save = session.createSave();
     save.appVersion = version;
     storage.setItem(SAVE_KEY, JSON.stringify(save));

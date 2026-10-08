@@ -44,12 +44,13 @@ async function boot(raw, { storageThrows = false, confirm = true } = {}) {
   };
 }
 
-test("只有 schema 2 的 v0.2.0 存档加载旧版脚本", async () => {
-  const old = await boot(JSON.stringify({ schemaVersion: 2, appVersion: "0.2.0" }));
-  assert.equal(old.script.src, "./legacy/v0.2.0/app.bundle.js");
+test("schema 2 的两个旧版本分别加载对应的冻结脚本", async () => {
+  for (const version of ["0.2.0", "0.2.1"]) {
+    const old = await boot(JSON.stringify({ schemaVersion: 2, appVersion: version }));
+    assert.equal(old.script.src, `./legacy/v${version}/app.bundle.js`);
+  }
   for (const raw of [
     null,
-    JSON.stringify({ schemaVersion: 2, appVersion: "0.2.1" }),
     JSON.stringify({ schemaVersion: 2, appVersion: "0.3.0" }),
     JSON.stringify({ schemaVersion: 1, appVersion: "0.2.0" }),
     "{broken"
@@ -60,13 +61,18 @@ test("只有 schema 2 的 v0.2.0 存档加载旧版脚本", async () => {
 });
 
 test("脚本加载失败时显示重试且不动存档", async () => {
-  const state = await boot(JSON.stringify({ schemaVersion: 2, appVersion: "0.2.0" }));
-  state.script.onerror();
-  const error = state.appended.find(node => /加载失败/.test(node.textContent));
-  assert.match(error.textContent, /加载失败/);
-  const retry = error.children.find(node => node.tagName === "BUTTON");
-  retry.onclick();
-  assert.equal(state.reloads, 1);
+  for (const version of ["0.2.0", "0.2.1"]) {
+    const raw = JSON.stringify({ schemaVersion: 2, appVersion: version });
+    const state = await boot(raw);
+    state.script.onerror();
+    const error = state.appended.find(node => /加载失败/.test(node.textContent));
+    assert.match(error.textContent, /加载失败/);
+    const retry = error.children.find(node => node.tagName === "BUTTON");
+    retry.onclick();
+    assert.equal(state.reloads, 1);
+    assert.equal(state.saved, raw);
+    assert.equal(state.removals, 0);
+  }
 });
 
 test("仅封装页面使用启动脚本，根网页版入口保持原样", async () => {
@@ -123,9 +129,11 @@ test("结果界面若仍有旧存档则不启动旧版新局", async () => {
 });
 
 test("旧版对局显示规则版本提示且只安装一个捕获监听器", async () => {
-  const old = await boot(JSON.stringify({ schemaVersion: 2, appVersion: "0.2.0" }));
-  assert.ok(old.appended.some(node => /旧版规则/.test(node.textContent)));
-  assert.equal(old.listeners.filter(item => item.type === "click" && item.capture).length, 1);
+  for (const version of ["0.2.0", "0.2.1"]) {
+    const old = await boot(JSON.stringify({ schemaVersion: 2, appVersion: version }));
+    assert.ok(old.appended.some(node => node.textContent?.includes(`v${version} 旧版规则`)));
+    assert.equal(old.listeners.filter(item => item.type === "click" && item.capture).length, 1);
+  }
   const current = await boot(null);
   assert.equal(current.listeners.length, 0);
 });
@@ -135,4 +143,6 @@ test("五类真实旧版存档都路由到冻结规则脚本", async () => {
     const raw = await readFile(new URL(`./fixtures/v020-${name}.json`, import.meta.url), "utf8");
     assert.equal((await boot(raw)).script.src, "./legacy/v0.2.0/app.bundle.js", name);
   }
+  const v021 = await readFile(new URL("./fixtures/v021-response.json", import.meta.url), "utf8");
+  assert.equal((await boot(v021)).script.src, "./legacy/v0.2.1/app.bundle.js");
 });
