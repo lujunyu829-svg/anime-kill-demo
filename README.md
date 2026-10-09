@@ -2,7 +2,7 @@
 
 一个面向二次元玩家的原创战术卡牌游戏原型。游戏保留身份推理、座次距离、手牌攻防与角色技能的核心乐趣，同时加入伏笔、能量和作品扩展包。
 
-当前本地网页版：**v0.3.0《日轮与血月》**，尚未上传 GitHub 或生成新版安装包。新增鬼灭之刃十人扩展包，平衡和终局结果见[验收记录](docs/reports/v0.3.0-demon-slayer-acceptance.md)。[GitHub Releases](https://github.com/lujunyu829-svg/anime-kill-demo/releases) 中的旧安装包不包含本次更新。
+当前源码版本：**v0.3.0《日轮与血月》**，已上传 GitHub `main`，尚未生成新版安装包。新增鬼灭之刃十人扩展包，平衡和终局结果见[验收记录](docs/reports/v0.3.0-demon-slayer-acceptance.md)。[GitHub Releases](https://github.com/lujunyu829-svg/anime-kill-demo/releases) 中的旧安装包不包含本次更新。
 
 ## 当前内容
 
