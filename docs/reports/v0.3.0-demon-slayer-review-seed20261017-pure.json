@@ -1,0 +1,2235 @@
+{
+  "version": "0.3.0",
+  "sourceHash": "7440899ab2ea4af61cc0a04911273623a2edab3dbaea08d0e20f8a180df68926",
+  "pool": "demon-slayer",
+  "characterPool": [
+    "tanjiro",
+    "zenitsu",
+    "inosuke",
+    "shinobu",
+    "giyu",
+    "rengoku",
+    "mitsuri",
+    "nezuko",
+    "akaza",
+    "muzan"
+  ],
+  "mode": "ranked2v2",
+  "scenario": "balance",
+  "seedBase": 20261017,
+  "seedStep": 7919,
+  "seeds": [
+    {
+      "anchor": 0,
+      "first": 20261017,
+      "last": 22232848,
+      "gamesPerCharacter": 250
+    },
+    {
+      "anchor": 1,
+      "first": 20361017,
+      "last": 22332848,
+      "gamesPerCharacter": 250
+    },
+    {
+      "anchor": 2,
+      "first": 20461017,
+      "last": 22432848,
+      "gamesPerCharacter": 250
+    },
+    {
+      "anchor": 3,
+      "first": 20561017,
+      "last": 22532848,
+      "gamesPerCharacter": 250
+    }
+  ],
+  "generatedAt": "2026-10-17T03:20:43.954Z",
+  "games": 10000,
+  "unfinished": 0,
+  "camps": {
+    "azure": 4892,
+    "crimson": 5108
+  },
+  "residual": {},
+  "avgRounds": 8.8053,
+  "p95Rounds": 24,
+  "p99Rounds": 43,
+  "maxRounds": 46,
+  "over80": 0,
+  "maxSteps": 517,
+  "roles": [
+    {
+      "character": "tanjiro",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 0,
+      "games": 250,
+      "wins": 105,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1350,
+        "activeEffective": 1350,
+        "activeTargets": {
+          "other": 1350
+        },
+        "signatureDeclared": 303,
+        "signatureEffective": 303,
+        "signatureCosts": {
+          "4": 303
+        },
+        "damage": 1048,
+        "healing": 200,
+        "shield": 0,
+        "drawn": 2932,
+        "discarded": 421,
+        "cancelled": 54,
+        "equipmentChanges": 456,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 105,
+      "awakeRounds": 0,
+      "winRate": 42,
+      "avgRounds": 8.424,
+      "p95Rounds": 20,
+      "p99Rounds": 41,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 42
+    },
+    {
+      "character": "tanjiro",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 1,
+      "games": 250,
+      "wins": 94,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1178,
+        "activeEffective": 1178,
+        "activeTargets": {
+          "other": 1178
+        },
+        "signatureDeclared": 288,
+        "signatureEffective": 288,
+        "signatureCosts": {
+          "4": 288
+        },
+        "damage": 925,
+        "healing": 206,
+        "shield": 0,
+        "drawn": 3047,
+        "discarded": 412,
+        "cancelled": 56,
+        "equipmentChanges": 436,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 94,
+      "awakeRounds": 0,
+      "winRate": 37.6,
+      "avgRounds": 8.432,
+      "p95Rounds": 23,
+      "p99Rounds": 41,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 37.6
+    },
+    {
+      "character": "tanjiro",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 2,
+      "games": 250,
+      "wins": 105,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1203,
+        "activeEffective": 1203,
+        "activeTargets": {
+          "other": 1203
+        },
+        "signatureDeclared": 294,
+        "signatureEffective": 294,
+        "signatureCosts": {
+          "4": 294
+        },
+        "damage": 979,
+        "healing": 184,
+        "shield": 0,
+        "drawn": 3081,
+        "discarded": 406,
+        "cancelled": 62,
+        "equipmentChanges": 452,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 105,
+      "awakeRounds": 0,
+      "winRate": 42,
+      "avgRounds": 7.46,
+      "p95Rounds": 16,
+      "p99Rounds": 34,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 42
+    },
+    {
+      "character": "tanjiro",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 3,
+      "games": 250,
+      "wins": 74,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1148,
+        "activeEffective": 1148,
+        "activeTargets": {
+          "other": 1148
+        },
+        "signatureDeclared": 279,
+        "signatureEffective": 279,
+        "signatureCosts": {
+          "4": 279
+        },
+        "damage": 923,
+        "healing": 243,
+        "shield": 0,
+        "drawn": 3012,
+        "discarded": 453,
+        "cancelled": 52,
+        "equipmentChanges": 454,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 74,
+      "awakeRounds": 0,
+      "winRate": 29.599999999999998,
+      "avgRounds": 7.564,
+      "p95Rounds": 16,
+      "p99Rounds": 40,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 29.599999999999998
+    },
+    {
+      "character": "zenitsu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 0,
+      "games": 250,
+      "wins": 164,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 914,
+        "activeEffective": 914,
+        "activeTargets": {
+          "self": 914
+        },
+        "signatureDeclared": 677,
+        "signatureEffective": 677,
+        "signatureCosts": {
+          "4": 677
+        },
+        "damage": 1294,
+        "healing": 168,
+        "shield": 914,
+        "drawn": 3638,
+        "discarded": 1223,
+        "cancelled": 76,
+        "equipmentChanges": 373,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 164,
+      "awakeRounds": 0,
+      "winRate": 65.60000000000001,
+      "avgRounds": 9.472,
+      "p95Rounds": 19,
+      "p99Rounds": 40,
+      "maxRounds": 42,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 65.60000000000001
+    },
+    {
+      "character": "zenitsu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 1,
+      "games": 250,
+      "wins": 134,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 662,
+        "activeEffective": 662,
+        "activeTargets": {
+          "self": 662
+        },
+        "signatureDeclared": 546,
+        "signatureEffective": 546,
+        "signatureCosts": {
+          "4": 546
+        },
+        "damage": 1078,
+        "healing": 161,
+        "shield": 662,
+        "drawn": 3383,
+        "discarded": 983,
+        "cancelled": 74,
+        "equipmentChanges": 315,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 134,
+      "awakeRounds": 0,
+      "winRate": 53.6,
+      "avgRounds": 8.276,
+      "p95Rounds": 18,
+      "p99Rounds": 34,
+      "maxRounds": 41,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 53.6
+    },
+    {
+      "character": "zenitsu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 2,
+      "games": 250,
+      "wins": 158,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 808,
+        "activeEffective": 808,
+        "activeTargets": {
+          "self": 808
+        },
+        "signatureDeclared": 592,
+        "signatureEffective": 592,
+        "signatureCosts": {
+          "4": 592
+        },
+        "damage": 1206,
+        "healing": 167,
+        "shield": 808,
+        "drawn": 3724,
+        "discarded": 1210,
+        "cancelled": 83,
+        "equipmentChanges": 317,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 158,
+      "awakeRounds": 0,
+      "winRate": 63.2,
+      "avgRounds": 8.096,
+      "p95Rounds": 18,
+      "p99Rounds": 40,
+      "maxRounds": 41,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 63.2
+    },
+    {
+      "character": "zenitsu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 3,
+      "games": 250,
+      "wins": 139,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 855,
+        "activeEffective": 855,
+        "activeTargets": {
+          "self": 855
+        },
+        "signatureDeclared": 682,
+        "signatureEffective": 682,
+        "signatureCosts": {
+          "4": 682
+        },
+        "damage": 1209,
+        "healing": 222,
+        "shield": 855,
+        "drawn": 4266,
+        "discarded": 1384,
+        "cancelled": 84,
+        "equipmentChanges": 351,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 139,
+      "awakeRounds": 0,
+      "winRate": 55.60000000000001,
+      "avgRounds": 9.896,
+      "p95Rounds": 27,
+      "p99Rounds": 43,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 55.60000000000001
+    },
+    {
+      "character": "inosuke",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 0,
+      "games": 250,
+      "wins": 166,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1119,
+        "activeEffective": 1012,
+        "activeTargets": {
+          "other": 1119
+        },
+        "signatureDeclared": 269,
+        "signatureEffective": 269,
+        "signatureCosts": {
+          "4": 269
+        },
+        "damage": 1316,
+        "healing": 160,
+        "shield": 0,
+        "drawn": 2381,
+        "discarded": 272,
+        "cancelled": 38,
+        "equipmentChanges": 414,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 166,
+      "awakeRounds": 0,
+      "winRate": 66.4,
+      "avgRounds": 7.292,
+      "p95Rounds": 17,
+      "p99Rounds": 42,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 66.4
+    },
+    {
+      "character": "inosuke",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 1,
+      "games": 250,
+      "wins": 139,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 868,
+        "activeEffective": 805,
+        "activeTargets": {
+          "other": 868
+        },
+        "signatureDeclared": 242,
+        "signatureEffective": 242,
+        "signatureCosts": {
+          "4": 242
+        },
+        "damage": 1100,
+        "healing": 170,
+        "shield": 0,
+        "drawn": 2237,
+        "discarded": 222,
+        "cancelled": 40,
+        "equipmentChanges": 356,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 139,
+      "awakeRounds": 0,
+      "winRate": 55.60000000000001,
+      "avgRounds": 7.264,
+      "p95Rounds": 17,
+      "p99Rounds": 43,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 55.60000000000001
+    },
+    {
+      "character": "inosuke",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 2,
+      "games": 250,
+      "wins": 154,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 957,
+        "activeEffective": 912,
+        "activeTargets": {
+          "other": 957
+        },
+        "signatureDeclared": 270,
+        "signatureEffective": 270,
+        "signatureCosts": {
+          "4": 270
+        },
+        "damage": 1178,
+        "healing": 151,
+        "shield": 0,
+        "drawn": 2461,
+        "discarded": 267,
+        "cancelled": 48,
+        "equipmentChanges": 375,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 154,
+      "awakeRounds": 0,
+      "winRate": 61.6,
+      "avgRounds": 6.42,
+      "p95Rounds": 11,
+      "p99Rounds": 37,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 61.6
+    },
+    {
+      "character": "inosuke",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 3,
+      "games": 250,
+      "wins": 116,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 964,
+        "activeEffective": 873,
+        "activeTargets": {
+          "other": 964
+        },
+        "signatureDeclared": 267,
+        "signatureEffective": 267,
+        "signatureCosts": {
+          "4": 267
+        },
+        "damage": 1131,
+        "healing": 199,
+        "shield": 0,
+        "drawn": 2458,
+        "discarded": 277,
+        "cancelled": 47,
+        "equipmentChanges": 368,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 116,
+      "awakeRounds": 0,
+      "winRate": 46.400000000000006,
+      "avgRounds": 7.564,
+      "p95Rounds": 20,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 46.400000000000006
+    },
+    {
+      "character": "shinobu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 0,
+      "games": 250,
+      "wins": 164,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 463,
+        "activeEffective": 463,
+        "activeTargets": {
+          "other": 382,
+          "self": 76,
+          "ally": 5
+        },
+        "signatureDeclared": 386,
+        "signatureEffective": 386,
+        "signatureCosts": {
+          "4": 386
+        },
+        "damage": 681,
+        "healing": 171,
+        "shield": 81,
+        "drawn": 2584,
+        "discarded": 255,
+        "cancelled": 60,
+        "equipmentChanges": 436,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 164,
+      "awakeRounds": 0,
+      "winRate": 65.60000000000001,
+      "avgRounds": 7.704,
+      "p95Rounds": 19,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 65.60000000000001
+    },
+    {
+      "character": "shinobu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 1,
+      "games": 250,
+      "wins": 119,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 384,
+        "activeEffective": 384,
+        "activeTargets": {
+          "other": 265,
+          "self": 115,
+          "ally": 4
+        },
+        "signatureDeclared": 337,
+        "signatureEffective": 337,
+        "signatureCosts": {
+          "4": 337
+        },
+        "damage": 559,
+        "healing": 194,
+        "shield": 119,
+        "drawn": 2495,
+        "discarded": 282,
+        "cancelled": 46,
+        "equipmentChanges": 401,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 119,
+      "awakeRounds": 0,
+      "winRate": 47.599999999999994,
+      "avgRounds": 7.784,
+      "p95Rounds": 16,
+      "p99Rounds": 42,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 47.599999999999994
+    },
+    {
+      "character": "shinobu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 2,
+      "games": 250,
+      "wins": 148,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 399,
+        "activeEffective": 399,
+        "activeTargets": {
+          "other": 317,
+          "self": 70,
+          "ally": 12
+        },
+        "signatureDeclared": 366,
+        "signatureEffective": 366,
+        "signatureCosts": {
+          "4": 366
+        },
+        "damage": 600,
+        "healing": 184,
+        "shield": 82,
+        "drawn": 2783,
+        "discarded": 256,
+        "cancelled": 58,
+        "equipmentChanges": 434,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 148,
+      "awakeRounds": 0,
+      "winRate": 59.199999999999996,
+      "avgRounds": 7.396,
+      "p95Rounds": 16,
+      "p99Rounds": 41,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 59.199999999999996
+    },
+    {
+      "character": "shinobu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 3,
+      "games": 250,
+      "wins": 130,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 425,
+        "activeEffective": 425,
+        "activeTargets": {
+          "other": 355,
+          "self": 67,
+          "ally": 3
+        },
+        "signatureDeclared": 408,
+        "signatureEffective": 408,
+        "signatureCosts": {
+          "4": 408
+        },
+        "damage": 644,
+        "healing": 200,
+        "shield": 70,
+        "drawn": 2990,
+        "discarded": 325,
+        "cancelled": 65,
+        "equipmentChanges": 449,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 130,
+      "awakeRounds": 0,
+      "winRate": 52,
+      "avgRounds": 7.312,
+      "p95Rounds": 15,
+      "p99Rounds": 42,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 52
+    },
+    {
+      "character": "giyu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 0,
+      "games": 250,
+      "wins": 112,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 3024,
+        "activeEffective": 3024,
+        "activeTargets": {
+          "self": 2259,
+          "ally": 765
+        },
+        "signatureDeclared": 2685,
+        "signatureEffective": 2685,
+        "signatureCosts": {
+          "2": 2685
+        },
+        "damage": 944,
+        "healing": 417,
+        "shield": 0,
+        "drawn": 6676,
+        "discarded": 708,
+        "cancelled": 1418,
+        "equipmentChanges": 687,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 112,
+      "awakeRounds": 0,
+      "winRate": 44.800000000000004,
+      "avgRounds": 12.248,
+      "p95Rounds": 40,
+      "p99Rounds": 43,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 44.800000000000004
+    },
+    {
+      "character": "giyu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 1,
+      "games": 250,
+      "wins": 98,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 3000,
+        "activeEffective": 3000,
+        "activeTargets": {
+          "self": 2278,
+          "ally": 722
+        },
+        "signatureDeclared": 2683,
+        "signatureEffective": 2683,
+        "signatureCosts": {
+          "2": 2683
+        },
+        "damage": 859,
+        "healing": 461,
+        "shield": 0,
+        "drawn": 7093,
+        "discarded": 792,
+        "cancelled": 1514,
+        "equipmentChanges": 727,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 98,
+      "awakeRounds": 0,
+      "winRate": 39.2,
+      "avgRounds": 12.924,
+      "p95Rounds": 40,
+      "p99Rounds": 44,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 39.2
+    },
+    {
+      "character": "giyu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 2,
+      "games": 250,
+      "wins": 122,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 2622,
+        "activeEffective": 2622,
+        "activeTargets": {
+          "self": 1832,
+          "ally": 790
+        },
+        "signatureDeclared": 2343,
+        "signatureEffective": 2343,
+        "signatureCosts": {
+          "2": 2343
+        },
+        "damage": 861,
+        "healing": 381,
+        "shield": 0,
+        "drawn": 6196,
+        "discarded": 585,
+        "cancelled": 1228,
+        "equipmentChanges": 669,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 122,
+      "awakeRounds": 0,
+      "winRate": 48.8,
+      "avgRounds": 11.12,
+      "p95Rounds": 31,
+      "p99Rounds": 44,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 48.8
+    },
+    {
+      "character": "giyu",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 3,
+      "games": 250,
+      "wins": 90,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 3302,
+        "activeEffective": 3302,
+        "activeTargets": {
+          "self": 2424,
+          "ally": 878
+        },
+        "signatureDeclared": 2957,
+        "signatureEffective": 2957,
+        "signatureCosts": {
+          "2": 2957
+        },
+        "damage": 1025,
+        "healing": 445,
+        "shield": 0,
+        "drawn": 7780,
+        "discarded": 874,
+        "cancelled": 1612,
+        "equipmentChanges": 720,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 90,
+      "awakeRounds": 0,
+      "winRate": 36,
+      "avgRounds": 13.62,
+      "p95Rounds": 41,
+      "p99Rounds": 45,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 36
+    },
+    {
+      "character": "rengoku",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 0,
+      "games": 250,
+      "wins": 102,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 651,
+        "activeEffective": 651,
+        "activeTargets": {
+          "ally": 651
+        },
+        "signatureDeclared": 207,
+        "signatureEffective": 207,
+        "signatureCosts": {
+          "4": 207
+        },
+        "damage": 827,
+        "healing": 215,
+        "shield": 0,
+        "drawn": 2212,
+        "discarded": 185,
+        "cancelled": 43,
+        "equipmentChanges": 403,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 102,
+      "awakeRounds": 0,
+      "winRate": 40.8,
+      "avgRounds": 8.664,
+      "p95Rounds": 22,
+      "p99Rounds": 41,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 40.8
+    },
+    {
+      "character": "rengoku",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 1,
+      "games": 250,
+      "wins": 77,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 474,
+        "activeEffective": 474,
+        "activeTargets": {
+          "ally": 474
+        },
+        "signatureDeclared": 210,
+        "signatureEffective": 210,
+        "signatureCosts": {
+          "4": 210
+        },
+        "damage": 711,
+        "healing": 251,
+        "shield": 0,
+        "drawn": 2314,
+        "discarded": 190,
+        "cancelled": 40,
+        "equipmentChanges": 388,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 77,
+      "awakeRounds": 0,
+      "winRate": 30.8,
+      "avgRounds": 8.136,
+      "p95Rounds": 20,
+      "p99Rounds": 40,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 30.8
+    },
+    {
+      "character": "rengoku",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 2,
+      "games": 250,
+      "wins": 98,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 599,
+        "activeEffective": 599,
+        "activeTargets": {
+          "ally": 599
+        },
+        "signatureDeclared": 232,
+        "signatureEffective": 232,
+        "signatureCosts": {
+          "4": 232
+        },
+        "damage": 778,
+        "healing": 239,
+        "shield": 0,
+        "drawn": 2684,
+        "discarded": 226,
+        "cancelled": 54,
+        "equipmentChanges": 433,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 98,
+      "awakeRounds": 0,
+      "winRate": 39.2,
+      "avgRounds": 8.252,
+      "p95Rounds": 19,
+      "p99Rounds": 41,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 39.2
+    },
+    {
+      "character": "rengoku",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 3,
+      "games": 250,
+      "wins": 80,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 543,
+        "activeEffective": 543,
+        "activeTargets": {
+          "ally": 543
+        },
+        "signatureDeclared": 204,
+        "signatureEffective": 204,
+        "signatureCosts": {
+          "4": 204
+        },
+        "damage": 792,
+        "healing": 229,
+        "shield": 0,
+        "drawn": 2491,
+        "discarded": 219,
+        "cancelled": 43,
+        "equipmentChanges": 421,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 80,
+      "awakeRounds": 0,
+      "winRate": 32,
+      "avgRounds": 8.964,
+      "p95Rounds": 26,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 32
+    },
+    {
+      "character": "mitsuri",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 0,
+      "games": 250,
+      "wins": 121,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 811,
+        "activeEffective": 811,
+        "activeTargets": {
+          "ally": 811
+        },
+        "signatureDeclared": 467,
+        "signatureEffective": 448,
+        "signatureCosts": {
+          "3": 467
+        },
+        "damage": 617,
+        "healing": 117,
+        "shield": 62,
+        "drawn": 2362,
+        "discarded": 151,
+        "cancelled": 50,
+        "equipmentChanges": 434,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 121,
+      "awakeRounds": 0,
+      "winRate": 48.4,
+      "avgRounds": 9.516,
+      "p95Rounds": 27,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 48.4
+    },
+    {
+      "character": "mitsuri",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 1,
+      "games": 250,
+      "wins": 104,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 719,
+        "activeEffective": 719,
+        "activeTargets": {
+          "ally": 719
+        },
+        "signatureDeclared": 502,
+        "signatureEffective": 477,
+        "signatureCosts": {
+          "3": 502
+        },
+        "damage": 567,
+        "healing": 129,
+        "shield": 61,
+        "drawn": 2831,
+        "discarded": 151,
+        "cancelled": 57,
+        "equipmentChanges": 473,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 104,
+      "awakeRounds": 0,
+      "winRate": 41.6,
+      "avgRounds": 8.604,
+      "p95Rounds": 18,
+      "p99Rounds": 41,
+      "maxRounds": 43,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 41.6
+    },
+    {
+      "character": "mitsuri",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 2,
+      "games": 250,
+      "wins": 113,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 795,
+        "activeEffective": 795,
+        "activeTargets": {
+          "ally": 795
+        },
+        "signatureDeclared": 569,
+        "signatureEffective": 553,
+        "signatureCosts": {
+          "3": 569
+        },
+        "damage": 649,
+        "healing": 151,
+        "shield": 69,
+        "drawn": 3142,
+        "discarded": 188,
+        "cancelled": 76,
+        "equipmentChanges": 466,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 113,
+      "awakeRounds": 0,
+      "winRate": 45.2,
+      "avgRounds": 9.2,
+      "p95Rounds": 31,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 45.2
+    },
+    {
+      "character": "mitsuri",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 3,
+      "games": 250,
+      "wins": 99,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 745,
+        "activeEffective": 745,
+        "activeTargets": {
+          "ally": 745
+        },
+        "signatureDeclared": 558,
+        "signatureEffective": 533,
+        "signatureCosts": {
+          "3": 558
+        },
+        "damage": 662,
+        "healing": 179,
+        "shield": 67,
+        "drawn": 3034,
+        "discarded": 189,
+        "cancelled": 59,
+        "equipmentChanges": 470,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 99,
+      "awakeRounds": 0,
+      "winRate": 39.6,
+      "avgRounds": 9.064,
+      "p95Rounds": 26,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 39.6
+    },
+    {
+      "character": "nezuko",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 0,
+      "games": 250,
+      "wins": 148,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 935,
+        "activeEffective": 935,
+        "activeTargets": {
+          "ally": 935
+        },
+        "signatureDeclared": 527,
+        "signatureEffective": 527,
+        "signatureCosts": {
+          "3": 527
+        },
+        "damage": 770,
+        "healing": 431,
+        "shield": 126,
+        "drawn": 2711,
+        "discarded": 416,
+        "cancelled": 50,
+        "equipmentChanges": 421,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 148,
+      "awakeRounds": 0,
+      "winRate": 59.199999999999996,
+      "avgRounds": 7.672,
+      "p95Rounds": 16,
+      "p99Rounds": 31,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 59.199999999999996
+    },
+    {
+      "character": "nezuko",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 1,
+      "games": 250,
+      "wins": 140,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 768,
+        "activeEffective": 768,
+        "activeTargets": {
+          "ally": 768
+        },
+        "signatureDeclared": 514,
+        "signatureEffective": 514,
+        "signatureCosts": {
+          "3": 514
+        },
+        "damage": 707,
+        "healing": 557,
+        "shield": 79,
+        "drawn": 2784,
+        "discarded": 366,
+        "cancelled": 52,
+        "equipmentChanges": 398,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 140,
+      "awakeRounds": 0,
+      "winRate": 56.00000000000001,
+      "avgRounds": 8.552,
+      "p95Rounds": 18,
+      "p99Rounds": 42,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 56.00000000000001
+    },
+    {
+      "character": "nezuko",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 2,
+      "games": 250,
+      "wins": 152,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 804,
+        "activeEffective": 804,
+        "activeTargets": {
+          "ally": 804
+        },
+        "signatureDeclared": 562,
+        "signatureEffective": 562,
+        "signatureCosts": {
+          "3": 562
+        },
+        "damage": 735,
+        "healing": 474,
+        "shield": 103,
+        "drawn": 3053,
+        "discarded": 446,
+        "cancelled": 70,
+        "equipmentChanges": 429,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 152,
+      "awakeRounds": 0,
+      "winRate": 60.8,
+      "avgRounds": 7.904,
+      "p95Rounds": 18,
+      "p99Rounds": 40,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 60.8
+    },
+    {
+      "character": "nezuko",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 3,
+      "games": 250,
+      "wins": 126,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 823,
+        "activeEffective": 823,
+        "activeTargets": {
+          "ally": 823
+        },
+        "signatureDeclared": 511,
+        "signatureEffective": 511,
+        "signatureCosts": {
+          "3": 511
+        },
+        "damage": 712,
+        "healing": 540,
+        "shield": 88,
+        "drawn": 2970,
+        "discarded": 429,
+        "cancelled": 56,
+        "equipmentChanges": 425,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 126,
+      "awakeRounds": 0,
+      "winRate": 50.4,
+      "avgRounds": 8.064,
+      "p95Rounds": 17,
+      "p99Rounds": 41,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 50.4
+    },
+    {
+      "character": "akaza",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 0,
+      "games": 250,
+      "wins": 137,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1693,
+        "activeEffective": 1693,
+        "activeTargets": {
+          "other": 1693
+        },
+        "signatureDeclared": 466,
+        "signatureEffective": 466,
+        "signatureCosts": {
+          "3": 466
+        },
+        "damage": 1245,
+        "healing": 253,
+        "shield": 294,
+        "drawn": 3659,
+        "discarded": 375,
+        "cancelled": 66,
+        "equipmentChanges": 502,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 137,
+      "awakeRounds": 0,
+      "winRate": 54.800000000000004,
+      "avgRounds": 8.476,
+      "p95Rounds": 23,
+      "p99Rounds": 42,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 54.800000000000004
+    },
+    {
+      "character": "akaza",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 1,
+      "games": 250,
+      "wins": 111,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1435,
+        "activeEffective": 1435,
+        "activeTargets": {
+          "other": 1435
+        },
+        "signatureDeclared": 406,
+        "signatureEffective": 406,
+        "signatureCosts": {
+          "3": 406
+        },
+        "damage": 1007,
+        "healing": 255,
+        "shield": 229,
+        "drawn": 3444,
+        "discarded": 338,
+        "cancelled": 68,
+        "equipmentChanges": 474,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 111,
+      "awakeRounds": 0,
+      "winRate": 44.4,
+      "avgRounds": 8.484,
+      "p95Rounds": 20,
+      "p99Rounds": 42,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 44.4
+    },
+    {
+      "character": "akaza",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 2,
+      "games": 250,
+      "wins": 146,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1716,
+        "activeEffective": 1716,
+        "activeTargets": {
+          "other": 1716
+        },
+        "signatureDeclared": 463,
+        "signatureEffective": 463,
+        "signatureCosts": {
+          "3": 463
+        },
+        "damage": 1157,
+        "healing": 249,
+        "shield": 245,
+        "drawn": 4130,
+        "discarded": 400,
+        "cancelled": 86,
+        "equipmentChanges": 501,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 146,
+      "awakeRounds": 0,
+      "winRate": 58.4,
+      "avgRounds": 9,
+      "p95Rounds": 28,
+      "p99Rounds": 43,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 58.4
+    },
+    {
+      "character": "akaza",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 3,
+      "games": 250,
+      "wins": 128,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1469,
+        "activeEffective": 1469,
+        "activeTargets": {
+          "other": 1469
+        },
+        "signatureDeclared": 455,
+        "signatureEffective": 455,
+        "signatureCosts": {
+          "3": 455
+        },
+        "damage": 1170,
+        "healing": 278,
+        "shield": 239,
+        "drawn": 3571,
+        "discarded": 371,
+        "cancelled": 64,
+        "equipmentChanges": 474,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 128,
+      "awakeRounds": 0,
+      "winRate": 51.2,
+      "avgRounds": 7.928,
+      "p95Rounds": 18,
+      "p99Rounds": 42,
+      "maxRounds": 45,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 51.2
+    },
+    {
+      "character": "muzan",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 0,
+      "games": 250,
+      "wins": 126,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1560,
+        "activeEffective": 1560,
+        "activeTargets": {
+          "other": 1560
+        },
+        "signatureDeclared": 181,
+        "signatureEffective": 181,
+        "signatureCosts": {
+          "4": 181
+        },
+        "damage": 783,
+        "healing": 312,
+        "shield": 644,
+        "drawn": 4442,
+        "discarded": 284,
+        "cancelled": 80,
+        "equipmentChanges": 610,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 126,
+      "awakeRounds": 0,
+      "winRate": 50.4,
+      "avgRounds": 9.368,
+      "p95Rounds": 24,
+      "p99Rounds": 43,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 50.4
+    },
+    {
+      "character": "muzan",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 1,
+      "games": 250,
+      "wins": 96,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1579,
+        "activeEffective": 1579,
+        "activeTargets": {
+          "other": 1579
+        },
+        "signatureDeclared": 190,
+        "signatureEffective": 190,
+        "signatureCosts": {
+          "4": 190
+        },
+        "damage": 697,
+        "healing": 342,
+        "shield": 755,
+        "drawn": 4979,
+        "discarded": 334,
+        "cancelled": 112,
+        "equipmentChanges": 595,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 96,
+      "awakeRounds": 0,
+      "winRate": 38.4,
+      "avgRounds": 10.328,
+      "p95Rounds": 27,
+      "p99Rounds": 43,
+      "maxRounds": 44,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 38.4
+    },
+    {
+      "character": "muzan",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 2,
+      "games": 250,
+      "wins": 136,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1577,
+        "activeEffective": 1577,
+        "activeTargets": {
+          "other": 1577
+        },
+        "signatureDeclared": 187,
+        "signatureEffective": 187,
+        "signatureCosts": {
+          "4": 187
+        },
+        "damage": 712,
+        "healing": 346,
+        "shield": 681,
+        "drawn": 5138,
+        "discarded": 328,
+        "cancelled": 132,
+        "equipmentChanges": 635,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 136,
+      "awakeRounds": 0,
+      "winRate": 54.400000000000006,
+      "avgRounds": 10.244,
+      "p95Rounds": 33,
+      "p99Rounds": 44,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 54.400000000000006
+    },
+    {
+      "character": "muzan",
+      "pack": "demon_slayer_sun_moon",
+      "anchor": 3,
+      "games": 250,
+      "wins": 121,
+      "unfinished": 0,
+      "residual": {},
+      "camps": {
+        "azure": 250
+      },
+      "supportOpportunityHistogram": {
+        "0": 250
+      },
+      "metrics": {
+        "activeDeclared": 1515,
+        "activeEffective": 1515,
+        "activeTargets": {
+          "other": 1515
+        },
+        "signatureDeclared": 204,
+        "signatureEffective": 204,
+        "signatureCosts": {
+          "4": 204
+        },
+        "damage": 812,
+        "healing": 321,
+        "shield": 687,
+        "drawn": 4948,
+        "discarded": 347,
+        "cancelled": 97,
+        "equipmentChanges": 585,
+        "healingOpportunities": 0,
+        "healingUsed": 0,
+        "healingSkipped": {},
+        "dreamReasons": {},
+        "awakeRound": 0
+      },
+      "dreamProgress": 0,
+      "awakened": 0,
+      "awakenedWins": 0,
+      "unawakenedWins": 121,
+      "awakeRounds": 0,
+      "winRate": 48.4,
+      "avgRounds": 9.524,
+      "p95Rounds": 23,
+      "p99Rounds": 43,
+      "maxRounds": 46,
+      "avgDreamProgress": 0,
+      "awakenRate": 0,
+      "avgAwakenRound": null,
+      "awakenedWinRate": null,
+      "unawakenedWinRate": 48.4
+    }
+  ]
+}
